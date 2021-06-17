@@ -1,1 +1,26 @@
 // app global css in SCSS form
+header {
+  position: absolute;
+  width: 100%;
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+  padding: 0 6vmin;
+  z-index: 1;
+}
+
+header .q-tab__indicator.absolute-bottom.text-primary {
+  height: 4px;
+  border-radius: 2px;
+  bottom: 6px;
+}
+
+header .q-focus-helper {
+  border-radius: 6px!important;
+  height: 82%!important;
+  top: 50%!important;
+  transform: translateY(-50%);
+}
+
+.q-tab__label {
+  font-size: 16px;
+}
