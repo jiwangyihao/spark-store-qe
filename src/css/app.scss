@@ -4,8 +4,8 @@
   src: url('../assets/font/Comfortaa-Light.ttf');
 }
 
-:root {
-  --q-color-primary: rgb(47,85,151);
+.flex-start {
+  align-content: flex-start;
 }
 
 header {
@@ -136,7 +136,7 @@ footer {
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-evenly;
-  padding: 2vmin 3vmin;
+  padding: 3vmin 3vmin 2vmin 3vmin;
   color: rgba(89,89,89);
 }
 
@@ -285,4 +285,64 @@ footer {
   font-size: 3vmin;
   line-height: 6vmin;
   margin: 0;
+}
+
+.downpage {
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: flex-start;
+  padding: 10vmin 0;
+}
+
+.downpage h1 {
+  margin: 8vmin 0 0 0;
+  color: white;
+  font-size: 6vmin;
+  line-height: 2em;
+  position: relative;
+}
+
+.downpage h1::after {
+  content: "";
+  width: 1.2em;
+  height: 0.16em;
+  background-color: white;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  border-radius: 0.08em;
+  transform: translateX(-50%);
+}
+
+.downpage h2 {
+  color: white;
+  margin: 0 0 4vmin 0;
+  font-size: 3vmin;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  line-height: 2em;
+}
+
+.downpage .downcard {
+  background-color: white;
+  width: 100%;
+  border-radius: 1vmin;
+  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+  padding: 3vmin 2vmin;
+}
+
+.downpage .downcard h3 {
+  font-size: 3vmin;
+  margin: 0;
+  display: flex;
+  line-height: 4vmin;
+}
+
+.downpage .downcard>.row>.row>span {
+  display: flex;
+  align-items: center;
+  margin-left: 2vmin;
+  color: rgb(127,127,127);
 }
