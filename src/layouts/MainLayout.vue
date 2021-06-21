@@ -2,12 +2,14 @@
   <q-layout view="lhr lpR fFf">
     <header>
       <q-toolbar style="height: 10vmin">
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="icons/favicon-128x128.png">
-          </q-avatar>
-          星火应用商店
-        </q-toolbar-title>
+        <router-link to="/" style="text-decoration: unset; color: black;">
+          <q-toolbar-title>
+            <q-avatar>
+              <img src="icons/favicon-128x128.png">
+            </q-avatar>
+            Spark Store
+          </q-toolbar-title>
+        </router-link>
         <q-space />
         <q-tabs
           shrink

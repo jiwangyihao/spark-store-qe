@@ -1,11 +1,21 @@
 // app global css in SCSS form
+@font-face {
+  font-family: Comfortaa-Light;
+  src: url('../assets/font/Comfortaa-Light.ttf');
+}
+
+:root {
+  --q-color-primary: rgb(47,85,151);
+}
+
 header {
-  position: absolute;
+  position: fixed;
   width: 100%;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.7);
   box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
   padding: 0 6vmin;
   z-index: 1;
+  backdrop-filter: blur(3vmin);
 }
 
 header .q-tab__indicator.absolute-bottom.text-primary {
@@ -21,6 +31,251 @@ header .q-focus-helper {
   transform: translateY(-50%);
 }
 
+header .q-toolbar__title {
+  font-family: Comfortaa-Light;
+  font-weight: bold;
+}
+
 .q-tab__label {
   font-size: 16px;
+}
+
+.mainpage>.row {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10vh;
+}
+
+.mainpage>.row:first-child {
+  flex-direction: column;
+  align-content: space-evenly;
+}
+
+.mainpage>.row>.row {
+  flex-direction: column;
+}
+
+.mainpage .bgPic {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.mainpage .app_name {
+  font-family: Comfortaa-Light;
+  font-size: 9vmin;
+  margin: 0;
+  display: flex;
+  color: white;
+  text-shadow: 0 0 2vmin #777 !important;
+  font-weight: bolder;
+}
+
+.mainpage .app_name .q-chip {
+  font-size: 2vmin;
+  font-family: "Roboto", "-apple-system", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+.mainpage .P1st {
+  flex-direction: column;
+}
+
+.mainpage .P1st h2 {
+  font-size: 3.4vmin;
+  color: white;
+  font-weight: bolder;
+  margin: 0;
+  line-height: 7vmin;
+  text-shadow: 0 0 2vmin #777 !important;
+  margin-bottom: 4vmin;
+}
+
+.mainpage .P1st h3 {
+  font-size: 3vmin;
+  color: white;
+  font-weight: 500;
+  margin: 0;
+  line-height: 6vmin;
+  text-align: center;
+}
+
+.mainpage .P1st .window {
+  padding-top: 60%;
+  position: relative;
+}
+
+.mainpage .P1st .window>.row {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(2.4vmin);
+  border-radius: 2vmin;
+  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+}
+
+.mainpage .P1st .window>.row>.row:first-child {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  padding: 2vmin 3vmin;
+  color: rgba(79,79,79,0.6);
+}
+
+.mainpage .P1st .window>.row>.row:last-child {
+  flex-grow: 1;
+  background-color: rgba(255,255,255,0.7);
+  border-radius: 2vmin;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0.2vmin 1vmin;
+  margin-right: -1px;
+}
+
+.mainpage .P1st .window p {
+  font-size: 2.6vmin;
+  margin: 0;
+}
+
+.mainpage .P2nd {
+  padding-left: 6vmin;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.mainpage .P2nd h2 {
+  margin: 0;
+  font-size: 5vmin;
+  margin-bottom: 3vmin;
+}
+
+.mainpage .P2nd p {
+  font-size: 3vmin;
+  line-height: 6vmin;
+  margin: 0;
+}
+
+.mainpage .P2nd p:last-of-type {
+  font-size: 4vmin;
+  font-weight: bold;
+  line-height: 10vmin;
+}
+
+.mainpage .P3rd {
+  padding-left: 6vmin;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.mainpage .P3rd h2 {
+  margin: 2vmin 0;
+  font-size: 5vmin;
+  color: var(--q-color-primary);
+  position: relative;
+  font-weight: bold;
+}
+
+.mainpage .P3rd h2::after {
+  content: "";
+  width: 2.5em;
+  height: 0.2em;
+  background-color: var(--q-color-primary);
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.mainpage .P3rd p {
+  font-size: 4vmin;
+  line-height: 8vmin;
+  margin: 0;
+}
+
+.mainpage .P4th {
+  padding-left: 12vmin;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.mainpage .P4th h2 {
+  margin: 2vmin 0;
+  font-size: 5vmin;
+  color: var(--q-color-primary);
+  position: relative;
+  font-weight: bold;
+}
+
+.mainpage .P4th h2::after {
+  content: "";
+  width: 2.5em;
+  height: 0.2em;
+  background-color: var(--q-color-primary);
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.mainpage .P4th p {
+  font-size: 4vmin;
+  line-height: 8vmin;
+  margin: 0;
+}
+
+.mainpage .P5th {
+  padding-left: 6vmin;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.mainpage .P5th h2 {
+  margin: 2vmin 0;
+  font-size: 5vmin;
+  color: var(--q-color-primary);
+  position: relative;
+  font-weight: bold;
+}
+
+.mainpage .P5th h2::after {
+  content: "";
+  width: 2.5em;
+  height: 0.2em;
+  background-color: var(--q-color-primary);
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.mainpage .P5th p {
+  font-size: 4vmin;
+  line-height: 8vmin;
+  margin: 0;
+}
+
+.mainpage .P6th {
+  padding-left: 6vmin;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.mainpage .P6th h2 {
+  margin: 0;
+  font-size: 5vmin;
+  margin-bottom: 3vmin;
+}
+
+.mainpage .P6th p {
+  font-size: 3vmin;
+  line-height: 6vmin;
+  margin: 0;
 }
