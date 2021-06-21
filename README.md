@@ -1,6 +1,6 @@
 # spark-app-store (spark-app-store)
 
-The offical website of spark store
+The beta and unoffical website of spark store
 
 ## Install the dependencies
 ```bash
