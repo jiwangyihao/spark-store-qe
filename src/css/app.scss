@@ -36,6 +36,13 @@ header .q-toolbar__title {
   font-weight: bold;
 }
 
+footer {
+  position: absolute;
+  bottom: 0;
+  background-color: rgb(89,89,89);
+  width: 100%;
+}
+
 .q-tab__label {
   font-size: 16px;
 }
@@ -130,7 +137,7 @@ header .q-toolbar__title {
   flex-wrap: nowrap;
   justify-content: space-evenly;
   padding: 2vmin 3vmin;
-  color: rgba(79,79,79,0.6);
+  color: rgba(89,89,89);
 }
 
 .mainpage .P1st .window>.row>.row:last-child {
