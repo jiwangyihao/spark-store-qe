@@ -346,3 +346,141 @@ footer {
   margin-left: 2vmin;
   color: rgb(127,127,127);
 }
+
+.aboutpage {
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: space-evenly;
+  padding: 10vmin 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.aboutpage .bgPic {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  filter: brightness(0.5);
+}
+
+.aboutpage>.row {
+  flex-direction: column;
+  align-items: center;
+}
+
+.aboutpage h1 {
+  margin: 0;
+  color: white;
+  font-size: 6vmin;
+  line-height: 2em;
+  position: relative;
+}
+
+.aboutpage h1::after {
+  content: "";
+  width: 1.2em;
+  height: 0.16em;
+  background-color: white;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  border-radius: 0.08em;
+  transform: translateX(-50%);
+}
+
+.aboutpage h2 {
+  color: white;
+  margin: 0;
+  font-size: 3vmin;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  line-height: 2em;
+}
+
+.aboutpage p {
+  color: white;
+  margin: 0;
+  font-size: 2.2vmin;
+  line-height: 2.2em;
+}
+
+.wantedpage {
+  position: relative;
+  align-items: flex-start;
+  align-content: flex-start;
+  justify-content: flex-start;
+  padding: 10vmin 8vmin;
+  flex-direction: column;
+}
+
+.wantedpage .title {
+  margin-top: 6vmin;
+}
+
+.wantedpage h1 {
+  margin: 0;
+  color: white;
+  font-size: 6vmin;
+  line-height: 2em;
+}
+
+.wantedpage h2 {
+  color: rgba(255,255,255,0.42);
+  margin: 0;
+  margin-left: 3vmin;
+  font-size: 6vmin;
+  font-weight: 400;
+  line-height: 2em;
+}
+
+.wantedpage p {
+  color: white;
+  margin: 0;
+  font-size: 2.2vmin;
+  line-height: 2.2em;
+}
+
+.wantedpage .method {
+  background-color: white;
+  border-radius: 2vmin;
+  padding: 0.4vmin 4vmin;
+  font-size: 2vmin;
+  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+  color: rgb(25,46,66);
+}
+
+.wantedpage .jobcard {
+  width: 80%;
+  background-color: white;
+  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+  border-radius: 1vmin;
+  margin: 4vmin 0;
+  padding: 3vmin;
+  position: relative;
+  flex-direction: column;
+}
+
+.wantedpage .jobcard h4 {
+  margin: 0;
+  margin-bottom: 3vmin;
+  font-size: 3vmin;
+  line-height: 1em;
+}
+
+.wantedpage .jobcard h4::after {
+  content: "";
+  height: 1em;
+  width: 0.3em;
+  background-color: var(--q-color-primary);
+  position: absolute;
+  left: 0;
+}
+
+.wantedpage .jobcard p {
+  color: black;
+}

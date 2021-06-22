@@ -99,9 +99,9 @@ module.exports = function (/* ctx */) {
       plugins: []
     },
 
-    // animations: 'all', // --- includes all animations
+    animations: 'all', // --- includes all animations
     // https://v1.quasar.dev/options/animations
-    animations: [],
+    // animations: [],
 
     // https://v1.quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {

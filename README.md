@@ -1,13 +1,13 @@
-# spark-app-store (spark-app-store)
+# 星火应用商店官网（Vue）
 
-The beta and unoffical website of spark store
+使用Vue3以及Quasar Framework制作的星火应用商店官网
 
-## Install the dependencies
+### 安装依赖
 ```bash
-yarn
+yarn install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### 调试运行
 ```bash
 quasar dev
 ```
@@ -17,10 +17,7 @@ quasar dev
 yarn run lint
 ```
 
-### Build the app for production
+### 构建网站
 ```bash
 quasar build
 ```
-
-### Customize the configuration
-See [Configuring quasar.conf.js](https://v1.quasar.dev/quasar-cli/quasar-conf-js).
