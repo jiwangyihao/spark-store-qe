@@ -37,7 +37,7 @@
       enter-active-class="animated fadeInLeft"
       leave-active-class="animated fadeOutLeft"
     >
-      <div :class="{storenav: true, active: hActive&&nActive, seMenu: !hActive}" v-if="this.$route.path.match('store')">
+      <div :class="{storenav: true, active: hActive&&nActive, nActive: nActive, seMenu: !hActive}" v-if="this.$route.path.match('store')">
         <nav>
           <router-link to="/" style="text-decoration: unset; color: black;">
             <q-toolbar-title class="logo">
@@ -391,6 +391,8 @@ export default {
     box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
     transform: translateX(0);
     opacity: 1;
+  }
+  .storenav.nActive.seMenu:hover .menu {
     transition: all 0.5s 0.4s;
   }
 </style>

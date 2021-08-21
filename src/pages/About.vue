@@ -64,6 +64,8 @@
 </template>
 
 <script>
+import { useMeta } from 'quasar'
+
 export default {
   name: 'PageIndex',
   data: () => {
@@ -71,10 +73,13 @@ export default {
       module: "about"
     }
   },
-  meta: {
-    title: '关于',
-    // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
-    titleTemplate: title => `${title} - 星火应用商店`,
+  setup () {
+    // needs to be called in setup()
+    useMeta({
+      title: '关于',
+      // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
+      titleTemplate: title => `${title} - 星火应用商店`,
+    })
   },
   methods: {
     goWanted: function() {
