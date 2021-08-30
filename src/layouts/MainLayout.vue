@@ -5,7 +5,7 @@
       enter-active-class="animated fadeInDown"
       leave-active-class="animated fadeOutUp"
     >
-      <header v-if="!this.$route.path.match('store')">
+      <header v-if="!$route.path.match('store')">
         <q-toolbar style="height: 10vmin">
           <router-link to="/" style="text-decoration: unset; color: black;">
             <q-toolbar-title>
@@ -37,7 +37,7 @@
       enter-active-class="animated fadeInLeft"
       leave-active-class="animated fadeOutLeft"
     >
-      <div :class="{storenav: true, active: hActive&&nActive, nActive: nActive, seMenu: !hActive}" v-if="this.$route.path.match('store')">
+      <div :class="{storenav: true, active: hActive&&nActive&&lsA, nActive: nActive, seMenu: !hActive, isSorts: isSorts}" v-if="$route.path.match('store')">
         <nav>
           <router-link to="/" style="text-decoration: unset; color: black;">
             <q-toolbar-title class="logo">
@@ -47,17 +47,18 @@
               <span>Spark Web Store</span>
             </q-toolbar-title>
           </router-link>
-          <q-tabs
+          <j-tabs
             v-model="tabs"
             vertical
             shrink
+            ref="tabs1"
           >
-            <q-tab name="recommend" @click="to('/store')" id="recommend" icon="recommend" label="推荐" :ripple="false" />
-            <q-tab name="rank" @click="to('/store/rank')" id="rank" icon="format_list_numbered" label="排行" :ripple="false" />
-            <q-tab name="sorts" @click="to('/store/sorts/games')" id="sorts" icon="queue" label="分类" :ripple="false" />
+            <j-tab name="recommend" @click.prevent="to('/store')" id="recommend" icon="recommend" label="推荐" :ripple="false" />
+            <j-tab name="rank" @click.prevent="to('/store/rank')" id="rank" icon="format_list_numbered" label="排行" :ripple="false" />
+            <j-tab name="sorts" @click.prevent="to('/store/sorts/games')" id="sorts" icon="queue" label="分类" :ripple="false" />
             <q-space />
-            <q-tab name="home" @click="to('/')" id="home" icon="home" label="首页" :ripple="false" />
-          </q-tabs>
+            <j-tab name="home" @click.prevent="to('/')" id="home" icon="home" label="首页" :ripple="false" />
+          </j-tabs>
           <span @click="nActive=!nActive"></span>
           <!--
           <span v-if="!hoverA" :key="'s1'">&gt;</span>
@@ -89,7 +90,7 @@
     <q-page-container style="overflow: hidden;">
       <router-view />
     </q-page-container>
-    <footer v-if="!this.$route.path.match('store')">
+    <footer v-if="!$route.path.match('store')">
       <q-toolbar style="height: 10vmin; justify-content: center;">
         <router-link to="/" style="text-decoration: unset; color: black;">
           <q-toolbar-title style="color: rgb(206,206,206); font-size: 2.4vmin">
@@ -102,9 +103,11 @@
 </template>
 
 <script>
+import { JTabs, JTab } from '../components/index.js'
+
 export default {
   name: 'MainLayout',
-  components: {  },
+  components: { JTabs, JTab },
   data () {
     return {
       hActive: true,
@@ -118,7 +121,9 @@ export default {
         "/": "home",
         "/store": "recommend",
         "/store/rank": "rank"
-      }
+      },
+      isSorts: false,
+      lsA: true
     }
   },
   methods: {
@@ -137,46 +142,56 @@ export default {
   created() {
     window.Vue=this
     this.$watch(
+      () => this.nActive,
+      (toValue, previousValue) => {
+        window.nActive=toValue
+      }
+    )
+    this.$watch(
       () => this.$route.path,
       (toPath, previousPath) => {
         // 对路由变化做出响应...
         if (toPath.match("store")) {
           if (toPath.match("sorts")) {
-            this.tabs="sorts"
-            this.sort=this.$route.params.sort
             this.seMenu()
+            this.sort=this.$route.params.sort
+            if (previousPath.match("sorts")) {
+              this.tabs="sorts"
+            } else {
+              window.isSorts=true
+              if (this.nActive) {
+                setTimeout(() => {
+                  this.tabs="sorts"
+                  this.isSorts=true
+                }, 900);
+              } else {
+                this.tabs="sorts"
+              }
+            }
           } else {
-            this.tabs=this.path[toPath]
-            this.frMenu()
+            if (previousPath.match("sorts")) {
+              window.isSorts=true
+              if (this.nActive) {
+                setTimeout(() => {
+                  this.tabs=this.path[toPath]
+                  setTimeout(() => {
+                    this.isSorts=false
+                    this.lsA=false
+                    this.frMenu()
+                    setTimeout(() => {
+                      this.lsA=true
+                    }, 400)
+                  }, 150);
+                }, 100);
+              } else {
+                this.tabs=this.path[toPath]
+                this.frMenu()
+              }
+            } else {
+              this.tabs=this.path[toPath]
+              this.frMenu()
+            }
           }
-        }
-      }
-    )
-    this.$watch(
-      () => this.tabs,
-      (toTab, previousTab) => {
-        // 对路由变化做出响应...
-        if (previousTab) {
-          this.$nextTick(() => {
-            this.animateTimer1 = setTimeout(() => {
-              const oldEl = document.getElementById(previousTab).getElementsByClassName('q-tab__indicator')[0];
-              const newEl = document.getElementById(toTab).getElementsByClassName('q-tab__indicator')[0];
-              oldEl.style.transition = 'all 0.7s'
-              oldEl.style.transform = 'none'
-              newEl.style.transition = 'all 0.7s'
-              newEl.style.transform = 'none'
-              const
-                oldPos = oldEl.getBoundingClientRect(),
-                newPos = newEl.getBoundingClientRect()
-              newEl.style.transform = `translate3d(0,${oldPos.top - newPos.top}px,0) scale3d(1,${newPos.height ? oldPos.height / newPos.height : 1},1)`
-              this.$nextTick(() => {
-                this.animateTimer = setTimeout(() => {
-                  newEl.style.transition = 'transform .25s cubic-bezier(.4, 0, .2, 1), all 0.7s'
-                  newEl.style.transform = 'none'
-                }, 70)
-              })
-            }, 10)
-          })
         }
       }
     )
@@ -185,11 +200,13 @@ export default {
         this.tabs="sorts"
         this.sort=this.$route.params.sort
         this.seMenu()
+        this.isSorts=true
       } else {
         this.tabs=this.path[this.$route.path]
         this.frMenu()
       }
     }
+    window.nActive=true
   }
 }
 </script>
@@ -201,12 +218,13 @@ export default {
     left: 0;
     width: calc(10vmin + 28px);
     height: 100%;
-    z-index: 1;
+    z-index: 2;
     overflow: hidden;
-    transition: all 0.7s 0.2s;
+    will-change: width;
+    transition: width 0.7s 0.2s;
   }
-  .storenav:hover {
-    transition: all 0.5s;
+  .storenav.active:hover, .storenav.seMenu:hover {
+    transition: width 0.2s;
   }
   .storenav.active:hover, .storenav.seMenu:hover {
     width: calc(36vmin + 28px);
@@ -216,88 +234,120 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
-    padding: 2.4vmin 0 1vmin 0;
+    padding-bottom: 31px;
     width: 10vmin;
     height: 100%;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.6);
     box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
     z-index: 2;
-    backdrop-filter: blur(1vmin);
+    backdrop-filter: blur(4vmin);
     flex-direction: column;
     align-items: center;
-    transition: all 0.4s 0.3s;
+    will-change: width, box-shadow;
+    transition-property: width, box-shadow;
+    transition-duration: 0.5s;
+    transition-delay: 0.2s;
   }
   .storenav nav:hover {
-    transition: all 0.4s;
+    transition-delay: 0s;
   }
   .storenav.seMenu nav {
-    transition: all 0.5s 0.2s;
+    transition-delay: 0.2s;
   }
   .storenav.active nav:hover {
     width: 36vmin;
-    padding: 4vmin 0 2.4vmin 0;
   }
   .storenav nav>span {
     font-weight: bold;
     text-align: center;
+    white-space: nowrap;
+    transition: transform 1s;
   }
-  .storenav nav>span {
-    height: 20.8px;
-    padding: 0 1vmin;
-    border-radius: 1vmin;
-    transition: background 0.35s;
+  .storenav.active nav:hover>span {
+    transform: translate3d(0, 21px, 0);
   }
-  .storenav nav>span:hover {
-    background: rgba(0,0,0,0.1);
+  .storenav nav>span:hover::before, .storenav nav>span:hover::after {
+    background-color: rgba(0,0,0,0.1);
   }
   .storenav nav>span::before {
     content: ">";
     display: inline-block;
     text-align: center;
     overflow: hidden;
+    width: calc(1em + 2vmin);
+    height: 20.8px;
+    border-radius: 1vmin;
     opacity: 1;
-    width: 1em;
-    transition: all 0.75s;
+    transform: translateX(calc(30px + 1vmin));
+    will-change: opacity, background-color;
+    transition-property: opacity, background-color;
+    transition-duration: 0.5s, 0.35s;
+    transition-delay: 0.2s, 0s;
   }
   .storenav.active nav:hover>span::before {
     opacity: 0;
-    width: 0;
+    transition-delay: 0s;
   }
   .storenav nav>span::after {
     content: "<<<<<<";
     display: inline-block;
-    transition: all 0.5s;
     text-align: center;
     overflow: hidden;
+    width: calc(60px + 2vmin);
+    height: 20.8px;
+    border-radius: 1vmin;
     opacity: 0;
-    width: 0;
+    transform: translateX(calc(-0.5em - 1vmin));
+    will-change: opacity, background-color;
+    transition-property: opacity, background-color;
+    transition-duration: 0.5s, 0.35s;
   }
   .storenav.active nav:hover>span::after {
     opacity: 1;
-    width: 60px;
+    transition-delay: 0.2s, 0s;
   }
   .storenav .logo {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: visible;
+  }
+  .storenav .q-avatar {
+    transform: translate3d(0, 31px, 0);
+    will-change: transform;
+    transition: transform 0.5s;
+  }
+  .storenav.active nav:hover .q-avatar {
+    transform: translate3d(0, 18px, 0)
   }
   .storenav .logo span {
     display: flex;
-    width: 0;
-    height: 0;
+    width: 100%;
+    height: 2em;
     overflow: hidden;
     justify-content: center;
     line-height: 2em;
     opacity: 0;
-    transition: all 0.7s;
+    margin-top: 6px;
+    transform: scale3d(0.1, 0.1, 0.1) translate3d(0, 60px, 0);
+    font-family: 'Comfortaa-Light';
+    font-weight: bold;
+    will-change: opacity, transform;
+    transition-property: opacity, transform;
+    transition-duration: 0.5s;
   }
   .storenav.active nav:hover .logo span {
-    width: 100%;
-    height: 2em;
     opacity: 1;
+    transform: scale3d(1, 1, 1) translate3d(0, 16px, 0);
+    transition-delay: 0.2s;
   }
-  .storenav .q-tabs {
-    padding-top: 2vmin;
+  .storenav.active nav .q-tabs, .storenav.storenav.seMenu nav .q-tabs {
+    will-change: transform;
+    transition: transform 0.5s 0.2s;
+  }
+  .storenav.active nav:hover .q-tabs {
+    transform: translate3d(0, 21px, 0);
+    transition: transform 0.5s;
   }
   .storenav.seMenu .menu .q-tabs {
     padding: 0;
@@ -312,32 +362,40 @@ export default {
   }
   .storenav .q-tab__label {
     width: 0;
-    height: 0;
+    height: 1.715em;
     opacity: 0;
     overflow: hidden;
-    transition: width 0.7s, height 0.7s, opacity 0.7s;
+    will-change: opacity, width;
+    transition-property: opacity, width;
+    transition-duration: 0.5s;
+  }
+  .storenav.active nav:hover .q-tab__label {
+    transition-delay: 0.2s;
   }
   .storenav.active nav:hover .q-tab__label, .storenav.seMenu .menu .q-tab__label {
     width: 100%;
-    height: 1.715em;
     opacity: 1;
   }
   .storenav .q-tab {
     border-radius: 1vmin;
-    margin: 0;
+    margin: 0.5vmin;
     width: 40px;
     height: 48px;
     min-height: unset;
     flex: unset;
     box-sizing: content-box;
-    transition: all 0.7s;
+    will-change: width;
+    transition-property: width;
+    transition-duration: 0.5s;
   }
-  .storenav.active nav:hover .q-tab, .storenav.seMenu .menu .q-tab {
-    height: 48px;
+  .storenav.active nav:hover .q-tab {
+    transition-delay: 0.2s;
+  }
+  .storenav.active nav:hover .q-tab {
     width: 30vmin;
-    margin: 1vmin;
   }
   .storenav.seMenu .menu .q-tab {
+    margin: 1vmin;
     width: 20vmin;
     height: 36px;
   }
@@ -351,19 +409,27 @@ export default {
     background: #3787ff;
     top: 0;
     left: 0;
-    margin-top: 17px;
-    margin-left: 9px;
+    transform: translate3d(9px,17px, 0);
     width: 5px;
     height: 14px;
     z-index: -1;
     border-radius: 1vmin;
-    transition: all 0.7s;
+    will-change: width, height, transform, opacity;
+    transition-property: width, height, transform, opacity;
+    transition-duration: 0.5s;
   }
-  .storenav.active nav:hover .q-tab__indicator, .storenav.seMenu .menu .q-tab__indicator {
-    margin-top: 0px;
-    margin-left: 0px;
-    width: 100%;
-    height: 100%;
+  .storenav.active nav:hover .q-tab__indicator {
+    transition-delay: 0.2s;
+  }
+  .storenav.active nav:hover .q-tab__indicator {
+    transform: translate3d(0, 0, 0);
+    width: calc(30vmin + 16px);
+    height: 48px;
+  }
+  .storenav.seMenu .menu .q-tab__indicator {
+    transform: translate3d(0, 0, 0);
+    width: calc(20vmin + 16px);
+    height: 36px;
   }
   .storenav.active nav:hover .q-tab--active .q-tab__indicator,
   .storenav.seMenu .menu .q-tab--active .q-tab__indicator {
@@ -379,20 +445,24 @@ export default {
     width: 26vmin;
     height: 100%;
     z-index: 1;
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 0px 0 rgb(0 0 0 / 30%);
-    backdrop-filter: blur(1vmin);
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
+    backdrop-filter: blur(4vmin);
     opacity: 0;
-    transform: translateX(-26vmin);
+    transform: translate3d(-26vmin, 0, 0);
     padding: calc(2vmin - 8px);
-    transition: all 0.5s;
+    will-change: transform, opacity;
+    transition-property: transform, opacity;
+    transition-duration: 0.5s;
   }
   .storenav.seMenu:hover .menu {
-    box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
     opacity: 1;
   }
   .storenav.nActive.seMenu:hover .menu {
-    transition: all 0.5s 0.4s;
+    transition-delay: 1s;
+  }
+  .storenav.nActive.seMenu.isSorts:hover .menu {
+    transition-delay: 0s;
   }
 </style>

@@ -4,6 +4,16 @@
   src: url('../assets/font/Comfortaa-Light.ttf');
 }
 
+.fadeInDelay1s {
+  animation-name: fadeIn;
+  animation-delay: 1s;
+}
+
+.fadeOutDelay1s {
+  animation-name: fadeOut;
+  animation-delay: 1s;
+}
+
 .flex-start {
   align-content: flex-start;
 }
@@ -16,6 +26,7 @@ header {
   padding: 0 6vmin;
   z-index: 1;
   backdrop-filter: blur(3vmin);
+  will-change: transform, opacity;
 }
 
 header .q-tab__indicator.absolute-bottom.text-primary {
