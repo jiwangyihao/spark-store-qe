@@ -2,7 +2,7 @@
   <q-page class="flex storepage">
     <div class="topbar">
       <div class="search">
-        <q-icon name="search" size="4.2vmin" />
+        <q-icon name="search" size="25px" />
         <q-input borderless v-model="searchStr">
           <template v-slot:append>
             <q-icon v-if="searchStr !== ''" name="clear" class="cursor-pointer" @click="searchStr = ''" />
@@ -10,38 +10,40 @@
         </q-input>
       </div>
     </div>
-    <div class="body relative-position">
-      <transition-group
-        appear
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
-      >
-        <div v-if="$route.path=='/store'&&loaded" class="rank" key="recommend">
-          <h5>施工ing...</h5>
-        </div>
-        <div v-if="$route.path.match('rank')&&loaded" class="rank" key="rank">
-          <h5>施工ing...</h5>
-        </div>
-        <div v-if="$route.path.match('sort')&&loaded" class="sort applist" key="sort">
-          <q-card v-for="(app, index) in appList" :key="index">
-            <q-card-section horizontal>
-              <q-avatar size="64px" rounded>
-                <img :src="source+'/store/'+$route.params.sort+'/'+app.Pkgname+'/icon.png'">
-              </q-avatar>
-              <q-card-section>
-                <h6>{{app.Name}}</h6>
-                <div class="wrap">
-                  <div class="text">
-                    {{app.More}}
+    <q-scroll-area style="width: 100%;  margin-top: 52px" :thumb-style='{"z-index" : 1, "border-radius" : "100px"}' :visible="false">
+      <div class="body relative-position">
+        <transition-group
+          appear
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+        >
+          <div v-if="$route.path=='/store'&&loaded" class="rank" key="recommend">
+            <h5>施工ing...</h5>
+          </div>
+          <div v-if="$route.path.match('rank')&&loaded" class="rank" key="rank">
+            <h5>施工ing...</h5>
+          </div>
+          <div v-if="$route.path.match('sort')&&loaded" class="sort applist" key="sort">
+            <q-card v-for="(app, index) in appList" :key="index">
+              <q-card-section horizontal>
+                <q-avatar size="64px" rounded>
+                  <img :src="source+'/store/'+$route.params.sort+'/'+app.package+'/icon.png'">
+                </q-avatar>
+                <q-card-section>
+                  <h6>{{app.application_name_zh}}</h6>
+                  <div class="wrap">
+                    <div class="text">
+                      {{app.more}}
+                    </div>
                   </div>
-                </div>
+                </q-card-section>
               </q-card-section>
-            </q-card-section>
-          </q-card>
-          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-        </div>
-      </transition-group>
-    </div>
+            </q-card>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </transition-group>
+      </div>
+    </q-scroll-area>
   </q-page>
 </template>
 
@@ -56,23 +58,41 @@ export default {
       appList: [],
       source: "https://d.store.deepinos.org.cn",
       imgSource: "https://cdn.jsdelivr.net/gh/Jerrywang959/jsonpng",
+      dataSource: "https://store.deepinos.org/api/",
       searchStr: "",
-      loaded: true
+      loaded: true,
+      sortId: {}
     }
   },
   methods: {
+    getSortId: function() {
+      axios
+        .post(
+          `${this.dataSource}type/get_type_list`
+        )
+        .then((res) => {
+          res.data.data.forEach(e => {
+            this.sortId[e.orig_name]=e.type_id
+          });
+          this.getAppList(this.$route.params)
+        });
+    },
     getAppList: function(params) {
       if (params.hasOwnProperty("sort")) {
         axios
           //39.106.2.2:38324
-          .get(
-            `${this.source}/store/${params.sort}/applist.json`
+          .post(
+            `${this.dataSource}application/get_application_list`,
+            {
+              size: 10000,
+              type_id: this.sortId[params.sort]
+            }
           )
           //applist.json 软件列表
           .then((res) => {
             //console.log(this.appList);
             setTimeout(() => {
-              this.appList = res.data;
+              this.appList = res.data.data.data;
               this.loaded=true
             }, 800);
           });
@@ -80,6 +100,8 @@ export default {
     }
   },
   created() {
+    //window.Vue=this
+    console.log(process.env.MODE)
     this.$watch(
       () => this.$route.params,
       (toParams, previousParams) => {
@@ -97,7 +119,7 @@ export default {
     if (this.$route.params.hasOwnProperty("sort")) {
       this.loaded=false
     }
-    this.getAppList(this.$route.params)
+    this.getSortId()
 
     this.$watch(
       () => this.$route.path,
@@ -131,8 +153,7 @@ export default {
   .storepage .body {
     display: flex;
     flex-grow: 1;
-    padding: 4vmin;
-    margin-top: 6vmin;
+    padding: 4vmin 2vmin;
   }
   .storepage .body>span {
     display: flex;
@@ -245,9 +266,9 @@ export default {
     z-index: 1;
   }
   .storepage .topbar .search {
-    width: 8vmin;
-    height: 8vmin;
-    border-radius: 4vmin;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
     background: white;
     box-shadow: 0 1px 2px rgba(0,0,0,0.08), 
                 0 2px 4px rgba(0,0,0,0.08), 
@@ -256,8 +277,8 @@ export default {
                 0 16px 32px rgba(0,0,0,0.08), 
                 0 32px 64px rgba(0,0,0,0.08);
     position: absolute;
-    top: 2.2vmin;
-    left: calc(4vmin + 28px);
+    top: 13px;
+    left: 52px;
     overflow: hidden;
     display: flex;
     justify-content: flex-start;
@@ -267,7 +288,7 @@ export default {
     transition-duration: 0.5s;
   }
   .storepage .topbar .search:hover {
-    width: 54vmin;
+    width: 324px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.06), 
               0 2px 2px rgba(0,0,0,0.06), 
               0 4px 4px rgba(0,0,0,0.06), 
@@ -277,7 +298,7 @@ export default {
   .storepage .topbar .search .q-icon {
     color: gray;
     transition: all 0.5s;
-    margin: 1.9vmin;
+    margin: 12px;
   }
   .storepage .topbar .search:hover .q-icon {
     color: var(--q-primary);

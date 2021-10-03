@@ -169,6 +169,12 @@ module.exports = function (/* ctx */) {
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
 
+        download: {
+          mirrorOptions: {
+            mirror: "https://github.91chifun.workers.dev/https://github.com//electron/electron/releases/download/",
+          }
+        }
+
         // OS X / Mac App Store
         // appBundleId: '',
         // appCategoryType: '',
@@ -182,16 +188,33 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'spark-app-store'
+        appId: 'spark-app-store',
+        icon: 'src-electron/icons/icon',
+
+        electronDownload: {
+          mirror: "https://npmmirror.com/mirrors/electron/"
+        }
       },
 
-      // More info: https://v1.quasar.dev/quasar-cli/developing-electron-apps/node-integration
-      nodeIntegration: true,
-
-      extendWebpack (/* cfg */) {
-        // do something with Electron main process Webpack cfg
-        // chainWebpack also available besides this extendWebpack
-      }
+      // was renamed from chainWebpack()
+      chainWebpackMain (chain) {
+        // example for its content (adds linting)
+        chain.plugin('eslint-webpack-plugin')
+          .use(ESLintPlugin, [{ extensions: ['js'] }])
+      },
+    
+      // was renamed from extendWebpack()
+      extendWebpackMain (cfg) { /* ... */ },
+    
+      // New!
+      chainWebpackPreload (chain) {
+        // example (adds linting)
+        chain.plugin('eslint-webpack-plugin')
+          .use(ESLintPlugin, [{ extensions: ['js'] }])
+      },
+    
+      // New!
+      extendWebpackPreload (cfg) { /* ... */ }
     }
   }
 }

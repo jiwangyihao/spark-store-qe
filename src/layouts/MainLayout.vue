@@ -1,12 +1,18 @@
 <template>
   <q-layout view="lhr lpR fFf">
+    <div v-if="mode=='electron'" class="toolbox">
+      <q-btn color="white" padding="xs" icon="minimize" @click="min" />
+      <q-btn color="white" padding="xs" icon-right="settings_ethernet" @click="max" />
+      <q-btn color="white" padding="xs" icon="close" @click="close" />
+    </div>
+    <div v-if="mode=='electron'" class="dragArea"></div>
     <transition
       appear
       enter-active-class="animated fadeInDown"
       leave-active-class="animated fadeOutUp"
     >
       <header v-if="!$route.path.match('store')">
-        <q-toolbar style="height: 10vmin">
+        <q-toolbar style="height: 60px">
           <router-link to="/" style="text-decoration: unset; color: black;">
             <q-toolbar-title>
               <q-avatar>
@@ -39,9 +45,9 @@
     >
       <div :class="{storenav: true, active: hActive&&nActive&&lsA, nActive: nActive, seMenu: !hActive, isSorts: isSorts}" v-if="$route.path.match('store')">
         <nav>
-          <router-link to="/" style="text-decoration: unset; color: black;">
+          <router-link to="/" style="text-decoration: unset; color: black; width: 100%;">
             <q-toolbar-title class="logo">
-              <q-avatar size="6vmin">
+              <q-avatar size="36px">
                 <img src="icons/favicon-128x128.png">
               </q-avatar>
               <span>Spark Web Store</span>
@@ -123,7 +129,8 @@ export default {
         "/store/rank": "rank"
       },
       isSorts: false,
-      lsA: true
+      lsA: true,
+      mode: process.env.MODE
     }
   },
   methods: {
@@ -137,6 +144,15 @@ export default {
     },
     frMenu: function() {
       this.hActive=true
+    },
+    min: function() {
+      electron.min()
+    },
+    max: function() {
+      electron.max()
+    },
+    close: function() {
+      electron.close()
     }
   },
   created() {
@@ -212,22 +228,62 @@ export default {
 </script>
 
 <style lang="scss">
+  .toolbox {
+    height: 40px;
+    position: fixed;
+    right: 5px;
+    top: 10px;
+    z-index: 2;
+    -webkit-user-select: none;
+  }
+  .toolbox .q-btn {
+    margin: 0 5px;
+  }
+  .toolbox .q-btn::before {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 10%),
+     0 2px 2px rgba(0, 0, 0, 7%),
+     0 3px 1px -2px rgba(0, 0, 0, 6%);
+  }
+  .toolbox .q-btn--active::before {
+    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 10%),
+     0 5px 8px rgba(0, 0, 0, 7%),
+     0 1px 14px rgba(0, 0, 0, 6%)!important;
+  }
+  
+  .toolbox .q-btn i {
+    color: gray;
+    transition-property: color;
+    transition-duration: 0.5s;
+    will-change: color;
+  }
+  .toolbox .q-btn:hover i {
+    color: var(--q-primary);
+  }
+  .dragArea {
+    position: fixed;
+    height: calc(40px + 4vmin);
+    width: calc(100vw - 620px);
+    left: 480px;
+    z-index: 3;
+    -webkit-app-region: drag;
+  }
   .storenav {
     position: fixed;
     top: 0;
     left: 0;
-    width: calc(10vmin + 28px);
+    width: 88px;
     height: 100%;
     z-index: 2;
     overflow: hidden;
     will-change: width;
     transition: width 0.7s 0.2s;
+    -webkit-user-select: none;
   }
   .storenav.active:hover, .storenav.seMenu:hover {
     transition: width 0.2s;
   }
   .storenav.active:hover, .storenav.seMenu:hover {
-    width: calc(36vmin + 28px);
+    width: 244px;
   }
   .storenav nav {
     display: flex;
@@ -235,12 +291,12 @@ export default {
     left: 0;
     top: 0;
     padding-bottom: 31px;
-    width: 10vmin;
+    width: 60px;
     height: 100%;
     background: rgba(255, 255, 255, 0.6);
     box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
     z-index: 2;
-    backdrop-filter: blur(4vmin);
+    backdrop-filter: blur(24px);
     flex-direction: column;
     align-items: center;
     will-change: width, box-shadow;
@@ -255,7 +311,7 @@ export default {
     transition-delay: 0.2s;
   }
   .storenav.active nav:hover {
-    width: 36vmin;
+    width: 216px;
   }
   .storenav nav>span {
     font-weight: bold;
@@ -274,11 +330,11 @@ export default {
     display: inline-block;
     text-align: center;
     overflow: hidden;
-    width: calc(1em + 2vmin);
+    width: calc(1em + 12px);
     height: 20.8px;
-    border-radius: 1vmin;
+    border-radius: 6px;
     opacity: 1;
-    transform: translateX(calc(30px + 1vmin));
+    transform: translateX(36px);
     will-change: opacity, background-color;
     transition-property: opacity, background-color;
     transition-duration: 0.5s, 0.35s;
@@ -293,11 +349,11 @@ export default {
     display: inline-block;
     text-align: center;
     overflow: hidden;
-    width: calc(60px + 2vmin);
+    width: 72px;
     height: 20.8px;
-    border-radius: 1vmin;
+    border-radius: 6px;
     opacity: 0;
-    transform: translateX(calc(-0.5em - 1vmin));
+    transform: translateX(calc(-0.5em - 6px));
     will-change: opacity, background-color;
     transition-property: opacity, background-color;
     transition-duration: 0.5s, 0.35s;
@@ -349,14 +405,14 @@ export default {
     transform: translate3d(0, 21px, 0);
     transition: transform 0.5s;
   }
-  .storenav.seMenu .menu .q-tabs {
+  .storenav .menu .q-tabs {
     padding: 0;
   }
   .storenav .q-tabs__content {
     display: flex !important;
     flex-direction: column;
   }
-  .storenav.seMenu .menu .q-tabs__content{
+  .storenav .menu .q-tabs__content{
     justify-content: flex-start;
     overflow: auto;
   }
@@ -377,8 +433,8 @@ export default {
     opacity: 1;
   }
   .storenav .q-tab {
-    border-radius: 1vmin;
-    margin: 0.5vmin;
+    border-radius: 6px;
+    margin: 3px;
     width: 40px;
     height: 48px;
     min-height: unset;
@@ -392,11 +448,11 @@ export default {
     transition-delay: 0.2s;
   }
   .storenav.active nav:hover .q-tab {
-    width: 30vmin;
+    width: 180px;
   }
-  .storenav.seMenu .menu .q-tab {
-    margin: 1vmin;
-    width: 20vmin;
+  .storenav .menu .q-tab {
+    margin: 6px;
+    width: 120px;
     height: 36px;
   }
   .storenav .q-tab__content {
@@ -413,7 +469,7 @@ export default {
     width: 5px;
     height: 14px;
     z-index: -1;
-    border-radius: 1vmin;
+    border-radius: 6px;
     will-change: width, height, transform, opacity;
     transition-property: width, height, transform, opacity;
     transition-duration: 0.5s;
@@ -423,16 +479,16 @@ export default {
   }
   .storenav.active nav:hover .q-tab__indicator {
     transform: translate3d(0, 0, 0);
-    width: calc(30vmin + 16px);
+    width: 196px;
     height: 48px;
   }
-  .storenav.seMenu .menu .q-tab__indicator {
+  .storenav .menu .q-tab__indicator {
     transform: translate3d(0, 0, 0);
-    width: calc(20vmin + 16px);
+    width: 136px;
     height: 36px;
   }
   .storenav.active nav:hover .q-tab--active .q-tab__indicator,
-  .storenav.seMenu .menu .q-tab--active .q-tab__indicator {
+  .storenav .menu .q-tab--active .q-tab__indicator {
     opacity: 0.2;
   }
   .storenav.seMenu:hover nav {
@@ -441,16 +497,16 @@ export default {
   }
   .storenav .menu {
     position: absolute;
-    left: 10vmin;
-    width: 26vmin;
+    left: 60px;
+    width: 156px;
     height: 100%;
     z-index: 1;
     background: rgba(255, 255, 255, 0.6);
     box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
     backdrop-filter: blur(4vmin);
     opacity: 0;
-    transform: translate3d(-26vmin, 0, 0);
-    padding: calc(2vmin - 8px);
+    transform: translate3d(-156px, 0, 0);
+    padding: 4px;
     will-change: transform, opacity;
     transition-property: transform, opacity;
     transition-duration: 0.5s;

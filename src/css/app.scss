@@ -4,6 +4,10 @@
   src: url('../assets/font/Comfortaa-Light.ttf');
 }
 
+:focus-visible {
+  outline: unset;
+}
+
 .fadeInDelay1s {
   animation-name: fadeIn;
   animation-delay: 1s;
@@ -23,9 +27,9 @@ header {
   width: 100%;
   background: rgba(255, 255, 255, 0.7);
   box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
-  padding: 0 6vmin;
+  padding: 0 36px;
   z-index: 1;
-  backdrop-filter: blur(3vmin);
+  backdrop-filter: blur(18px);
   will-change: transform, opacity;
 }
 
