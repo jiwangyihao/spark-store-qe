@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme } from 'electron'
+import { app, BrowserWindow, nativeTheme, ipcMain } from 'electron'
 import path from 'path'
 
 try {
@@ -17,14 +17,17 @@ function createWindow () {
     width: 1000,
     height: 600,
     useContentSize: true,
+    frame: false,
+    backgroundColor: '#fff',
     webPreferences: {
       contextIsolation: true,
       // More info: /quasar-cli/developing-electron-apps/electron-preload-script
-      preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD)
+      preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD),
+      webSecurity: false
     }
   })
 
-  mainWindow.loadURL(process.env.APP_URL)
+  mainWindow.loadURL(process.env.APP_URL + "#/store")
 
   if (process.env.DEBUGGING) {
     // if on DEV or Production with debug enabled
@@ -53,4 +56,20 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+ipcMain.on("min", () => {
+  mainWindow.minimize()
+})
+
+ipcMain.on("max", () => {
+  if (mainWindow.isMaximized()) {
+    mainWindow.unmaximize()
+  } else {
+    mainWindow.maximize()
+  }
+})
+
+ipcMain.on("close", () => {
+  mainWindow.close()
 })

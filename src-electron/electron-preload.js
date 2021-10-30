@@ -15,3 +15,17 @@
  *     doAThing: () => {}
  *   })
  */
+
+ const { contextBridge, ipcRenderer } = require('electron')
+
+ contextBridge.exposeInMainWorld('electron', {
+   min: () => {
+     ipcRenderer.send('min');
+   },
+   max: () => {
+     ipcRenderer.send('max');
+   },
+   close: () => {
+     ipcRenderer.send('close');
+   }
+ })
