@@ -1,4 +1,4 @@
-<!--suppress JSUnresolvedVariable, NpmUsedModulesInstalled -->
+<!--suppress JSUnresolvedVariable, NpmUsedModulesInstalled, CssInvalidFunction -->
 <template>
   <q-layout view="lhr lpR fFf">
     <div v-if="mode==='electron'" class="toolbox">
@@ -472,7 +472,7 @@ export default defineComponent({
   }
   .storeNav .q-tab {
     border-radius: 6px;
-    margin: 2px;
+    margin: 2px 3px;
     width: 40px;
     height: 48px;
     min-height: unset;
