@@ -26,7 +26,7 @@ header {
   position: fixed;
   width: 100%;
   background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+  box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
   padding: 0 36px;
   z-index: 1;
   backdrop-filter: blur(18px);
@@ -47,7 +47,7 @@ header .q-focus-helper {
 }
 
 header .q-toolbar__title {
-  font-family: Comfortaa-Light;
+  font-family: "Comfortaa-Light", sans-serif;
   font-weight: bold;
 }
 
@@ -62,7 +62,7 @@ footer {
   font-size: 16px;
 }
 
-.mainpage>.row {
+.mainPage>.row {
   position: relative;
   height: 100vh;
   width: 100vw;
@@ -72,16 +72,16 @@ footer {
   padding-top: 10vh;
 }
 
-.mainpage>.row:first-child {
+.mainPage>.row:first-child {
   flex-direction: column;
   align-content: space-evenly;
 }
 
-.mainpage>.row>.row {
+.mainPage>.row>.row {
   flex-direction: column;
 }
 
-.mainpage .bgPic {
+.mainPage .bgPic {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -90,8 +90,8 @@ footer {
   z-index: -1;
 }
 
-.mainpage .app_name {
-  font-family: Comfortaa-Light;
+.mainPage .app_name {
+  font-family: "Comfortaa-Light", sans-serif;
   font-size: 9vmin;
   margin: 0;
   display: flex;
@@ -100,28 +100,27 @@ footer {
   font-weight: bolder;
 }
 
-.mainpage .app_name .q-chip {
+.mainPage .app_name .q-chip {
   font-size: 2vmin;
   font-family: "Roboto", "-apple-system", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
   letter-spacing: normal;
 }
 
-.mainpage .P1st {
+.mainPage .P1st {
   flex-direction: column;
 }
 
-.mainpage .P1st h2 {
+.mainPage .P1st h2 {
   font-size: 3.4vmin;
   color: white;
   font-weight: bolder;
-  margin: 0;
   line-height: 7vmin;
   text-shadow: 0 0 2vmin #777 !important;
-  margin-bottom: 4vmin;
+  margin: 0 0 4vmin;
 }
 
-.mainpage .P1st h3 {
+.mainPage .P1st h3 {
   font-size: 3vmin;
   color: white;
   font-weight: 500;
@@ -130,12 +129,12 @@ footer {
   text-align: center;
 }
 
-.mainpage .P1st .window {
+.mainPage .P1st .window {
   padding-top: 60%;
   position: relative;
 }
 
-.mainpage .P1st .window>.row {
+.mainPage .P1st .window>.row {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -144,10 +143,10 @@ footer {
   left: 0;
   backdrop-filter: blur(2.4vmin);
   border-radius: 2vmin;
-  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+  box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
 }
 
-.mainpage .P1st .window>.row>.row:first-child {
+.mainPage .P1st .window>.row>.row:first-child {
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-evenly;
@@ -155,7 +154,7 @@ footer {
   color: rgba(89,89,89);
 }
 
-.mainpage .P1st .window>.row>.row:last-child {
+.mainPage .P1st .window>.row>.row:last-child {
   flex-grow: 1;
   background-color: rgba(255,255,255,0.7);
   border-radius: 2vmin;
@@ -165,50 +164,50 @@ footer {
   margin-right: -1px;
 }
 
-.mainpage .P1st .window p {
+.mainPage .P1st .window p {
   font-size: 2.6vmin;
   margin: 0;
 }
 
-.mainpage .P2nd {
+.mainPage .P2nd {
   padding-left: 6vmin;
   text-align: left;
   flex-grow: 1;
 }
 
-.mainpage .P2nd h2 {
-  margin: 0;
+.mainPage .P2nd h2 {
   font-size: 5vmin;
-  margin-bottom: 3vmin;
+  margin: 0 0 3vmin;
 }
 
-.mainpage .P2nd p {
+.mainPage .P2nd p {
   font-size: 3vmin;
   line-height: 6vmin;
   margin: 0;
 }
 
-.mainpage .P2nd p:last-of-type {
+.mainPage .P2nd p:last-of-type {
   font-size: 4vmin;
   font-weight: bold;
   line-height: 10vmin;
 }
 
-.mainpage .P3rd {
+.mainPage .P3rd {
   padding-left: 6vmin;
   text-align: left;
   flex-grow: 1;
 }
 
-.mainpage .P3rd h2 {
+.mainPage .P3rd h2 {
   margin: 2vmin 0;
   font-size: 5vmin;
   color: var(--q-primary);
   position: relative;
   font-weight: bold;
+  line-height: 1.6em;
 }
 
-.mainpage .P3rd h2::after {
+.mainPage .P3rd h2::after {
   content: "";
   width: 2.5em;
   height: 0.2em;
@@ -218,27 +217,28 @@ footer {
   bottom: 0;
 }
 
-.mainpage .P3rd p {
+.mainPage .P3rd p {
   font-size: 4vmin;
   line-height: 8vmin;
   margin: 0;
 }
 
-.mainpage .P4th {
+.mainPage .P4th {
   padding-left: 12vmin;
   text-align: left;
   flex-grow: 1;
 }
 
-.mainpage .P4th h2 {
+.mainPage .P4th h2 {
   margin: 2vmin 0;
   font-size: 5vmin;
   color: var(--q-primary);
   position: relative;
   font-weight: bold;
+  line-height: 1.6em;
 }
 
-.mainpage .P4th h2::after {
+.mainPage .P4th h2::after {
   content: "";
   width: 2.5em;
   height: 0.2em;
@@ -248,27 +248,28 @@ footer {
   bottom: 0;
 }
 
-.mainpage .P4th p {
+.mainPage .P4th p {
   font-size: 4vmin;
   line-height: 8vmin;
   margin: 0;
 }
 
-.mainpage .P5th {
+.mainPage .P5th {
   padding-left: 6vmin;
   text-align: left;
   flex-grow: 1;
 }
 
-.mainpage .P5th h2 {
+.mainPage .P5th h2 {
   margin: 2vmin 0;
   font-size: 5vmin;
   color: var(--q-primary);
   position: relative;
   font-weight: bold;
+  line-height: 1.6em;
 }
 
-.mainpage .P5th h2::after {
+.mainPage .P5th h2::after {
   content: "";
   width: 2.5em;
   height: 0.2em;
@@ -278,31 +279,30 @@ footer {
   bottom: 0;
 }
 
-.mainpage .P5th p {
+.mainPage .P5th p {
   font-size: 4vmin;
   line-height: 8vmin;
   margin: 0;
 }
 
-.mainpage .P6th {
+.mainPage .P6th {
   padding-left: 6vmin;
   text-align: left;
   flex-grow: 1;
 }
 
-.mainpage .P6th h2 {
-  margin: 0;
+.mainPage .P6th h2 {
   font-size: 5vmin;
-  margin-bottom: 3vmin;
+  margin: 0 0 3vmin;
 }
 
-.mainpage .P6th p {
+.mainPage .P6th p {
   font-size: 3vmin;
   line-height: 6vmin;
   margin: 0;
 }
 
-.downpage {
+.downPage {
   position: relative;
   flex-direction: column;
   align-items: center;
@@ -311,7 +311,7 @@ footer {
   padding: 10vmin 0;
 }
 
-.downpage h1 {
+.downPage h1 {
   margin: 8vmin 0 0 0;
   color: white;
   font-size: 6vmin;
@@ -319,7 +319,7 @@ footer {
   position: relative;
 }
 
-.downpage h1::after {
+.downPage h1::after {
   content: "";
   width: 1.2em;
   height: 0.16em;
@@ -331,7 +331,7 @@ footer {
   transform: translateX(-50%);
 }
 
-.downpage h2 {
+.downPage h2 {
   color: white;
   margin: 0 0 4vmin 0;
   font-size: 3vmin;
@@ -340,29 +340,29 @@ footer {
   line-height: 2em;
 }
 
-.downpage .downcard {
+.downPage .downCard {
   background-color: white;
   width: 100%;
   border-radius: 1vmin;
-  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+  box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
   padding: 3vmin 2vmin;
 }
 
-.downpage .downcard h3 {
-  font-size: 3vmin;
+.downPage .downCard h3 {
+  font-size: 15px;
   margin: 0;
   display: flex;
-  line-height: 4vmin;
+  line-height: 20px;
 }
 
-.downpage .downcard>.row>.row>span {
+.downPage .downCard>.row>.row>span {
   display: flex;
   align-items: center;
   margin-left: 2vmin;
   color: rgb(127,127,127);
 }
 
-.aboutpage {
+.aboutPage {
   position: relative;
   flex-direction: column;
   align-items: center;
@@ -373,7 +373,7 @@ footer {
   height: 100vh;
 }
 
-.aboutpage .bgPic {
+.aboutPage .bgPic {
   width: 100vw;
   height: 100vh;
   position: absolute;
@@ -383,12 +383,12 @@ footer {
   filter: brightness(0.5);
 }
 
-.aboutpage>.row {
+.aboutPage>.row {
   flex-direction: column;
   align-items: center;
 }
 
-.aboutpage h1 {
+.aboutPage h1 {
   margin: 0;
   color: white;
   font-size: 6vmin;
@@ -396,7 +396,7 @@ footer {
   position: relative;
 }
 
-.aboutpage h1::after {
+.aboutPage h1::after {
   content: "";
   width: 1.2em;
   height: 0.16em;
@@ -408,7 +408,7 @@ footer {
   transform: translateX(-50%);
 }
 
-.aboutpage h2 {
+.aboutPage h2 {
   color: white;
   margin: 0;
   font-size: 3vmin;
@@ -417,14 +417,14 @@ footer {
   line-height: 2em;
 }
 
-.aboutpage p {
+.aboutPage p {
   color: white;
   margin: 0;
   font-size: 2.2vmin;
   line-height: 2.2em;
 }
 
-.wantedpage {
+.wantedPage {
   position: relative;
   align-items: flex-start;
   align-content: flex-start;
@@ -433,46 +433,45 @@ footer {
   flex-direction: column;
 }
 
-.wantedpage .title {
+.wantedPage .title {
   margin-top: 6vmin;
 }
 
-.wantedpage h1 {
+.wantedPage h1 {
   margin: 0;
   color: white;
   font-size: 6vmin;
   line-height: 2em;
 }
 
-.wantedpage h2 {
+.wantedPage h2 {
   color: rgba(255,255,255,0.42);
-  margin: 0;
-  margin-left: 3vmin;
+  margin: 0 0 0 3vmin;
   font-size: 6vmin;
   font-weight: 400;
   line-height: 2em;
 }
 
-.wantedpage p {
+.wantedPage p {
   color: white;
   margin: 0;
   font-size: 2.2vmin;
   line-height: 2.2em;
 }
 
-.wantedpage .method {
+.wantedPage .method {
   background-color: white;
   border-radius: 2vmin;
   padding: 0.4vmin 4vmin;
   font-size: 2vmin;
-  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+  box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
   color: rgb(25,46,66);
 }
 
-.wantedpage .jobcard {
+.wantedPage .jobCard {
   width: 80%;
   background-color: white;
-  box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+  box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
   border-radius: 1vmin;
   margin: 4vmin 0;
   padding: 3vmin;
@@ -480,14 +479,13 @@ footer {
   flex-direction: column;
 }
 
-.wantedpage .jobcard h4 {
-  margin: 0;
-  margin-bottom: 3vmin;
+.wantedPage .jobCard h4 {
+  margin: 0 0 3vmin;
   font-size: 3vmin;
   line-height: 1em;
 }
 
-.wantedpage .jobcard h4::after {
+.wantedPage .jobCard h4::after {
   content: "";
   height: 1em;
   width: 0.3em;
@@ -496,6 +494,6 @@ footer {
   left: 0;
 }
 
-.wantedpage .jobcard p {
+.wantedPage .jobCard p {
   color: black;
 }

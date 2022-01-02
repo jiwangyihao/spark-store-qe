@@ -1,5 +1,6 @@
+<!--suppress NpmUsedModulesInstalled -->
 <template>
-  <q-page class="flex flex-center mainpage">
+  <q-page class="flex flex-center mainPage">
     <div class="row">
       <q-img
         src="../assets/img/index/1.png"
@@ -42,7 +43,7 @@
               <div class="row" style="flex-direction: column;">
                 <q-btn color="primary" style="margin-bottom: 2vmin;" to="/download">
                   <q-avatar size="20px" style="filter: brightness(100) grayscale(1);">
-                    <img src="icons/favicon-128x128.png">
+                    <img src="../assets/icons/favicon-128x128.png">
                   </q-avatar>
                   下载最新版本
                 </q-btn>
@@ -167,7 +168,7 @@
               style="margin-right: 1vmin"
               contain
             />
-            加入我们一同构建 Spark Store  > 
+            加入我们一同构建 Spark Store  >
           </q-btn>
         </div>
       </div>

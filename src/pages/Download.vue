@@ -1,5 +1,6 @@
+<!--suppress SyntaxError -->
 <template>
-  <q-page class="flex flex-start downpage">
+  <q-page class="flex flex-start downPage">
     <q-img
       src="../assets/img/download/download_1.png"
       spinner-color="white"
@@ -11,8 +12,8 @@
     <h2>DOWNLOADS</h2>
     <div class="row" style="width: 76vw">
       <div class="row" style="flex-grow:1;padding:4vmin">
-        <div class="row downcard">
-          <q-avatar size="9vmin">
+        <div class="row downCard">
+          <q-avatar size="48px">
             <img src="../assets/img/download/download_2.png">
           </q-avatar>
           <div class="row" style="flex-direction:column; align-items: flex-start;margin-left:2vmin">
@@ -35,8 +36,8 @@
         </div>
       </div>
       <div class="row" style="flex-grow:1;padding:4vmin">
-        <div class="row downcard">
-          <q-avatar size="9vmin">
+        <div class="row downCard">
+          <q-avatar size="48px">
             <img src="../assets/img/download/download_3.png">
           </q-avatar>
           <div class="row" style="flex-direction:column; align-items: flex-start;margin-left:2vmin">

@@ -1,6 +1,7 @@
+<!--suppress CssUnusedSymbol, JSUnresolvedVariable -->
 <template>
-  <q-page class="flex storepage">
-    <div class="topbar">
+  <q-page class="flex storePage">
+    <div class="topBar">
       <div class="search">
         <q-icon name="search" size="25px" />
         <q-input borderless v-model="searchStr">
@@ -17,19 +18,21 @@
           enter-active-class="animated fadeIn"
           leave-active-class="animated fadeOut"
         >
-          <div v-if="$route.path=='/store'&&loaded" class="rank" key="recommend">
+          <div v-if="$route.path==='/store'&&loaded" class="rank" key="recommend">
             <h5>施工ing...</h5>
           </div>
           <div v-if="$route.path.match('rank')&&loaded" class="rank" key="rank">
             <h5>施工ing...</h5>
           </div>
-          <div v-if="$route.path.match('sort')&&loaded" class="sort applist" key="sort">
-            <q-card v-for="(app, index) in appList" :key="index">
+          <div v-if="$route.path.match('sort')&&loaded" class="sort appList" key="sort">
+            <q-card v-for="(app, index) in appList" :id="'app_'+index" :key="index" @click="// noinspection JSUnresolvedVariable
+openApp(app.application_id,index)">
               <q-card-section horizontal>
                 <q-avatar size="64px" rounded>
-                  <img :src="source+'/store/'+$route.params.sort+'/'+app.package+'/icon.png'">
+                  <img :src="source+'/store/'+$route.params.sort+'/'+app.package.replace('+', '%2B')+'/icon.png'">
                 </q-avatar>
                 <q-card-section>
+                  <!--suppress JSUnresolvedVariable -->
                   <h6>{{app.application_name_zh}}</h6>
                   <div class="wrap">
                     <div class="text">
@@ -79,6 +82,7 @@ export default {
     },
     getAppList: function(params) {
       if (params.hasOwnProperty("sort")) {
+        // noinspection SpellCheckingInspection
         axios
           //39.106.2.2:38324
           .post(
@@ -88,7 +92,7 @@ export default {
               type_id: this.sortId[params.sort]
             }
           )
-          //applist.json 软件列表
+          //appList.json 软件列表
           .then((res) => {
             //console.log(this.appList);
             setTimeout(() => {
@@ -97,6 +101,9 @@ export default {
             }, 800);
           });
       }
+    },
+    openApp: function(appId,cardIndex) {
+      console.log(appId, cardIndex);
     }
   },
   created() {
@@ -147,31 +154,31 @@ export default {
 }
 </script>
 <style>
-  .storepage {
+  .storePage {
     padding-left: 10vmin;
   }
-  .storepage .body {
+  .storePage .body {
     display: flex;
     flex-grow: 1;
     padding: 4vmin 2vmin;
   }
-  .storepage .body>span {
+  .storePage .body>span {
     display: flex;
     flex-grow: 1;
     will-change: contents;
   }
-  .storepage .rank {
+  .storePage .rank {
     display: flex;
     flex-grow: 1;
     justify-content: center;
     align-items: center;
   }
-  .storepage .applist {
+  .storePage .appList {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
   }
-  .storepage .applist .q-card {
+  .storePage .appList .q-card {
     margin: 2vmin;
     border-radius: 2vmin;
     box-shadow: 0 1px 10px rgb(0 0 0 / 30%),
@@ -180,25 +187,25 @@ export default {
     will-change: all;
     transition: all 0.35s;
   }
-  .storepage .applist .q-card:hover {
+  .storePage .appList .q-card:hover {
     box-shadow: 0 1px 5px rgb(0 0 0 / 20%),
       0 2px 2px rgb(0 0 0 / 14%),
       0 3px 1px -2px rgb(0 0 0 / 12%);
   }
-  .storepage .applist .q-card__section--horiz {
+  .storePage .appList .q-card__section--horiz {
     padding: 12px;
   }
-  .storepage .applist .q-card__section--vert {
+  .storePage .appList .q-card__section--vert {
     padding: 0 0 0 12px;
   }
-  .storepage .applist .q-avatar {
+  .storePage .appList .q-avatar {
     display: flex;
     padding: 2px;
     box-sizing: content-box;
     border-radius: 2vmin;
     justify-content: center;
   }
-  .storepage .applist .q-avatar__content, .q-avatar img:not(.q-icon):not(.q-img__image) {
+  .storePage .appList .q-avatar__content, .q-avatar img:not(.q-icon):not(.q-img__image) {
     display: flex;
     height: auto;
     width: auto;
@@ -206,7 +213,7 @@ export default {
     max-height: 1em;
     font-size: inherit;
   }
-  .storepage .applist h6 {
+  .storePage .appList h6 {
     margin: 0;
     font-size: 14px;
     font-weight: bold;
@@ -216,7 +223,7 @@ export default {
     text-overflow: ellipsis;
     overflow: hidden;
   }
-  .storepage .applist .wrap {
+  .storePage .appList .wrap {
     --j-height: 48px;
     --j-line-height: 16px;
     height: var(--j-height);
@@ -227,19 +234,19 @@ export default {
     font-size: 13px;
     color: gray;
   }
-  .storepage .applist .wrap .text {
+  .storePage .appList .wrap .text {
     float: right;
     margin-left: -5px;
     width: 100%;
     word-break:break-all;
   }
-  .storepage .applist .wrap::before {
+  .storePage .appList .wrap::before {
     float: left;
     width: 5px;
     content: '';
     height: var(--j-height);
   }
-  .storepage .applist .wrap::after {
+  .storePage .appList .wrap::after {
     float: right;
     content: "...";
     height: var(--j-line-height);
@@ -253,28 +260,28 @@ export default {
     top: calc(0px - var(--j-line-height));
     background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
   }
-  .storepage .applist i {
+  .storePage .appList i {
     margin: 0 2vmin;
     width: 264px;
     height: 0;
   }
-  .storepage .topbar {
+  .storePage .topBar {
     position: fixed;
     width: 100%;
     height: 20vmin;
     background: linear-gradient(white 36%, rgba(0,0,0,0));
     z-index: 1;
   }
-  .storepage .topbar .search {
+  .storePage .topBar .search {
     width: 48px;
     height: 48px;
     border-radius: 24px;
     background: white;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.08), 
-                0 2px 4px rgba(0,0,0,0.08), 
-                0 4px 8px rgba(0,0,0,0.08), 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08),
+                0 2px 4px rgba(0,0,0,0.08),
+                0 4px 8px rgba(0,0,0,0.08),
                 0 8px 16px rgba(0,0,0,0.08),
-                0 16px 32px rgba(0,0,0,0.08), 
+                0 16px 32px rgba(0,0,0,0.08),
                 0 32px 64px rgba(0,0,0,0.08);
     position: absolute;
     top: 13px;
@@ -287,27 +294,27 @@ export default {
     transition-property: width, box-shadow;
     transition-duration: 0.5s;
   }
-  .storepage .topbar .search:hover {
+  .storePage .topBar .search:hover {
     width: 324px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.06), 
-              0 2px 2px rgba(0,0,0,0.06), 
-              0 4px 4px rgba(0,0,0,0.06), 
+    box-shadow: 0 1px 1px rgba(0,0,0,0.06),
+              0 2px 2px rgba(0,0,0,0.06),
+              0 4px 4px rgba(0,0,0,0.06),
               0 6px 8px rgba(0,0,0,0.06),
               0 8px 16px rgba(0,0,0,0.06);
   }
-  .storepage .topbar .search .q-icon {
+  .storePage .topBar .search .q-icon {
     color: gray;
     transition: all 0.5s;
     margin: 12px;
   }
-  .storepage .topbar .search:hover .q-icon {
+  .storePage .topBar .search:hover .q-icon {
     color: var(--q-primary);
   }
-  .storepage .topbar .search .q-field {
+  .storePage .topBar .search .q-field {
     opacity: 0;
     transition: all 0.5s;
   }
-  .storepage .topbar .search:hover .q-field {
+  .storePage .topBar .search:hover .q-field {
     opacity: 1;
     flex-grow: 1;
     margin-left: 4vmin;

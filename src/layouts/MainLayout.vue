@@ -1,11 +1,12 @@
+<!--suppress JSUnresolvedVariable, NpmUsedModulesInstalled -->
 <template>
   <q-layout view="lhr lpR fFf">
-    <div v-if="mode=='electron'" class="toolbox">
+    <div v-if="mode==='electron'" class="toolbox">
       <q-btn color="white" padding="xs" icon="minimize" @click="min" />
       <q-btn color="white" padding="xs" icon-right="settings_ethernet" @click="max" />
       <q-btn color="white" padding="xs" icon="close" @click="close" />
     </div>
-    <div v-if="mode=='electron'" class="dragArea"></div>
+    <div v-if="mode==='electron'" class="dragArea"></div>
     <transition
       appear
       enter-active-class="animated fadeInDown"
@@ -32,7 +33,7 @@
             <q-route-tab to="/" label="首页" :ripple="false" />
             <q-route-tab to="/download" label="下载" :ripple="false" />
             <q-route-tab to="/store" label="商店" :ripple="false" />
-            <q-route-tab to="/fourm" label="社区" :ripple="false" />
+            <q-route-tab to="/forum" label="社区" :ripple="false" />
             <q-route-tab to="/about" label="关于" :ripple="false" />
           </q-tabs>
         </q-toolbar>
@@ -43,7 +44,7 @@
       enter-active-class="animated fadeInLeft"
       leave-active-class="animated fadeOutLeft"
     >
-      <div :class="{storenav: true, active: hActive&&nActive&&lsA, nActive: nActive, seMenu: !hActive, isSorts: isSorts}" v-if="$route.path.match('store')">
+      <div :class="{storeNav: true, active: hActive&&nActive&&lsA, nActive: nActive, seMenu: !hActive, isSorts: isSorts}" v-if="$route.path.match('store')">
         <nav>
           <router-link to="/" style="text-decoration: unset; color: black; width: 100%;">
             <q-toolbar-title class="logo">
@@ -110,7 +111,7 @@
 
 <script>
 import { JTabs, JTab } from '../components/index.js'
-import { defineComponent, ref } from 'vue'
+import { defineComponent} from 'vue'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -122,7 +123,7 @@ export default defineComponent({
 
   methods: {
     to: function(ref) {
-      if (this.$route.path!=ref) {
+      if (this.$route.path!==ref) {
         this.$router.push(ref)
       }
     },
@@ -169,6 +170,11 @@ export default defineComponent({
       if (this.$route.path.match("sorts")) {
         this.tabs="sorts"
         this.sort=this.$route.params.sort
+        this.hActive=false
+        this.isSorts=true
+      } else if (this.$route.path.match("application")) {
+        this.tabs="sorts"
+        this.sort="application"
         this.hActive=false
         this.isSorts=true
       } else {
@@ -258,7 +264,7 @@ export default defineComponent({
      0 5px 8px rgba(0, 0, 0, 7%),
      0 1px 14px rgba(0, 0, 0, 6%)!important;
   }
-  
+
   .toolbox .q-btn i {
     color: gray;
     transition-property: color;
@@ -276,85 +282,92 @@ export default defineComponent({
     z-index: 3;
     -webkit-app-region: drag;
   }
-  .storenav {
+  .storeNav {
     position: fixed;
     top: 0;
     left: 0;
-    width: 88px;
+    width: 216px;
     height: 100%;
     z-index: 2;
-    overflow: hidden;
-    will-change: width;
-    transition: width 0.7s 0.2s;
+    will-change: transform;
+    transition: transform 0.5s 0.5s;
     user-select: none;
     -webkit-user-select: none;
+    transform: translateX(-156px);
   }
-  .storenav.active:hover, .storenav.seMenu:hover {
-    transition: width 0.2s;
+  .storeNav.active:hover, .storeNav.seMenu:hover {
+    transform: translateX(0);
+    transition-delay: 0s;
   }
-  .storenav.active:hover, .storenav.seMenu:hover {
-    width: 244px;
-  }
-  .storenav nav {
+  .storeNav nav {
     display: flex;
     position: absolute;
     left: 0;
     top: 0;
     padding-bottom: 31px;
-    width: 60px;
+    width: 216px;
     height: 100%;
     background: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0px 28px 0 rgb(0 0 0 / 30%);
+    box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
     z-index: 2;
+    -webkit-backdrop-filter: blur(24px);
     backdrop-filter: blur(24px);
     flex-direction: column;
-    align-items: center;
-    will-change: width, box-shadow;
-    transition-property: width, box-shadow;
+    align-items: flex-end;
+    will-change: box-shadow,transform;
+    transition-property: box-shadow,transform;
     transition-duration: 0.5s;
     transition-delay: 0.2s;
   }
-  .storenav nav:hover {
+  .storeNav nav:hover {
+    transition-delay: 0.4s;
+  }
+  .storeNav.seMenu nav {
+    transition-delay: 0.5s;
+  }
+  .storeNav.seMenu:hover nav {
+    transition-delay: 0.5s;
+    transform: translate3d(-156px,0,0);
+  }
+  .storeNav.seMenu.isSorts:hover nav {
     transition-delay: 0s;
   }
-  .storenav.seMenu nav {
-    transition-delay: 0.2s;
-  }
-  .storenav.active nav:hover {
-    width: 216px;
-  }
-  .storenav nav>span {
+  .storeNav nav>span {
     font-weight: bold;
     text-align: center;
     white-space: nowrap;
-    transition: transform 1s;
+    transition: transform 0.5s 0.5s;
+    width: 80px;
+    transform: translate3d(10px,0,0);
   }
-  .storenav.active nav:hover>span {
-    transform: translate3d(0, 21px, 0);
+  .storeNav.active nav:hover>span {
+    transform: translate3d(-68px, 0, 0);
+    transition-delay: 0s;
   }
-  .storenav nav>span:hover::before, .storenav nav>span:hover::after {
+  .storeNav nav>span:hover::before, .storeNav nav>span:hover::after {
     background-color: rgba(0,0,0,0.1);
   }
-  .storenav nav>span::before {
+  .storeNav nav>span::before {
     content: ">";
     display: inline-block;
     text-align: center;
     overflow: hidden;
-    width: calc(1em + 12px);
+    width: calc(1em + 10px);
     height: 20.8px;
     border-radius: 6px;
     opacity: 1;
-    transform: translateX(36px);
-    will-change: opacity, background-color;
-    transition-property: opacity, background-color;
-    transition-duration: 0.5s, 0.35s;
-    transition-delay: 0.2s, 0s;
+    transform: translate3d(28px,0,0);
+    will-change: opacity, background-color, transform;
+    transition-property: opacity, background-color, transform;
+    transition-duration: 0.5s, 0.35s, 1s;
+    transition-delay: 0.7s, 0.5s, 0.5s;
   }
-  .storenav.active nav:hover>span::before {
+  .storeNav.active nav:hover>span::before {
     opacity: 0;
+    transform: translate3d(28px, 21px, 0);
     transition-delay: 0s;
   }
-  .storenav nav>span::after {
+  .storeNav nav>span::after {
     content: "<<<<<<";
     display: inline-block;
     text-align: center;
@@ -363,30 +376,40 @@ export default defineComponent({
     height: 20.8px;
     border-radius: 6px;
     opacity: 0;
-    transform: translateX(calc(-0.5em - 6px));
-    will-change: opacity, background-color;
-    transition-property: opacity, background-color;
-    transition-duration: 0.5s, 0.35s;
+    transform: translate3d(calc(-0.5em - 14px),0,0);
+    will-change: opacity, background-color,transform;
+    transition-property: opacity, background-color, transform;
+    transition-duration: 0.5s, 0.35s, 1s;
+    transition-delay: 0.5s;
   }
-  .storenav.active nav:hover>span::after {
+  .storeNav.active nav:hover>span::after {
     opacity: 1;
-    transition-delay: 0.2s, 0s;
+    transform: translate3d(calc(-0.5em - 14px), 21px, 0);
+    transition-delay: 0.2s, 0s, 0s;
   }
-  .storenav .logo {
+  .storeNav nav>a {
+    width: 60px!important;
+    transition: width 0.5s 0.5s;
+  }
+  .storeNav.active nav:hover>a {
+    width: 216px!important;
+    transition-delay: 0s;
+  }
+  .storeNav .logo {
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow: visible;
   }
-  .storenav .q-avatar {
+  .storeNav .q-avatar {
     transform: translate3d(0, 31px, 0);
     will-change: transform;
     transition: transform 0.5s;
   }
-  .storenav.active nav:hover .q-avatar {
+  .storeNav.active nav:hover .q-avatar {
     transform: translate3d(0, 18px, 0)
   }
-  .storenav .logo span {
+  .storeNav .logo span {
     display: flex;
     width: 100%;
     height: 2em;
@@ -396,37 +419,42 @@ export default defineComponent({
     opacity: 0;
     margin-top: 6px;
     transform: scale3d(0.1, 0.1, 0.1) translate3d(0, 60px, 0);
-    font-family: 'Comfortaa-Light';
+    font-family: 'Comfortaa-Light',sans-serif;
     font-weight: bold;
     will-change: opacity, transform;
     transition-property: opacity, transform;
     transition-duration: 0.5s;
   }
-  .storenav.active nav:hover .logo span {
+  .storeNav.active nav:hover .logo span {
     opacity: 1;
     transform: scale3d(1, 1, 1) translate3d(0, 16px, 0);
     transition-delay: 0.2s;
   }
-  .storenav.active nav .q-tabs, .storenav.storenav.seMenu nav .q-tabs {
+  .storeNav.active nav .q-tabs, .storeNav.storeNav.seMenu nav .q-tabs {
     will-change: transform;
-    transition: transform 0.5s 0.2s;
+    transition: transform 0.5s 0.5s;
   }
-  .storenav.active nav:hover .q-tabs {
-    transform: translate3d(0, 21px, 0);
+  .storeNav.active nav:hover .q-tabs {
+    transform: translate3d(-78px, 21px, 0);
     transition: transform 0.5s;
   }
-  .storenav .menu .q-tabs {
+  .storeNav .menu .q-tabs {
     padding: 0;
   }
-  .storenav .q-tabs__content {
+  .storeNav.active nav:hover .q-tabs__content {
+    transform: translate3d(70px,0,0);
+    transition-delay: 0.2s;
+  }
+  .storeNav .q-tabs__content {
     display: flex !important;
     flex-direction: column;
+    transition: transform 0.5s;
   }
-  .storenav .menu .q-tabs__content{
+  .storeNav .menu .q-tabs__content{
     justify-content: flex-start;
     overflow: auto;
   }
-  .storenav .q-tab__label {
+  .storeNav .q-tab__label {
     width: 0;
     height: 1.715em;
     opacity: 0;
@@ -435,16 +463,16 @@ export default defineComponent({
     transition-property: opacity, width;
     transition-duration: 0.5s;
   }
-  .storenav.active nav:hover .q-tab__label {
+  .storeNav.active nav:hover .q-tab__label {
     transition-delay: 0.2s;
   }
-  .storenav.active nav:hover .q-tab__label, .storenav.seMenu .menu .q-tab__label {
+  .storeNav.active nav:hover .q-tab__label, .storeNav.seMenu .menu .q-tab__label {
     width: 100%;
     opacity: 1;
   }
-  .storenav .q-tab {
+  .storeNav .q-tab {
     border-radius: 6px;
-    margin: 3px;
+    margin: 2px;
     width: 40px;
     height: 48px;
     min-height: unset;
@@ -454,24 +482,24 @@ export default defineComponent({
     transition-property: width;
     transition-duration: 0.5s;
   }
-  .storenav.active nav:hover .q-tab {
+  .storeNav.active nav:hover .q-tab {
     transition-delay: 0.2s;
   }
-  .storenav.active nav:hover .q-tab {
+  .storeNav.active nav:hover .q-tab {
     width: 180px;
   }
-  .storenav .menu .q-tab {
+  .storeNav .menu .q-tab {
     margin: 6px;
     width: 120px;
     height: 36px;
   }
-  .storenav .q-tab__content {
+  .storeNav .q-tab__content {
     flex-wrap: nowrap;
     flex-direction: row;
     padding: 0;
     width: inherit;
   }
-  .storenav .q-tab__indicator {
+  .storeNav .q-tab__indicator {
     background: #3787ff;
     top: 0;
     left: 0;
@@ -484,28 +512,28 @@ export default defineComponent({
     transition-property: width, height, transform, opacity;
     transition-duration: 0.5s;
   }
-  .storenav.active nav:hover .q-tab__indicator {
+  .storeNav.active nav:hover .q-tab__indicator {
     transition-delay: 0.2s;
   }
-  .storenav.active nav:hover .q-tab__indicator {
+  .storeNav.active nav:hover .q-tab__indicator {
     transform: translate3d(0, 0, 0);
     width: 196px;
     height: 48px;
   }
-  .storenav .menu .q-tab__indicator {
+  .storeNav .menu .q-tab__indicator {
     transform: translate3d(0, 0, 0);
     width: 136px;
     height: 36px;
   }
-  .storenav.active nav:hover .q-tab--active .q-tab__indicator,
-  .storenav .menu .q-tab--active .q-tab__indicator {
+  .storeNav.active nav:hover .q-tab--active .q-tab__indicator,
+  .storeNav .menu .q-tab--active .q-tab__indicator {
     opacity: 0.2;
   }
-  .storenav.seMenu:hover nav {
+  .storeNav.seMenu:hover nav {
     background: rgba(255, 255, 255, 1);
-    box-shadow: 0 0px 4px 0 rgb(0 0 0 / 30%);
+    box-shadow: 0 0 4px 0 rgb(0 0 0 / 30%);
   }
-  .storenav .menu {
+  .storeNav .menu {
     position: absolute;
     left: 60px;
     width: 156px;
@@ -521,14 +549,14 @@ export default defineComponent({
     transition-property: transform, opacity;
     transition-duration: 0.5s;
   }
-  .storenav.seMenu:hover .menu {
+  .storeNav.seMenu:hover .menu {
     transform: translate3d(0, 0, 0);
     opacity: 1;
   }
-  .storenav.nActive.seMenu:hover .menu {
+  .storeNav.nActive.seMenu:hover .menu {
     transition-delay: 1s;
   }
-  .storenav.nActive.seMenu.isSorts:hover .menu {
+  .storeNav.nActive.seMenu.isSorts:hover .menu {
     transition-delay: 0s;
   }
 </style>

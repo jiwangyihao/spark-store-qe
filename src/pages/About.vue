@@ -4,7 +4,7 @@
       enter-active-class="animated backInRight"
       enter-leave-class="animated backOutLeft"
     >
-      <div v-show="module=='about'" class="row aboutpage" key="about">
+      <div v-show="module==='about'" class="row aboutPage" key="about">
         <q-img
           src="../assets/img/about/about_1.png"
           spinner-color="white"
@@ -30,10 +30,10 @@
           @click="goWanted"
           rounded
         >
-          招贤纳士 > 
+          招贤纳士 >
         </q-btn>
       </div>
-      <div v-show="module=='wanted'" class="row wantedpage" key="wanted">
+      <div v-show="module==='wanted'" class="row wantedPage" key="wanted">
         <q-img
           src="../assets/img/about/about_2.png"
           spinner-color="white"
@@ -48,7 +48,7 @@
         <div class="row method">
           联系方式：872690351<span style="color: rgb(132,128,126)">（QQ 群）</span>
         </div>
-        <div class="row jobcard">
+        <div class="row jobCard">
           <h4>软件维护员</h4>
           <p><strong>年龄：</strong>不限</p>
           <p><strong>性别：</strong>不限</p>
@@ -56,7 +56,7 @@
           <p><strong>学历要求：</strong>小学及以上</p>
           <p><strong>能力要求：</strong>会使用 deepin V20 或其它 Linux 发行版，会打字，会上网，会下载 Linux 软件包，有责任心，有电脑；</p>
           <p><strong>职责：</strong>搜集软件，打包软件。维护者可以不是开发者，但必须有认真负责的态度，对于自己维护的软件包应当维护到底。若不能维护，请在软件标题写明“已停止维护”并通知站长或其他开发者，以便于找人接手。</p>
-          <p><strong>投递须知：</strong><a href="http://www.shenmo.tech:420/?p=193">http://www.shenmo.tech:420/?p=193</a></p>
+          <p><strong>投递须知：</strong><a href="https://www.shenmo.tech:420/?p=193">https://www.shenmo.tech:420/?p=193</a></p>
         </div>
       </div>
     </transition-group>
