@@ -293,7 +293,12 @@ export default defineComponent({
     transition: transform 0.5s 0.5s;
     user-select: none;
     -webkit-user-select: none;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     transform: translateX(-156px);
+  }
+  .storeNav.seMenu {
+    transition-delay: 0s;
   }
   .storeNav.active:hover, .storeNav.seMenu:hover {
     transform: translateX(0);
@@ -307,11 +312,9 @@ export default defineComponent({
     padding-bottom: 31px;
     width: 216px;
     height: 100%;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.4);
     box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
     z-index: 2;
-    -webkit-backdrop-filter: blur(24px);
-    backdrop-filter: blur(24px);
     flex-direction: column;
     align-items: flex-end;
     will-change: box-shadow,transform;
@@ -323,7 +326,8 @@ export default defineComponent({
     transition-delay: 0.4s;
   }
   .storeNav.seMenu nav {
-    transition-delay: 0.5s;
+    transition-delay: 0s;
+    background-color: #fff;
   }
   .storeNav.seMenu:hover nav {
     transition-delay: 0.5s;
@@ -430,7 +434,7 @@ export default defineComponent({
     transform: scale3d(1, 1, 1) translate3d(0, 16px, 0);
     transition-delay: 0.2s;
   }
-  .storeNav.active nav .q-tabs, .storeNav.storeNav.seMenu nav .q-tabs {
+  .storeNav.active nav .q-tabs, .storeNav.seMenu nav .q-tabs {
     will-change: transform;
     transition: transform 0.5s 0.5s;
   }
@@ -466,7 +470,7 @@ export default defineComponent({
   .storeNav.active nav:hover .q-tab__label {
     transition-delay: 0.2s;
   }
-  .storeNav.active nav:hover .q-tab__label, .storeNav.seMenu .menu .q-tab__label {
+  .storeNav.active nav:hover .q-tab__label, .storeNav .menu .q-tab__label {
     width: 100%;
     opacity: 1;
   }
@@ -535,22 +539,19 @@ export default defineComponent({
   }
   .storeNav .menu {
     position: absolute;
-    left: 60px;
+    right: 0;
     width: 156px;
     height: 100%;
     z-index: 1;
     background: rgba(255, 255, 255, 0.6);
     box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
-    backdrop-filter: blur(4vmin);
     opacity: 0;
-    transform: translate3d(-156px, 0, 0);
     padding: 4px;
-    will-change: transform, opacity;
-    transition-property: transform, opacity;
+    will-change: opacity;
+    transition-property: opacity;
     transition-duration: 0.5s;
   }
   .storeNav.seMenu:hover .menu {
-    transform: translate3d(0, 0, 0);
     opacity: 1;
   }
   .storeNav.nActive.seMenu:hover .menu {

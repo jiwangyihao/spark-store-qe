@@ -4,7 +4,7 @@ node_modules
 
 # Quasar core related directories
 .quasar
-/dist
+/dist/electron/
 
 # Cordova related directories and files
 /src-cordova/node_modules
@@ -31,3 +31,4 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+/dist/electron
