@@ -298,10 +298,13 @@ export default defineComponent({
     transform: translateX(-156px);
   }
   .storeNav.seMenu {
-    transition-delay: 0s;
+    transition-delay: 0.5s;
   }
   .storeNav.active:hover, .storeNav.seMenu:hover {
     transform: translateX(0);
+    transition-delay: 0s;
+  }
+  .storeNav.isSorts {
     transition-delay: 0s;
   }
   .storeNav nav {
@@ -322,7 +325,7 @@ export default defineComponent({
     transition-duration: 0.5s;
     transition-delay: 0.2s;
   }
-  .storeNav nav:hover {
+  .storeNav:hover nav {
     transition-delay: 0.4s;
   }
   .storeNav.seMenu nav {
@@ -344,7 +347,7 @@ export default defineComponent({
     width: 80px;
     transform: translate3d(10px,0,0);
   }
-  .storeNav.active nav:hover>span {
+  .storeNav.active:hover nav>span {
     transform: translate3d(-68px, 0, 0);
     transition-delay: 0s;
   }
@@ -366,7 +369,7 @@ export default defineComponent({
     transition-duration: 0.5s, 0.35s, 1s;
     transition-delay: 0.7s, 0.5s, 0.5s;
   }
-  .storeNav.active nav:hover>span::before {
+  .storeNav.active:hover nav>span::before {
     opacity: 0;
     transform: translate3d(28px, 21px, 0);
     transition-delay: 0s;
@@ -386,7 +389,7 @@ export default defineComponent({
     transition-duration: 0.5s, 0.35s, 1s;
     transition-delay: 0.5s;
   }
-  .storeNav.active nav:hover>span::after {
+  .storeNav.active:hover nav>span::after {
     opacity: 1;
     transform: translate3d(calc(-0.5em - 14px), 21px, 0);
     transition-delay: 0.2s, 0s, 0s;
@@ -395,7 +398,7 @@ export default defineComponent({
     width: 60px!important;
     transition: width 0.5s 0.5s;
   }
-  .storeNav.active nav:hover>a {
+  .storeNav.active:hover nav>a {
     width: 216px!important;
     transition-delay: 0s;
   }
@@ -410,7 +413,7 @@ export default defineComponent({
     will-change: transform;
     transition: transform 0.5s;
   }
-  .storeNav.active nav:hover .q-avatar {
+  .storeNav.active:hover nav .q-avatar {
     transform: translate3d(0, 18px, 0)
   }
   .storeNav .logo span {
@@ -429,7 +432,7 @@ export default defineComponent({
     transition-property: opacity, transform;
     transition-duration: 0.5s;
   }
-  .storeNav.active nav:hover .logo span {
+  .storeNav.active:hover nav .logo span {
     opacity: 1;
     transform: scale3d(1, 1, 1) translate3d(0, 16px, 0);
     transition-delay: 0.2s;
@@ -437,17 +440,26 @@ export default defineComponent({
   .storeNav.active nav .q-tabs, .storeNav.seMenu nav .q-tabs {
     will-change: transform;
     transition: transform 0.5s 0.5s;
+    transform: translate3d(0,0,0);
   }
-  .storeNav.active nav:hover .q-tabs {
+  .storeNav.active:hover nav .q-tabs {
     transform: translate3d(-78px, 21px, 0);
     transition: transform 0.5s;
+  }
+  .storeNav.seMenu:hover nav .q-tabs {
+    transition-delay: 0.5s;
+    transform: translate3d(0,0,0);
   }
   .storeNav .menu .q-tabs {
     padding: 0;
   }
-  .storeNav.active nav:hover .q-tabs__content {
+  .storeNav.active:hover nav .q-tabs__content {
     transform: translate3d(70px,0,0);
     transition-delay: 0.2s;
+  }
+  .storeNav.seMenu:hover nav .q-tabs__content {
+    transition-delay: 0s;
+    transform: translate3d(0,0,0);
   }
   .storeNav .q-tabs__content {
     display: flex !important;
@@ -467,10 +479,10 @@ export default defineComponent({
     transition-property: opacity, width;
     transition-duration: 0.5s;
   }
-  .storeNav.active nav:hover .q-tab__label {
+  .storeNav.active:hover nav .q-tab__label {
     transition-delay: 0.2s;
   }
-  .storeNav.active nav:hover .q-tab__label, .storeNav .menu .q-tab__label {
+  .storeNav.active:hover nav .q-tab__label, .storeNav .menu .q-tab__label {
     width: 100%;
     opacity: 1;
   }
@@ -486,10 +498,10 @@ export default defineComponent({
     transition-property: width;
     transition-duration: 0.5s;
   }
-  .storeNav.active nav:hover .q-tab {
+  .storeNav.active:hover nav .q-tab {
     transition-delay: 0.2s;
   }
-  .storeNav.active nav:hover .q-tab {
+  .storeNav.active:hover nav .q-tab {
     width: 180px;
   }
   .storeNav .menu .q-tab {
@@ -516,10 +528,10 @@ export default defineComponent({
     transition-property: width, height, transform, opacity;
     transition-duration: 0.5s;
   }
-  .storeNav.active nav:hover .q-tab__indicator {
+  .storeNav.active:hover nav .q-tab__indicator {
     transition-delay: 0.2s;
   }
-  .storeNav.active nav:hover .q-tab__indicator {
+  .storeNav.active:hover nav .q-tab__indicator {
     transform: translate3d(0, 0, 0);
     width: 196px;
     height: 48px;
@@ -529,7 +541,7 @@ export default defineComponent({
     width: 136px;
     height: 36px;
   }
-  .storeNav.active nav:hover .q-tab--active .q-tab__indicator,
+  .storeNav.active:hover nav .q-tab--active .q-tab__indicator,
   .storeNav .menu .q-tab--active .q-tab__indicator {
     opacity: 0.2;
   }
