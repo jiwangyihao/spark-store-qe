@@ -6,6 +6,7 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/Index.vue') },
       { path: 'download', component: () => import('pages/Download.vue') },
+      { path: 'download_latest', beforeEnter() { location.href = 'https://gitee.com/deepin-community-store/spark-store/attach_files/915704/download/spark-store_3.0.3-7_amd64.deb' } },
       { path: 'forum', beforeEnter() { location.href = 'https://www.deepinos.org/' } },
       { path: 'feedback', beforeEnter() { location.href = 'https://www.deepinos.org/' } },
       { path: 'blog', beforeEnter() { location.href = 'https://www.deepinos.org/' } },

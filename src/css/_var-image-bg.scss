@@ -1,0 +1,42 @@
+// Media 背景图控制
+
+@mixin image($page, $picName) {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.png");
+
+
+  @media screen and (min-aspect-ratio: 1/1) {
+    //横屏
+    @media (max-width: 3840px) {
+      background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.webp");
+    }
+    @media (max-width: 1920px) {
+      background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.webp");
+    }
+    @media (max-width: 1366px) {
+      background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.webp");
+    }
+    @media (max-width: 640px) {
+      background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.webp");
+    }
+  }
+
+  @media screen and (max-aspect-ratio: 1/1) {
+    //竖屏
+    background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.png");
+    @media (max-height: 3840px) {
+      background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.webp");
+    }
+    @media (max-height: 1920px) {
+      background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.webp");
+    }
+    @media (max-height: 1366px) {
+      background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.webp");
+    }
+    @media (max-height: 640px) {
+      background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.webp");
+    }
+  }
+}

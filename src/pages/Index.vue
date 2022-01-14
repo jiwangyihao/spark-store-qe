@@ -1,17 +1,18 @@
 <!--suppress NpmUsedModulesInstalled -->
 <template>
   <q-page class="flex flex-center mainPage">
-    <div class="row">
-      <q-img
+    <div class="row varImageBg indexBackground">
+      <!--<q-img
         src="../assets/img/index/1.png"
         spinner-color="white"
         class="bgPic"
-      />
+        loading="eager"
+      />-->
       <div class="row P1st">
         <h1 class="app_name">
           Spark Store
           <q-chip size="2vmin" icon="get_app">
-            3.0.2
+            3.0.3-7
           </q-chip>
         </h1>
         <h2>Debian 系发行版的专属应用商店</h2>
@@ -199,3 +200,11 @@ export default defineComponent({
 })
 
 </script>
+
+<style lang="scss">
+  @use '../css/var-image-bg';
+
+  .mainPage .varImageBg.indexBackground {
+    @include var-image-bg.image("index",'background');
+  }
+</style>

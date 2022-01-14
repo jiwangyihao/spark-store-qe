@@ -22,7 +22,7 @@
               <q-btn
                 color="primary"
                 text-color="white"
-                to="/download"
+                to="/download_latest"
                 style="padding: 0 3vmin;"
                 dense
                 rounded
@@ -30,7 +30,7 @@
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.0.2</span>
+              <span>最新版本 3.0.3-7</span>
             </div>
           </div>
         </div>
@@ -85,6 +85,57 @@ export default {
   data: () => {
     return {
       updateHistory: [
+        {
+          version: "3.0.3-8",
+          time: "2022-01-14 00:39",
+          details: [
+            "不再与最新版本的spark-dstore-patch冲突；",
+            "现在默认不会显示已集成dstore patch的信息了，仅在同时安装了patch后显示；",
+            "安装时会同时加入新的密钥，旧的将会在不久后废除，所以请尽快更新到3.0.3-8+版本；",
+            "这回记住修改关于界面的版本号了。"
+          ]
+        },
+        {
+          version: "3.0.3-7",
+          time: "2021-12-13 20:15",
+          details: [
+            "更改版本号&催更地址。"
+          ]
+        },
+        {
+          version: "3.0.3-6",
+          time: "2021-12-11 17:54",
+          details: [
+            "现在在非UOS/deepin上安装星火应用商店就可以正确处理UOS包啦！"
+          ]
+        },
+        {
+          version: "3.0.3-5",
+          time: "2021-10-26 20:43",
+          details: [
+            "在UOS上重编译以适配。"
+          ]
+        },
+        {
+          version: "3.0.3-4",
+          time: "2021-10-24 23:48",
+          details: [
+            "添加了临时催更功能，减轻维护者负担，放弃维护无人使用的应用。"
+          ]
+        },
+        {
+          version: "3.0.3—LTS",
+          time: "2021-07-06 10:20",
+          details: [
+            "支持应用详情页显示升级/重新安装；",
+            "修复应用详情页经常加载失败的问题；",
+            "修复应用详情页写在失败的问题；",
+            "修复下载列表和通知栏不显示应用缩略图的问题；",
+            "支持动态获取下载镜像源列表；",
+            "尝试开启 Hidpi 支持；",
+            "DTK 界面版本后续随缘维护更新。"
+          ]
+        },
         {
           version: "3.0.2",
           time: "2021-06-13 14:41",
