@@ -4,7 +4,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.png");
+  background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.webp");
 
 
   @media screen and (min-aspect-ratio: 1/1) {
@@ -25,7 +25,7 @@
 
   @media screen and (max-aspect-ratio: 1/1) {
     //竖屏
-    background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.png");
+    background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.webp");
     @media (max-height: 3840px) {
       background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.webp");
     }
