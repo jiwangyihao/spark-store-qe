@@ -31,4 +31,5 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
-/dist/electron
+/dist
+。vscode
