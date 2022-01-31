@@ -1,13 +1,7 @@
-<!--suppress SyntaxError -->
+<!--suppress ALL -->
+
 <template>
-  <q-page class="flex flex-start downPage">
-    <q-img
-      src="../assets/img/download/download_1.png"
-      spinner-color="white"
-      height="56vh"
-      style="position: absolute; top: 0; z-index:-1;"
-      :img-style="{transform: 'scale(1.1)', filter: 'blur(1vmin)'}"
-    />
+  <q-page class="flex flex-start downPage varImageBg downBackground">
     <h1>下载</h1>
     <h2>DOWNLOADS</h2>
     <div class="row" style="width: 76vw">
@@ -210,3 +204,18 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+@use '../css/var-image-bg';
+
+.downPage.varImageBg.downBackground::before {
+  @include var-image-bg.image("download",'background');
+  content:"";
+  width: 100%;
+  height: 56vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+</style>

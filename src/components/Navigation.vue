@@ -1,0 +1,650 @@
+<!--suppress NpmUsedModulesInstalled -->
+<script setup>
+import {onMounted, ref, watch} from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const state = ref({
+  home: true,
+  navigation: true,
+  hoverP: false,
+  hoverS: false,
+  primary: !(route.path.match("sorts") || route.path.match("application")),
+  secondary: route.path.match("sorts") || route.path.match("application"),
+  active: true
+})
+
+const tabGroup = ref([
+  {
+    id: 1,
+    name: "recommend",
+    path: "/store",
+    label: "推荐",
+    icon: "recommend",
+    active: true,
+    el: null
+  },
+  {
+    id: 2,
+    name: "rank",
+    path: "/store/rank",
+    label: "排行",
+    icon: "format_list_numbered",
+    active: false,
+    el: null
+  },
+  {
+    id: 3,
+    name: "sorts",
+    path: "/store/sorts/games",
+    label: "分类",
+    icon: "queue",
+    active: false,
+    el: null
+  }
+])
+
+const secondTabGroup = ref([
+  {
+    id: 1,
+    name: "games",
+    path: "/store/sorts/games",
+    label: "游戏",
+    icon: "sports_esports",
+    active: true,
+    el: null
+  },
+  {
+    id: 2,
+    name: "network",
+    path: "/store/sorts/network",
+    label: "网络",
+    icon: "travel_explore",
+    active: false,
+    el: null
+  },
+  {
+    id: 3,
+    name: "chat",
+    path: "/store/sorts/chat",
+    label: "社交",
+    icon: "question_answer",
+    active: false,
+    el: null
+  },
+  {
+    id: 4,
+    name: "music",
+    path: "/store/sorts/music",
+    label: "音乐",
+    icon: "library_music",
+    active: false,
+    el: null
+  },
+  {
+    id: 5,
+    name: "video",
+    path: "/store/sorts/video",
+    label: "视频",
+    icon: "smart_display",
+    active: false,
+    el: null
+  },
+  {
+    id: 6,
+    name: "image_graphics",
+    path: "/store/sorts/image_graphics",
+    label: "图形",
+    icon: "image",
+    active: false,
+    el: null
+  },
+  {
+    id: 7,
+    name: "office",
+    path: "/store/sorts/office",
+    label: "办公",
+    icon: "business_center",
+    active: false,
+    el: null
+  },
+  {
+    id: 8,
+    name: "reading",
+    path: "/store/sorts/reading",
+    label: "阅读",
+    icon: "auto_stories",
+    active: false,
+    el: null
+  },
+  {
+    id: 9,
+    name: "development",
+    path: "/store/sorts/development",
+    label: "开发",
+    icon: "developer_board",
+    active: false,
+    el: null
+  },
+  {
+    id: 10,
+    name: "tools",
+    path: "/store/sorts/tools",
+    label: "工具",
+    icon: "handyman",
+    active: false,
+    el: null
+  },
+  {
+    id: 11,
+    name: "themes",
+    path: "/store/sorts/themes",
+    label: "美化",
+    icon: "extension",
+    active: false,
+    el: null
+  },
+  {
+    id: 12,
+    name: "others",
+    path: "/store/sorts/others",
+    label: "其他",
+    icon: "pending",
+    active: false,
+    el: null
+  }
+])
+
+const activeTab = ref(tabGroup.value[0])
+
+const secondActiveTab = ref(tabGroup.value[0])
+
+function toTab(path) {
+  if (path.match("store")) {
+    if (path.match("sorts")) {
+      for (const tab of tabGroup.value) {
+        if (tab.name==="sorts") {
+          for (const secondTab of secondTabGroup.value) {
+            if (secondTab.path===route.path) {
+              return [tab, secondTab]
+            }
+          }
+        }
+      }
+    } else if (path.match("application")) {
+      for (const tab of tabGroup.value) {
+        if (tab.name==="sorts") {
+          return [tab, secondActiveTab]
+        }
+      }
+    } else {
+      for (const tab of tabGroup.value) {
+        if (tab.path===route.path) {
+          return [tab, secondTabGroup.value[0]]
+        }
+      }
+    }
+  }
+  for (const tab of tabGroup.value) {
+    if (tab.name==="recommend") {
+      return [tab, secondTabGroup.value[0]]
+    }
+  }
+}
+
+watch(
+  () => route.path,
+  async newPath => {
+    activeTab.value.active = false
+    secondActiveTab.value.active = false
+    const activeTabs = toTab(newPath)
+    activeTab.value = activeTabs[0]
+    secondActiveTab.value = activeTabs[1]
+    activeTab.value.active = true
+    secondActiveTab.value.active = true
+    state.value.home = !route.path.match("store")
+    state.value.primary = !activeTab.value.name.match("sorts")
+    state.value.secondary = activeTab.value.name.match("sorts")
+    for (const tab of tabGroup.value) {
+      tab.el.style=`--j-offset:${(activeTab.value.id - tab.id) * 52}px`
+    }
+    for (const secondTab of secondTabGroup.value) {
+      console.log(secondTab)
+      secondTab.el.$el.style=`--j-offset:${(secondActiveTab.value.id - secondTab.id) * 52}px`
+    }
+  }
+)
+
+onMounted(() => {
+  activeTab.value.active = false
+  secondActiveTab.value.active = false
+  const activeTabs = toTab(route.path)
+  activeTab.value = activeTabs[0]
+  secondActiveTab.value = activeTabs[1]
+  activeTab.value.active = true
+  secondActiveTab.value.active = true
+  state.value.home = !route.path.match("store")
+  for (const tab of tabGroup.value) {
+    tab.el.style=`--j-offset:${(activeTab.value.id - tab.id) * 52}px`
+  }
+  for (const secondTab of secondTabGroup.value) {
+    secondTab.el.$el.style=`--j-offset:${(secondActiveTab.value.id - secondTab.id) * 52}px`
+  }
+})
+</script>
+
+<template>
+  <span :class="state">
+    <nav class="primary" @mouseenter="state.hoverP=true" @mouseleave="state.hoverP=false">
+      <router-link to="/" class="logo">
+      </router-link>
+      <div class="navBtnGroup">
+        <div v-for="tab in tabGroup" :key="tab.name" :class="['navBtn', {active: tab.active}]" :ref="el => { tab.el = el }">
+          <span class="indicator"></span>
+          <q-icon :name="tab.icon" size="24px" />
+          <span class="label">{{ tab.label }}</span>
+          <router-link :to="tab.path" class="cover"></router-link>
+        </div>
+        <q-space />
+        <div class="navBtn">
+          <span class="indicator"></span>
+          <q-icon name="home" size="24px" />
+          <span class="label">首页</span>
+          <router-link to="/" class="cover"></router-link>
+        </div>
+      </div>
+      <span class="activeCtrl" @click="state.active=!state.active"></span>
+    </nav>
+    <nav class="secondary" @mouseenter="state.hoverS=true" @mouseleave="state.hoverS=false">
+      <div class="navBtnGroup">
+        <router-link v-for="secondTab in secondTabGroup" :to="secondTab.path" :class="['navBtn', {active: secondTab.active}]" :ref="el => { secondTab.el = el }" :key="secondTab.name">
+          <span class="indicator"></span>
+          <q-icon :name="secondTab.icon" size="24px" />
+          <span class="label">{{ secondTab.label }}</span>
+        </router-link>
+      </div>
+    </nav>
+  </span>
+</template>
+
+<style scoped lang="scss">
+@import "../css/quasar.variables";
+
+span.navigation {
+  position: fixed;
+  z-index: 10;
+
+  > * {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate3d(-156px, 0, 0);
+    backdrop-filter: blur(24px);
+    box-shadow:
+      1px 0 2.1px rgba(0, 0, 0, 0.03),
+      2.6px 0 5.2px rgba(0, 0, 0, 0.039),
+      5.3px 0 10.6px rgba(0, 0, 0, 0.044),
+      11px 0 21.9px rgba(0, 0, 0, 0.051),
+      30px 0 60px rgba(0, 0, 0, 0.07);
+    transition: {
+      property: transform, opacity, box-shadow;
+      duration: 500ms;
+      delay: 0s;
+    }
+    will-change: transform, opacity, box-shadow;
+  }
+
+  .primary {
+    display: flex;
+    flex-direction: column;
+    width: 216px;
+    background-color: white;
+    z-index: 1;
+    transition-delay: 500ms, 0s, 0s;
+
+    .logo {
+      display: block;
+      width: 100%;
+      height: 90px;
+      color: black;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .logo::before {
+      content: "";
+      display: block;
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      top: 32px;
+      right: 14px;
+      transform: scale3d(0.75, 0.75, 1);
+      background: {
+        image: url("../assets/icons/favicon-32x32.png");
+        repeat: no-repeat;
+        size: cover;
+        position: center;
+      };
+      transition: {
+        property: transform;
+        duration: 500ms;
+        delay: 500ms;
+      };
+    }
+
+    .logo::after {
+      content: "Spark Web Store";
+      font-family: Comfortaa-Light, sans-serif;
+      font-weight: 700;
+      font-size: 21px;
+      height: 2em;
+      line-height: 2em;
+      white-space: nowrap;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      opacity: 0;
+      transform: scale3d(.1, .1, .1) translate3d(-50%, 60px, 0);
+      transition: {
+        property: opacity,transform;
+        duration: 500ms;
+        delay: 500ms;
+      };
+      will-change: opacity,transform;
+    }
+
+    .navBtnGroup {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      transform: translate3d(78px, 0, 0);
+      transition: {
+        property: transform;
+        duration: 500ms;
+        delay: 500ms;
+      };
+      will-change: transform;
+
+      .navBtn {
+        height: 48px;
+        margin: 2px 0;
+        position: relative;
+        --j-offset: 0px;
+
+        i {
+          position: absolute;
+          right: 96px;
+          top: 12px;
+          transition: {
+            property: transform;
+            duration: 500ms;
+          };
+          will-change: transform;
+        }
+
+        .label {
+          font-size: 16px;
+          position: absolute;
+          top: 12px;
+          right: 80px;
+          transform: scale3d(.1, .1, 1) translate3d(-120px, 0, 0);
+          opacity: 0;
+          transition: {
+            property: transform, opacity;
+            duration: 500ms;
+          };
+          will-change: transform, opscity;
+        }
+
+        .indicator {
+          display: block;
+          background-color: $primary;
+          width: 5px;
+          height: 14px;
+          border-radius: 6px;
+          position: absolute;
+          top: 17px;
+          left: 88px;
+          opacity: 1;
+          --j-offset: inherit;
+          visibility: hidden;
+          transform: translate3d(0, var(--j-offset), 0);
+          transition: {
+            property: transform, opacity, width, height;
+            duration: 500ms;
+          };
+          will-change: transform, opscity, width, height;
+        }
+
+        &.active .indicator {
+          visibility: visible;
+        }
+
+        .cover {
+          width: 48px;
+          height: 48px;
+          border-radius: 6px;
+          background: black;
+          opacity: 0;
+          position: absolute;
+          left: 84px;
+          transition: {
+            property: transform, width, opacity;
+            duration: 500ms;
+          };
+          will-change: transform, width, opscity;
+        }
+
+        .cover:hover {
+          opacity: .1;
+        }
+      }
+    }
+
+    .activeCtrl {
+      font-weight: 700;
+      text-align: center;
+      transform: translate3d(38px, 0, 0);
+      transition: transform .5s .5s;
+      white-space: nowrap;
+      width: 80px;
+      position: relative;
+      left: 50%;
+      font-size: 14px;
+      margin-bottom: 21px;
+
+      &::before {
+        content: ">";
+        display: inline-block;
+        text-align: center;
+        overflow: hidden;
+        width: 24px;
+        height: 20.8px;
+        border-radius: 6px;
+        opacity: 1;
+        transform: translate3d(28px,0,0);
+        will-change: opacity, background-color, transform;
+        transition-property: opacity, background-color, transform;
+        transition-duration: 0.5s, 0.35s, 1s;
+        transition-delay: 0.7s, 0.5s, 0.5s;
+      }
+
+      &::after {
+        content: "<<<<<<";
+        display: inline-block;
+        text-align: center;
+        overflow: hidden;
+        width: 72px;
+        height: 20.8px;
+        border-radius: 6px;
+        opacity: 0;
+        transform: translate3d(-20px,0,0);
+        will-change: opacity, background-color,transform;
+        transition-property: opacity, background-color, transform;
+        transition-duration: 0.5s, 0.35s, 1s;
+        transition-delay: 0.5s;
+      }
+
+      &:hover {
+        &::before, &::after {
+          background-color: rgba(0,0,0,0.1);
+        }
+      }
+    }
+  }
+
+  .secondary {
+    width: 156px;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, .2);
+    left: 60px;
+    opacity: 0;
+    z-index: 0;
+
+    .navBtnGroup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 10px;
+
+      .navBtn {
+        display: flex;
+        height: 36px;
+        width: 100%;
+        margin: 8px 0;
+        padding: 8px;
+        color: black;
+        align-items: center;
+        text-decoration: none;
+        border-radius: 6px;
+        position: relative;
+        --j-offset: 0px;
+
+        .label {
+          flex-grow: 1;
+          text-align: center;
+        }
+
+        .indicator {
+          width: 100%;
+          height: 100%;
+          border-radius: 6px;
+          opacity: .2;
+          --j-offset: inherit;
+          visibility: hidden;
+          position: absolute;
+          top: 0;
+          left: 0;
+          background-color: $primary;
+          transform: translate3d(0, var(--j-offset), 0);
+          transition: transform .5s;
+        }
+      }
+
+      .navBtn:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .navBtn.active {
+        .indicator {
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  &.hoverP, &.hoverS {
+    &.active.primary > nav.primary {
+      transform: translate3d(0, 0, 0);
+      transition-delay: 0s;
+
+      .logo::before {
+        transform: translate3d(-78px, -12px, 0);
+        transition-delay: 0s;
+      }
+
+      .logo::after {
+        opacity: 1;
+        transform: scale3d(1, 1, 1) translate3d(-50%, 10px, 0);
+        transition-delay: 0s;
+      }
+
+      .navBtnGroup {
+        transform: translate3d(0, 10px, 0);
+        transition-delay: 0s;
+
+        .navBtn {
+
+          i {
+            transform: translate3d(-78px, 0, 0);
+            transition-delay: 500ms;
+          }
+
+          .label {
+            transform: scale3d(1, 1, 1);
+            opacity: 1;
+            transition-delay: 500ms;
+          }
+
+          .indicator {
+            width: 196px;
+            height: 48px;
+            transform: translate3d(-78px, calc(var(--j-offset) - 17px), 0);
+            opacity: .2;
+            transition-delay: 500ms;
+          }
+
+          .cover {
+            width: 196px;
+            transform: translate3d(-74px, 0, 0);
+            transition-delay: 500ms, 500ms, 0s;
+          }
+        }
+      }
+
+      .activeCtrl {
+        transform: translate3d(-40px, 0, 0);
+        transition-delay: 0s;
+
+        &::before {
+          opacity: 0;
+          transform: translate3d(28px, 21px, 0);
+          transition-delay: 0s;
+        }
+
+        &::after {
+          opacity: 1;
+          transform: translate3d(-20px, 21px, 0);
+          transition-delay: 0.2s, 0s, 0s;
+        }
+      }
+    }
+
+    &.secondary > {
+      .secondary {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+      }
+
+      .primary {
+        box-shadow: 0 0 4px 0 rgb(0 0 0 / 30%);
+      }
+    }
+  }
+
+  &.secondary {
+    .primary {
+      overflow: hidden;
+    }
+  }
+
+  &.home > * {
+    transform: translate3d(-216px, 0, 0)!important;
+    opacity: 0;
+    transition-delay: 0s;
+  }
+}
+</style>

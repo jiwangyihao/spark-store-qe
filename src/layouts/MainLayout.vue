@@ -43,6 +43,7 @@
       appear
       enter-active-class="animated fadeInLeft"
       leave-active-class="animated fadeOutLeft"
+      style="display: none"
     >
       <div :class="{storeNav: true, active: hActive&&nActive&&lsA, nActive: nActive, seMenu: !hActive, isSorts: isSorts}" v-if="$route.path.match('store')">
         <nav>
@@ -94,6 +95,7 @@
         </div>
       </div>
     </transition>
+    <navigation></navigation>
     <q-page-container style="overflow: hidden;">
       <router-view />
     </q-page-container>
@@ -111,6 +113,7 @@
 
 <script>
 import { JTabs, JTab } from '../components/index.js'
+import Navigation from '../components/Navigation.vue'
 import { defineComponent} from 'vue'
 
 export default defineComponent({
@@ -118,7 +121,8 @@ export default defineComponent({
 
   components: {
     JTabs,
-    JTab
+    JTab,
+    Navigation
   },
 
   methods: {
