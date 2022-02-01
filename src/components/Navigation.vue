@@ -6,7 +6,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const state = ref({
-  home: true,
+  home: !route.path.match("store"),
   navigation: true,
   hoverP: false,
   hoverS: false,
@@ -14,6 +14,49 @@ const state = ref({
   secondary: route.path.match("sorts") || route.path.match("application"),
   active: true
 })
+
+const topTabGroup = ref([
+  {
+    id: 1,
+    name: "home",
+    path: "/",
+    label: "首页",
+    active: true,
+    el: null
+  },
+  {
+    id: 2,
+    name: "download",
+    path: "/download",
+    label: "下载",
+    active: false,
+    el: null
+  },
+  {
+    id: 3,
+    name: "store",
+    path: "/store",
+    label: "商店",
+    active: false,
+    el: null
+  },
+  {
+    id: 4,
+    name: "forum",
+    path: "/forum",
+    label: "社区",
+    active: false,
+    el: null
+  },
+  {
+    id: 5,
+    name: "about",
+    path: "/about",
+    label: "关于",
+    active: false,
+    el: null
+  }
+])
 
 const tabGroup = ref([
   {
@@ -156,6 +199,35 @@ const secondTabGroup = ref([
   }
 ])
 
+const topTabGroupByName = ref({})
+
+const topTabGroupByPath = ref({})
+
+for (const tab of topTabGroup.value) {
+  topTabGroupByName.value[tab.name] = tab
+  topTabGroupByPath.value[tab.path] = tab
+}
+
+const tabGroupByName = ref({})
+
+const tabGroupByPath = ref({})
+
+for (const tab of tabGroup.value) {
+  tabGroupByName.value[tab.name] = tab
+  tabGroupByPath.value[tab.path] = tab
+}
+
+const secondTabGroupByName = ref({})
+
+const secondTabGroupByPath = ref({})
+
+for (const tab of secondTabGroup.value) {
+  secondTabGroupByName.value[tab.name] = tab
+  secondTabGroupByPath.value[tab.path] = tab
+}
+
+const topActiveTab = ref(topTabGroup.value[0])
+
 const activeTab = ref(tabGroup.value[0])
 
 const secondActiveTab = ref(tabGroup.value[0])
@@ -163,72 +235,67 @@ const secondActiveTab = ref(tabGroup.value[0])
 function toTab(path) {
   if (path.match("store")) {
     if (path.match("sorts")) {
-      for (const tab of tabGroup.value) {
-        if (tab.name==="sorts") {
-          for (const secondTab of secondTabGroup.value) {
-            if (secondTab.path===route.path) {
-              return [tab, secondTab]
-            }
-          }
-        }
-      }
+      return [topTabGroupByName.value['store'], tabGroupByName.value['sorts'], secondTabGroupByPath.value[path]]
     } else if (path.match("application")) {
-      for (const tab of tabGroup.value) {
-        if (tab.name==="sorts") {
-          return [tab, secondActiveTab]
-        }
-      }
+      return [topTabGroupByName.value['store'], tabGroupByName.value['sorts'], secondActiveTab.value]
     } else {
-      for (const tab of tabGroup.value) {
-        if (tab.path===route.path) {
-          return [tab, secondTabGroup.value[0]]
-        }
-      }
+      return [topTabGroupByName.value['store'], tabGroupByPath.value[path], secondTabGroup.value[0]]
     }
   }
-  for (const tab of tabGroup.value) {
-    if (tab.name==="recommend") {
-      return [tab, secondTabGroup.value[0]]
-    }
-  }
+  return [topTabGroupByPath.value[path], tabGroupByName.value['recommend'], secondTabGroup.value[0]]
 }
 
 watch(
   () => route.path,
   async newPath => {
+    topActiveTab.value.active = false
     activeTab.value.active = false
     secondActiveTab.value.active = false
     const activeTabs = toTab(newPath)
-    activeTab.value = activeTabs[0]
-    secondActiveTab.value = activeTabs[1]
+    topActiveTab.value = activeTabs[0]
+    activeTab.value = activeTabs[1]
+    secondActiveTab.value = activeTabs[2]
+    topActiveTab.value.active = true
     activeTab.value.active = true
     secondActiveTab.value.active = true
     state.value.home = !route.path.match("store")
     state.value.primary = !activeTab.value.name.match("sorts")
     state.value.secondary = activeTab.value.name.match("sorts")
+    for (const topTab of topTabGroup.value) {
+      // noinspection JSUnresolvedVariable
+      topTab.el.$el.style=`--j-offset:${(topActiveTab.value.id - topTab.id) * 72}px`
+    }
     for (const tab of tabGroup.value) {
       tab.el.style=`--j-offset:${(activeTab.value.id - tab.id) * 52}px`
     }
     for (const secondTab of secondTabGroup.value) {
-      console.log(secondTab)
+      // noinspection JSUnresolvedVariable
       secondTab.el.$el.style=`--j-offset:${(secondActiveTab.value.id - secondTab.id) * 52}px`
     }
   }
 )
 
 onMounted(() => {
+  topActiveTab.value.active = false
   activeTab.value.active = false
   secondActiveTab.value.active = false
   const activeTabs = toTab(route.path)
-  activeTab.value = activeTabs[0]
-  secondActiveTab.value = activeTabs[1]
+  topActiveTab.value = activeTabs[0]
+  activeTab.value = activeTabs[1]
+  secondActiveTab.value = activeTabs[2]
+  topActiveTab.value.active = true
   activeTab.value.active = true
   secondActiveTab.value.active = true
   state.value.home = !route.path.match("store")
+  for (const topTab of topTabGroup.value) {
+    // noinspection JSUnresolvedVariable
+    topTab.el.$el.style=`--j-offset:${(topActiveTab.value.id - topTab.id) * 72}px`
+  }
   for (const tab of tabGroup.value) {
     tab.el.style=`--j-offset:${(activeTab.value.id - tab.id) * 52}px`
   }
   for (const secondTab of secondTabGroup.value) {
+    // noinspection JSUnresolvedVariable
     secondTab.el.$el.style=`--j-offset:${(secondActiveTab.value.id - secondTab.id) * 52}px`
   }
 })
@@ -236,6 +303,18 @@ onMounted(() => {
 
 <template>
   <span :class="state">
+    <header>
+      <router-link to="/" class="logo">
+        <h1>Spark Store</h1>
+      </router-link>
+      <q-space />
+      <div class="navBtnGroup">
+        <router-link v-for="topTab in topTabGroup" :to="topTab.path" :class="['navBtn', {active: topTab.active}]" :ref="el => { topTab.el = el }" :key="topTab.name">
+          <span class="indicator"></span>
+          <span class="label">{{ topTab.label }}</span>
+        </router-link>
+      </div>
+    </header>
     <nav class="primary" @mouseenter="state.hoverP=true" @mouseleave="state.hoverP=false">
       <router-link to="/" class="logo">
       </router-link>
@@ -275,7 +354,7 @@ span.navigation {
   position: fixed;
   z-index: 10;
 
-  > * {
+  > nav {
     height: 100vh;
     position: fixed;
     top: 0;
@@ -302,6 +381,7 @@ span.navigation {
     width: 216px;
     background-color: white;
     z-index: 1;
+    overflow: hidden;
     transition-delay: 500ms, 0s, 0s;
 
     .logo {
@@ -522,6 +602,11 @@ span.navigation {
         border-radius: 6px;
         position: relative;
         --j-offset: 0px;
+        transition: background-color .5s;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
 
         .label {
           flex-grow: 1;
@@ -542,15 +627,111 @@ span.navigation {
           transform: translate3d(0, var(--j-offset), 0);
           transition: transform .5s;
         }
+
+        &.active {
+          .indicator {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+
+  header {
+    display: flex;
+    width: 100%;
+    height: 60px;
+    background: #ffffffb3;
+    box-shadow: 0 0 28px 0 #0000004d;
+    padding: 0 48px;
+    position: fixed;
+    z-index: 1;
+    backdrop-filter: blur(18px);
+    align-items: center;
+    transform: translate3d(0, -60px, 0);
+    opacity: 0;
+    transition: {
+      property: transform, opacity;
+      duration: 500ms;
+    };
+    will-change: transform,opacity;
+
+    .logo {
+      display: flex;
+      text-decoration: none;
+      color: black;
+      align-items: center;
+
+      &::before {
+        content: "";
+        display: inline-block;
+        background: {
+          image: url("../assets/icons/favicon-96x96.png");
+          repeat: no-repeat;
+          size: contain;
+        };
+        width: 38px;
+        height: 38px;
       }
 
-      .navBtn:hover {
-        background-color: rgba(0, 0, 0, 0.1);
+      h1 {
+        display: inline-block;
+        font: {
+          size: 21px;
+          family: "Comfortaa-Light", sans-serif;
+          weight: 700;
+        };
+        letter-spacing: .01em;
+        line-height: 1.5;
+        margin: 0 0 0 6px;
       }
+    }
 
-      .navBtn.active {
+    .navBtnGroup {
+      display: flex;
+
+      .navBtn {
+        display: flex;
+        width: 72px;
+        height: 40px;
+        border-radius: 6px;
+        color: black;
+        text-decoration: none;
+        font-size: 16px;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        --j-offset: 0px;
+        transition: {
+          property: background-color;
+          duration: 500ms;
+        };
+
+        &:hover {
+          background-color: rgba(0, 0, 0, .1);
+        }
+
         .indicator {
-          visibility: visible;
+          display: block;
+          width: 32px;
+          height: 4px;
+          border-radius: 2px;
+          background-color: $primary;
+          position: absolute;
+          bottom: 2px;
+          visibility: hidden;
+          --j-offset: inherit;
+          transform: translate3d(var(--j-offset), 0, 0);
+          transition: transform 500ms;
+        }
+
+        &.active {
+          color: $primary;
+          background-color: rgba($primary, .1);
+
+          .indicator {
+            visibility: visible;
+          }
         }
       }
     }
@@ -635,16 +816,17 @@ span.navigation {
     }
   }
 
-  &.secondary {
-    .primary {
-      overflow: hidden;
+  &.home {
+    > nav {
+      transform: translate3d(-216px, 0, 0) !important;
+      opacity: 0;
+      transition-delay: 0s;
     }
-  }
 
-  &.home > * {
-    transform: translate3d(-216px, 0, 0)!important;
-    opacity: 0;
-    transition-delay: 0s;
+    header {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
   }
 }
 </style>

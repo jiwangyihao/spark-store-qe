@@ -1,3 +1,22 @@
+<!--suppress NpmUsedModulesInstalled -->
+<script setup>
+import {ref} from "vue";
+import { useMeta } from 'quasar'
+import FooterView from '../components/FooterView'
+
+const module = ref("about")
+
+function goWanted() {
+  module.value="wanted"
+}
+
+useMeta({
+  title: '关于',
+  // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
+  titleTemplate: title => `${title} - 星火应用商店`,
+})
+</script>
+
 <template>
   <q-page class="flex flex-center" style="align-items:flex-start">
     <transition-group
@@ -5,11 +24,6 @@
       enter-leave-class="animated backOutLeft"
     >
       <div v-show="module==='about'" class="row aboutPage" key="about">
-        <q-img
-          src="../assets/img/about/about_1.png"
-          spinner-color="white"
-          class="bgPic"
-        />
         <div class="row">
           <h1>关于</h1>
           <h2>ABOUT US</h2>
@@ -34,13 +48,6 @@
         </q-btn>
       </div>
       <div v-show="module==='wanted'" class="row wantedPage" key="wanted">
-        <q-img
-          src="../assets/img/about/about_2.png"
-          spinner-color="white"
-          height="56vh"
-          style="position: absolute; top: 0; left: 0; z-index:-1;"
-          :img-style="{filter: 'brightness(0.7)'}"
-        />
         <div class="row title">
           <h1>招贤纳士</h1>
           <h2>WE WANT YOU</h2>
@@ -60,31 +67,160 @@
         </div>
       </div>
     </transition-group>
+    <footer-view></footer-view>
   </q-page>
 </template>
 
-<script>
-import { useMeta } from 'quasar'
+<style scoped lang="scss">
+@use '../css/var-image-bg';
 
-export default {
-  name: 'PageIndex',
-  data: () => {
-    return {
-      module: "about"
+.aboutPage {
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: space-evenly;
+  width: 100vw;
+  height: calc(100vh - 10vmin);
+  padding-top: 10vmin;
+
+  &::before {
+    @include var-image-bg.image("about",'background');
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    filter: brightness(0.5);
+  }
+
+  > .row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    margin: 0;
+    color: white;
+    font-size: 6vmin;
+    line-height: 2em;
+    position: relative;
+
+    &::after {
+      content: "";
+      width: 1.2em;
+      height: 0.16em;
+      background-color: white;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      border-radius: 0.08em;
+      transform: translateX(-50%);
     }
-  },
-  setup () {
-    // needs to be called in setup()
-    useMeta({
-      title: '关于',
-      // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
-      titleTemplate: title => `${title} - 星火应用商店`,
-    })
-  },
-  methods: {
-    goWanted: function() {
-      this.module="wanted"
+  }
+
+  h2 {
+    color: white;
+    margin: 0;
+    font-size: 3vmin;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    line-height: 2em;
+  }
+
+  p {
+    color: white;
+    margin: 0;
+    font-size: 2.2vmin;
+    line-height: 2.2em;
+  }
+}
+
+.wantedPage {
+  position: relative;
+  align-items: flex-start;
+  align-content: flex-start;
+  justify-content: flex-start;
+  padding: 10vmin 8vmin;
+  flex-direction: column;
+
+  &::before {
+    @include var-image-bg.image("about",'banner');
+    content: "";
+    width: 100%;
+    height: 56vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    filter: 'brightness(0.7)'
+  }
+
+  .title {
+    margin-top: 6vmin;
+  }
+
+  h1 {
+    margin: 0;
+    color: white;
+    font-size: 6vmin;
+    line-height: 2em;
+  }
+
+  h2 {
+    color: rgba(255,255,255,0.42);
+    margin: 0 0 0 3vmin;
+    font-size: 6vmin;
+    font-weight: 400;
+    line-height: 2em;
+  }
+
+  p {
+    color: white;
+    margin: 0;
+    font-size: 2.2vmin;
+    line-height: 2.2em;
+  }
+
+  .method {
+    background-color: white;
+    border-radius: 2vmin;
+    padding: 0.4vmin 4vmin;
+    font-size: 2vmin;
+    box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
+    color: rgb(25,46,66);
+  }
+
+  .jobCard {
+    width: 80%;
+    background-color: white;
+    box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
+    border-radius: 1vmin;
+    margin: 4vmin 0;
+    padding: 3vmin;
+    position: relative;
+    flex-direction: column;
+
+    h4 {
+      margin: 0 0 3vmin;
+      font-size: 3vmin;
+      line-height: 1em;
+
+      &::after {
+        content: "";
+        height: 1em;
+        width: 0.3em;
+        background-color: var(--q-primary);
+        position: absolute;
+        left: 0;
+      }
+    }
+
+    p {
+      color: black;
     }
   }
 }
-</script>
+</style>
