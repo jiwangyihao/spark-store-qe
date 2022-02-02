@@ -1,4 +1,8 @@
 <script setup>
+//下载地址在/src/router/routes.js中设置
+
+// noinspection NpmUsedModulesInstalled
+import {ref} from "vue";
 import { useMeta } from 'quasar'
 import FooterView from '../components/FooterView'
 
@@ -8,6 +12,58 @@ useMeta({
   titleTemplate: title => `${title} - 星火应用商店`,
 })
 
+//控制安装说明（Q&A）弹窗的显示
+const showTips = ref(false)
+
+//Q&A中的消息内容
+const qaMessages = [
+  {
+    //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
+    question: ["我在使用UOS但我不想打开开发者模式"],
+    answer: ["看看这个：<a href='https://gitee.com/deepin-community-store/spark-store-uos/releases'>https://gitee.com/deepin-community-store/spark-store-uos/releases</a>"]
+  },
+  {
+    question: ["去哪反馈？"],
+    answer: ["应用详情页面有按钮"]
+  },
+  {
+    question: ["在哪里投稿？"],
+    answer: ["右上角菜单--->投递应用"]
+  },
+  {
+    question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
+    answer: ["可以，但是请先下载依赖补充包"]
+  },
+  {
+    question: ["下载的web应用不能启动怎么办？"],
+    answer: [
+      "如果你在使用ubuntu 20.04，推荐更新dtk到5.4版本，也可参考Debian11的解决方法",
+      "如果你是使用Debian 11的用户，理论上不会出问题，如果闪退，请卸载spark-webapp-runtime并下载swrt-lite包来修复",
+      "sudo apt remove spark-webapp-runtime -y && sudo apt install swrt-lite -y"
+    ]
+  },
+  {
+    question: ["wine应用不能启动"],
+    answer: ["带上你的发行版名称&版本去应用反馈/催更"]
+  },
+  {
+    question: ["星火商店会影响系统正常更新吗？"],
+    answer: ["星火商店的源优先级被调的低于系统默认，不会影响"]
+  },
+  {
+    question: ["应用界面很灰，很亮，看不清怎么办"],
+    answer: ["dtk限制，暂时没什么办法，将就用吧"]
+  },
+  {
+    question: ["关于按钮打不开，一打开就闪退"],
+    answer: [
+      "如果你用的是ubuntu 20.04，请尝试更新dtk到5.4版本（仓库已经同步更新）",
+      "如果你用的是Debian11，理论上不会闪退，如果还是闪退，那就……联系开发者"
+    ]
+  }
+]
+
+//时间线中的更新日志
 const updateHistory= [
   {
     version: "3.0.3-8",
@@ -132,7 +188,7 @@ const updateHistory= [
       <div class="row" style="flex-grow:1;padding:4vmin">
         <div class="row downCard">
           <q-avatar size="48px">
-            <img src="../assets/img/download/download-deepin.svg" alt="deepin's logo">
+            <img src="../assets/icons/favicon-96x96.png" alt="">
           </q-avatar>
           <div class="row" style="flex-direction:column; align-items: flex-start;margin-left:2vmin">
             <h3>软件本体</h3>
@@ -140,7 +196,7 @@ const updateHistory= [
               <q-btn
                 color="primary"
                 text-color="white"
-                to="/download_latest"
+                @click="showTips = true"
                 style="padding: 0 3vmin;"
                 dense
                 rounded
@@ -156,15 +212,15 @@ const updateHistory= [
       <div class="row" style="flex-grow:1;padding:4vmin">
         <div class="row downCard">
           <q-avatar size="48px">
-            <img src="../assets/img/download/download-uos.svg" alt="UOS's logo">
+            <img src="../assets/img/download/download-debian.png" alt="">
           </q-avatar>
           <div class="row" style="flex-direction:column; align-items: flex-start;margin-left:2vmin">
-            <h3>UOS版</h3>
+            <h3>依赖包</h3>
             <div class="row">
               <q-btn
                 color="primary"
                 text-color="white"
-                to="/download_uos_latest"
+                to="/download_dependencies_latest"
                 style="padding: 0 3vmin;"
                 dense
                 rounded
@@ -172,36 +228,85 @@ const updateHistory= [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.0.3-7-uos</span>
+              <span>最新版本 5.4.20</span>
             </div>
           </div>
         </div>
       </div>
       <q-timeline color="primary" layout="comfortable">
-        <!--suppress JSUnresolvedVariable -->
         <q-timeline-entry
-          v-for="v,k in updateHistory"
+          v-for="(v,k) in updateHistory"
           :key="k"
           :title="v.version"
           :subtitle="v.time"
         >
           <div>
             <ul style="padding-inline-start: 0;">
-              <!--suppress JSUnresolvedVariable -->
-              <li v-for="t,key in v.details" :key="key">{{t}}</li>
+              <li v-for="(t,key) in v.details" :key="key">{{t}}</li>
             </ul>
           </div>
         </q-timeline-entry>
       </q-timeline>
     </div>
+
+    <!-- 安装说明（Q&A）弹窗 -->
+    <div :class="['tipsContainer',{active : showTips}]" @click="showTips = false">
+      <div class="tipsPanel" @click.stop>
+        <div class="logoPanel"></div>
+        <div class="contentPanel">
+          <h3>安装说明 Q&A</h3>
+          <q-scroll-area class="qaCard">
+            <div class="qaSection" v-for="(message,key) in qaMessages" :key="key">
+              <q-chat-message
+                :text="message.question"
+                text-html
+                text-color="white"
+                bg-color="primary"
+              >
+                <template #avatar>
+                  <div class="avatar">Q</div>
+                </template>
+              </q-chat-message>
+              <q-chat-message
+                :text="message.answer"
+                text-html
+                sent
+              >
+                <template #avatar>
+                  <div class="avatar">A</div>
+                </template>
+              </q-chat-message>
+            </div>
+          </q-scroll-area>
+          <q-btn
+            color="primary"
+            text-color="white"
+            to="/download_latest"
+          >
+            开始下载
+          </q-btn>
+        </div>
+      </div>
+    </div>
+
     <footer-view></footer-view>
   </q-page>
 </template>
 
 <style scoped lang="scss">
-  @use '../css/var-image-bg';
+@use '../css/var-image-bg';
+@import "../css/quasar.variables";
 
-  .downPage.varImageBg.downBackground::before {
+.downPage {
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: flex-start;
+  padding-top: 10vmin;
+  flex-wrap: nowrap;
+
+  &.varImageBg.downBackground::before {
     @include var-image-bg.image("download",'background');
     content:"";
     width: 100%;
@@ -212,68 +317,239 @@ const updateHistory= [
     z-index: -1;
   }
 
-  .downPage {
+  h1 {
+    margin: 8vmin 0 0 0;
+    color: white;
+    font-size: 6vmin;
+    line-height: 2em;
     position: relative;
-    flex-direction: column;
-    align-items: center;
-    align-content: center;
-    justify-content: flex-start;
-    padding-top: 10vmin;
-    flex-wrap: nowrap;
 
-    h1 {
-      margin: 8vmin 0 0 0;
-      color: white;
-      font-size: 6vmin;
-      line-height: 2em;
-      position: relative;
-
-      &::after {
-        content: "";
-        width: 1.2em;
-        height: 0.16em;
-        background-color: white;
-        position: absolute;
-        left: 50%;
-        bottom: 0;
-        border-radius: 0.08em;
-        transform: translateX(-50%);
-      }
-    }
-
-    h2 {
-      color: white;
-      margin: 0 0 4vmin 0;
-      font-size: 3vmin;
-      font-weight: 400;
-      letter-spacing: 0.3em;
-      line-height: 2em;
-    }
-
-    .downCard {
+    &::after {
+      content: "";
+      width: 1.2em;
+      height: 0.16em;
       background-color: white;
-      width: 100%;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      border-radius: 0.08em;
+      transform: translateX(-50%);
+    }
+  }
+
+  h2 {
+    color: white;
+    margin: 0 0 4vmin 0;
+    font-size: 3vmin;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    line-height: 2em;
+  }
+
+  .downCard {
+    background-color: white;
+    width: 100%;
+    border-radius: 1vmin;
+    box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
+    padding: 3vmin 2vmin;
+
+    .q-avatar__content {
+      font-size: 1em;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin: 0;
+      display: flex;
+      line-height: 20px;
+    }
+
+    > .row > .row > span {
+      display: flex;
+      align-items: center;
+      margin-left: 2vmin;
+      color: rgb(127,127,127);
+    }
+  }
+
+  .tipsContainer {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,.2);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    transition: {
+      property: opacity, visibility;
+      duration: 500ms, 0s;
+      delay: 0s, 500ms;
+    };
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+
+    .tipsPanel {
+      display: flex;
+      min-width: 70vw;
+      max-width: 90vw;
+      width: 100vmin;
+      height: 80vh;
+      background-color: white;
       border-radius: 1vmin;
-      box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
-      padding: 3vmin 2vmin;
+      overflow: hidden;
+      box-shadow:
+      0 0 0 rgba(0, 0, 0, 0.056),
+      0 0 0.1vmin rgba(0, 0, 0, 0.081),
+      0 0 0.1vmin rgba(0, 0, 0, 0.1),
+      0 0 0.2vmin rgba(0, 0, 0, 0.119),
+      0 0 0.4vmin rgba(0, 0, 0, 0.144),
+      0 0 1vmin rgba(0, 0, 0, 0.2);
 
-      .q-avatar__content {
-        font-size: 1em;
+      .logoPanel {
+        display: flex;
+        min-width: 10vmin;
+        width: 10vmin;
+        height: 100%;
+        background-color: #66ccff;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 1.5vmin;
+
+        &::before {
+          content: "";
+          display: block;
+          width: 7vmin;
+          height: 7vmin;
+          border-radius: 1vmin;
+          background: {
+            color: white;
+            image: url("../assets/icons/favicon-128x128.png");
+            repeat: no-repeat;
+            size: 4vmin;
+            position: center;
+          };
+          box-shadow:
+            0 0 0 rgba(0, 0, 0, 0.056),
+            0 0 0.1vmin rgba(0, 0, 0, 0.081),
+            0 0 0.1vmin rgba(0, 0, 0, 0.1),
+            0 0 0.2vmin rgba(0, 0, 0, 0.119),
+            0 0 0.4vmin rgba(0, 0, 0, 0.144),
+            0 0 1vmin rgba(0, 0, 0, 0.2)
+        ;
+
+          //filter: drop-shadow(0 0 0.5vmin white);
+        }
       }
 
-      h3 {
-        font-size: 15px;
-        margin: 0;
+      .contentPanel {
         display: flex;
-        line-height: 20px;
-      }
+        flex-grow: 1;
+        flex-direction: column;
+        padding: 5vmin;
 
-      > .row > .row > span {
-        display: flex;
-        align-items: center;
-        margin-left: 2vmin;
-        color: rgb(127,127,127);
+        h3 {
+          //color: black;
+          font-weight: bold;
+          font-size: 3.2vmin;
+          line-height: 4vmin;
+          margin: 0 0 2vmin 0;
+        }
+
+        .qaCard {
+          width: 100%;
+          flex-grow: 1;
+          padding: 2vmin;
+          background: rgba($primary,.05);
+          border-radius: 1vmin;
+
+          .scrollarea__container {
+            border-radius: 0.6vmin;
+          }
+
+          .q-scrollarea__bar {
+            right: 2px;
+            border-radius: 9px;
+            background-color: #027be3;
+            width: 9px;
+            opacity: 0.2
+          }
+
+          .q-scrollarea__thumb {
+            right: 4px;
+            border-radius: 5px;
+            background-color: #027be3;
+            width: 5px;
+            opacity: 0.75
+          }
+        }
+
+        .avatar {
+          min-width: 36px;
+          width: 36px;
+          height: 36px;
+          font-size: 18px;
+          font-weight: bold;
+          line-height: 36px;
+          text-align: center;
+          border-radius: 18px;
+        }
+
+        .q-message-received .avatar {
+          color: white;
+          background: $primary;
+          margin-right: 8px;
+        }
+
+        .q-message-sent .avatar {
+          color: lighten($primary, 10%);
+          background: #e0e0e0;
+          margin-left: 8px;
+        }
+
+        .q-btn {
+          align-self: flex-end;
+          margin-top: 2vmin;
+        }
       }
     }
   }
+}
+</style>
+
+<style lang="scss">
+@import "../css/quasar.variables";
+.qaCard {
+  .scrollarea__container {
+    border-radius: 0.6vmin;
+  }
+
+  .q-scrollarea__bar {
+    right: 2px;
+    border-radius: 9px;
+    background-color: $primary;
+    width: 9px;
+    opacity: 0.2
+  }
+
+  .q-scrollarea__thumb {
+    right: 4px;
+    border-radius: 5px;
+    background-color: $primary;
+    width: 5px;
+    opacity: 0.75
+  }
+
+  .q-message-text:last-child {
+    min-height: unset;
+  }
+}
 </style>

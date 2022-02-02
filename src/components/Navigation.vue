@@ -235,14 +235,26 @@ const secondActiveTab = ref(tabGroup.value[0])
 function toTab(path) {
   if (path.match("store")) {
     if (path.match("sorts")) {
-      return [topTabGroupByName.value['store'], tabGroupByName.value['sorts'], secondTabGroupByPath.value[path]]
+      if (secondTabGroupByPath.value.hasOwnProperty(path)) {
+        return [topTabGroupByName.value['store'], tabGroupByName.value['sorts'], secondTabGroupByPath.value[path]]
+      } else {
+        return [topTabGroupByName.value['store'], tabGroupByName.value['sorts'], secondTabGroup.value[0]]
+      }
     } else if (path.match("application")) {
       return [topTabGroupByName.value['store'], tabGroupByName.value['sorts'], secondActiveTab.value]
     } else {
-      return [topTabGroupByName.value['store'], tabGroupByPath.value[path], secondTabGroup.value[0]]
+      if (tabGroupByPath.value.hasOwnProperty(path)) {
+        return [topTabGroupByName.value['store'], tabGroupByPath.value[path], secondTabGroup.value[0]]
+      } else {
+        return [topTabGroupByName.value['store'], tabGroup.value[0], secondTabGroup.value[0]]
+      }
     }
   }
-  return [topTabGroupByPath.value[path], tabGroupByName.value['recommend'], secondTabGroup.value[0]]
+  if (topTabGroupByPath.value.hasOwnProperty(path)) {
+    return [topTabGroupByPath.value[path], tabGroupByName.value['recommend'], secondTabGroup.value[0]]
+  } else {
+    return [topTabGroup.value[0], tabGroupByName.value['recommend'], secondTabGroup.value[0]]
+  }
 }
 
 watch(
@@ -263,7 +275,7 @@ watch(
     state.value.secondary = activeTab.value.name.match("sorts")
     for (const topTab of topTabGroup.value) {
       // noinspection JSUnresolvedVariable
-      topTab.el.$el.style=`--j-offset:${(topActiveTab.value.id - topTab.id) * 72}px`
+      topTab.el.$el.style=`--j-offset:${(topActiveTab.value.id - topTab.id) * 78}px`
     }
     for (const tab of tabGroup.value) {
       tab.el.style=`--j-offset:${(activeTab.value.id - tab.id) * 52}px`
@@ -289,7 +301,7 @@ onMounted(() => {
   state.value.home = !route.path.match("store")
   for (const topTab of topTabGroup.value) {
     // noinspection JSUnresolvedVariable
-    topTab.el.$el.style=`--j-offset:${(topActiveTab.value.id - topTab.id) * 72}px`
+    topTab.el.$el.style=`--j-offset:${(topActiveTab.value.id - topTab.id) * 78}px`
   }
   for (const tab of tabGroup.value) {
     tab.el.style=`--j-offset:${(activeTab.value.id - tab.id) * 52}px`
@@ -694,6 +706,7 @@ span.navigation {
         display: flex;
         width: 72px;
         height: 40px;
+        margin: 0 3px;
         border-radius: 6px;
         color: black;
         text-decoration: none;

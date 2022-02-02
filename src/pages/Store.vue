@@ -3,10 +3,11 @@
 // noinspection NpmUsedModulesInstalled
 import {onMounted, ref, watch} from "vue";
 // noinspection NpmUsedModulesInstalled
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import axios from "axios";
 import { useMeta } from 'quasar'
 
+const router = useRouter()
 const route = useRoute()
 
 useMeta({
@@ -39,20 +40,23 @@ function getSortId() {
 function getAppList(params) {
   if (params.hasOwnProperty("sort")) {
     // noinspection SpellCheckingInspection
-    axios
-      //39.106.2.2:38324
-      .post(
-        `${dataSource.value}application/get_application_list`,
-        {
-          size: 10000,
-          type_id: sortId.value[params.sort]
-        }
-      )
-      //appList.json 软件列表
-      .then((res) => {
-        appList.value = res.data.data.data;
-        loaded.value=true
-      });
+    if (sortId.value.hasOwnProperty(params.sort)) {
+      axios
+        .post(
+          `${dataSource.value}application/get_application_list`,
+          {
+            size: 10000,
+            type_id: sortId.value[params.sort]
+          }
+        )
+        //appList.json 软件列表
+        .then((res) => {
+          appList.value = res.data.data.data;
+          loaded.value=true
+        });
+    } else {
+      router.push("/Error404")
+    }
   }
 }
 
@@ -83,7 +87,7 @@ watch(
         loaded.value=false
         setTimeout(() => {
           loaded.value=true
-        }, 200);
+        }, 500);
       }
     }
   }
@@ -265,6 +269,7 @@ openApp(app.application_id,index)">
     width: 100%;
     height: 20vmin;
     background: linear-gradient(white 36%, rgba(0,0,0,0));
+    pointer-events: none;
     z-index: 1;
   }
   .storePage .topBar .search {
@@ -288,6 +293,7 @@ openApp(app.application_id,index)">
     flex-direction: row-reverse;
     transition-property: width, box-shadow;
     transition-duration: 0.5s;
+    pointer-events: auto;
   }
   .storePage .topBar .search:hover {
     width: 324px;
