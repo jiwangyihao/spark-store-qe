@@ -311,6 +311,7 @@ const updateHistory= [
     content:"";
     width: 100%;
     height: 56vh;
+    max-height: calc(68vmin + 48px);
     position: absolute;
     top: 0;
     left: 0;
