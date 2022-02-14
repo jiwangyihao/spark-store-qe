@@ -63,7 +63,7 @@ useMeta({
           <p><strong>学历要求：</strong>小学及以上</p>
           <p><strong>能力要求：</strong>会使用 deepin V20 或其它 Linux 发行版，会打字，会上网，会下载 Linux 软件包，有责任心，有电脑；</p>
           <p><strong>职责：</strong>搜集软件，打包软件。维护者可以不是开发者，但必须有认真负责的态度，对于自己维护的软件包应当维护到底。若不能维护，请在软件标题写明“已停止维护”并通知站长或其他开发者，以便于找人接手。</p>
-          <p><strong>投递须知：</strong><a href="https://www.shenmo.tech:420/?p=193">https://www.shenmo.tech:420/?p=193</a></p>
+          <p><strong>投递须知：</strong><a href="https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit">https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit</a></p>
         </div>
       </div>
     </transition-group>

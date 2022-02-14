@@ -23,6 +23,14 @@ const qaMessages = [
     answer: ["看看这个：<a href='https://gitee.com/deepin-community-store/spark-store-uos/releases'>https://gitee.com/deepin-community-store/spark-store-uos/releases</a>"]
   },
   {
+    question: ["在哪进交流群？"],
+    answer: ["872690351"]
+  },
+  {
+    question: ["如何开启多线程下载？"],
+    answer: ["右上角菜单--->设置--->源列表旁边的刷新按钮，然后重启应用"]
+  },
+  {
     question: ["去哪反馈？"],
     answer: ["应用详情页面有按钮"]
   },
