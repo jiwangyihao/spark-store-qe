@@ -74,6 +74,15 @@ const qaMessages = [
 //时间线中的更新日志
 const updateHistory= [
   {
+    version: "3.0.3-9",
+    time: "2022-02-26 19:43",
+    details: [
+      "更改包构建方式，现在支持dpkg-build-package；",
+      "更改key的安装方法；",
+      "表明我们还活着。"
+    ]
+  },
+  {
     version: "3.0.3-8",
     time: "2022-01-14 00:39",
     details: [
@@ -212,7 +221,7 @@ const updateHistory= [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.0.3-8</span>
+              <span>最新版本 3.0.3-9</span>
             </div>
           </div>
         </div>
