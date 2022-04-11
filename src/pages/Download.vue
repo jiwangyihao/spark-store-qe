@@ -59,20 +59,41 @@ const qaMessages = [
     answer: ["星火商店的源优先级被调的低于系统默认，不会影响"]
   },
   {
-    question: ["应用界面很灰，很亮，看不清怎么办"],
-    answer: ["dtk限制，暂时没什么办法，将就用吧"]
+    question: ["有些应用已经过时或者失效了，我想让他下架"],
+    answer: ["前往<a href='https://gitee.com/deepin-community-store/software_-issue'>https://gitee.com/deepin-community-store/software_-issue</a>"]
   },
   {
-    question: ["关于按钮打不开，一打开就闪退"],
+    question: ["提示有更新之后在菜单里的Auto Upgrade操作却提示更新了0个软件包"],
     answer: [
-      "如果你用的是ubuntu 20.04，请尝试更新dtk到5.4版本（仓库已经同步更新）",
-      "如果你用的是Debian11，理论上不会闪退，如果还是闪退，那就……联系开发者"
+      "这个软件包所需要的依赖高于你的系统依赖。这可能是为了其他发行版编译的软件包，不能安装是正常的。如果觉得烦。。。可以在设置中按1关闭更新提醒服务"
     ]
   }
 ]
 
 //时间线中的更新日志
 const updateHistory= [
+{
+    version: "3.0.3-11",
+    time: "2022-04-11 11:43",
+    details: [
+      "提供了自动更新服务"
+    ]
+  },
+  {
+    version: "3.0.3-10",
+    time: "2022-04-07 15:30",
+    details: [
+      "这东西还要手写过来的？就不能直接让用户跳转到gitee去看发行日志吗",
+      "太反人类了",
+	"图呢？我想放个图啊！咋放图嘞？",
+      "支持html标签吗？",
+	"我在这写一个标签直接指向30310版本的发行日志应该没人发现吧",
+	"<a href='https://gitee.com/deepin-community-store/spark-store/releases/3.0.3-10'>https://gitee.com/deepin-community-store/spark-store/releases/3.0.3-10</a>",
+	"(｡･∀･)ﾉﾞ多省事！啥？jwyh说这样不美观？哼，又不是不能用！以后我还要辶",
+	"",
+	"搞事情的shenmo已经被拖走了"
+    ]
+  }, 
   {
     version: "3.0.3-9",
     time: "2022-02-26 19:43",
@@ -126,7 +147,7 @@ const updateHistory= [
     details: [
       "支持应用详情页显示升级/重新安装；",
       "修复应用详情页经常加载失败的问题；",
-      "修复应用详情页写在失败的问题；",
+      "修复应���详情页写在失败的问题；",
       "修复下载列表和通知栏不显示应用缩略图的问题；",
       "支持动态获取下载镜像源列表；",
       "尝试开启 Hidpi 支持；",
@@ -150,7 +171,7 @@ const updateHistory= [
       "修改默认源服务器列表；",
       "修复启动时首页颜色主题不跟随系统主题颜色的问题；",
       "修正设置界面源服务器选择下拉框中“开发者模式”提示文字可被选中的问题。",
-      "该版本由 UOS 个人版 + Qt 5.11.3 编译，如果存在运行问题请及时反馈......"
+      "该���本由 UOS 个人版 + Qt 5.11.3 编译，如果存在运行问题请及时反馈......"
     ]
   },
   {
@@ -221,7 +242,7 @@ const updateHistory= [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.0.3-9</span>
+              <span>最新版本 3.0.3-11</span>
             </div>
           </div>
         </div>
