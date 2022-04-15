@@ -135,12 +135,14 @@ useMeta({
 }
 
 .wantedPage {
+  min-height: calc(100vh - 10vmin);
   position: relative;
   align-items: flex-start;
   align-content: flex-start;
   justify-content: flex-start;
   padding: 10vmin 8vmin;
   flex-direction: column;
+  flex-grow: 1;
 
   &::before {
     @include var-image-bg.image("about",'banner');
