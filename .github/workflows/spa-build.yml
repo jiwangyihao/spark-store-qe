@@ -19,7 +19,7 @@ jobs:
           yarn global add @quasar/cli
           yarn
           quasar build
-          tar -zcvf SPA.zip build/spa
+          tar -zcvf SPA.zip dist/spa
         shell: bash
 
       - name: Upload SPA zip
