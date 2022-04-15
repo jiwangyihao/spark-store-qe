@@ -1,0 +1,29 @@
+name: SPA Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
+        with:
+          persist-credentials: false
+
+      - name: Build Vue
+        run: |
+          yarn global add @quasar/cli
+          yarn
+          quasar build
+          tar -zcvf SPA.zip build/spa
+        shell: bash
+
+      - name: Upload SPA zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: SPA.zip
+          path: "./SPA.zip"
