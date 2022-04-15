@@ -16,8 +16,5 @@ jobs:
           
       - name: Build Vue
         run: |
-          yarn global add @quasar/cli
-          quasar build
-          cd dist/spa
-          ln -s index.html 404.html
+          ls
         shell: bash
