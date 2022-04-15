@@ -76,7 +76,7 @@ const updateHistory= [
     version: "3.0.3-11",
     time: "2022-04-11 11:43",
     details: [
-      "提供了自动更新服务"
+      "提供了自动更新服务。"
     ]
   },
   {
@@ -85,15 +85,21 @@ const updateHistory= [
     details: [
       "这东西还要手写过来的？就不能直接让用户跳转到gitee去看发行日志吗",
       "太反人类了",
-	"图呢？我想放个图啊！咋放图嘞？",
+	    "图呢？我想放个图啊！咋放图嘞？",
       "支持html标签吗？",
-	"我在这写一个标签直接指向30310版本的发行日志应该没人发现吧",
-	"<a href='https://gitee.com/deepin-community-store/spark-store/releases/3.0.3-10'>https://gitee.com/deepin-community-store/spark-store/releases/3.0.3-10</a>",
-	"(｡･∀･)ﾉﾞ多省事！啥？jwyh说这样不美观？哼，又不是不能用！以后我还要辶",
-	"",
-	"搞事情的shenmo已经被拖走了"
+	    "我在这写一个标签直接指向30310版本的发行日志应该没人发现吧",
+	    "<a href='https://gitee.com/deepin-community-store/spark-store/releases/3.0.3-10'>https://gitee.com/deepin-community-store/spark-store/releases/3.0.3-10</a>",
+	    "(｡･∀･)ﾉﾞ多省事！啥？jwyh说这样不美观？哼，又不是不能用！以后我还要辶",
+	    "",
+	    "搞事情的shenmo已经被拖走了",
+      "",
+      "正式的更新日志 by jwyh：",
+      "大幅度优化了非deepin/UOS系统下的显示效果；",
+      "修改了control文件，防止在编译时误使用了dtk2的kit；",
+      "spark-dstore-patch现在会在编译时一并编译，跨平台已可以实现；",
+      "spark-dstore-patch现在有一个独立的仓库 https://gitee.com/deepin-community-store/spark-dstore-patch。"
     ]
-  }, 
+  },
   {
     version: "3.0.3-9",
     time: "2022-02-26 19:43",

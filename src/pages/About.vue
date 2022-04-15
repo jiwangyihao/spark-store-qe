@@ -29,7 +29,7 @@ useMeta({
           <h2>ABOUT US</h2>
         </div>
         <div class="row">
-          <p>由深度科技论坛（bbs.deepin.org）大佬 shenmo 发起的星火工作组致力于丰富 Linux 生态，</p>
+          <p>由深度科技论坛（bbs.deepin.org） shenmo 发起的星火工作组致力于丰富 Linux 生态，</p>
           <p>取“星星之火，可以燎原”之意，组建了星火应用商店。</p>
           <p>我们是个年轻的团队，大部分成员是 00 后，有小学生，中学生，大学生，来自五湖四海。</p>
           <p>尽管我们年龄不同，资历不同，但是我们努力建设 Linux 生态的目标是相同的，</p>
@@ -57,12 +57,8 @@ useMeta({
         </div>
         <div class="row jobCard">
           <h4>软件维护员</h4>
-          <p><strong>年龄：</strong>不限</p>
-          <p><strong>性别：</strong>不限</p>
-          <p><strong>工作地点：</strong>地球</p>
-          <p><strong>学历要求：</strong>小学及以上</p>
           <p><strong>能力要求：</strong>会使用 deepin V20 或其它 Linux 发行版，会打字，会上网，会下载 Linux 软件包，有责任心，有电脑；</p>
-          <p><strong>职责：</strong>搜集软件，打包软件。维护者可以不是开发者，但必须有认真负责的态度，对于自己维护的软件包应当维护到底。若不能维护，请在软件标题写明“已停止维护”并通知站长或其他开发者，以便于找人接手。</p>
+          <p><strong>职责：</strong>搜集软件，打包软件。维护者可以不是开发者，但必须有认真负责的态度。若不能继续维护，请在星火钉钉/QQ群通知管理员。</p>
           <p><strong>投递须知：</strong><a href="https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit">https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit</a></p>
         </div>
       </div>
