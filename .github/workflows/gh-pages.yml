@@ -16,5 +16,6 @@ jobs:
           
       - name: Build Vue
         run: |
+          yarn global add @quasar/cli
           ls
         shell: bash
