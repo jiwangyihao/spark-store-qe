@@ -13,6 +13,7 @@ jobs:
         run: |
           yarn global add @quasar/cli
           yarn install
+          ls
           quasar build
           cp dist/spa/index.html dist/spa/404.html
       - name: Deploy 🚀
