@@ -19,11 +19,10 @@ jobs:
           yarn global add @quasar/cli
           yarn
           quasar build
-          tar -zcvf SPA.zip dist/spa
         shell: bash
 
       - name: Upload SPA zip
         uses: actions/upload-artifact@v2
         with:
-          name: SPA.zip
-          path: "./SPA.zip"
+          name: SPA
+          path: "./dist/spa"
