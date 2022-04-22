@@ -8,7 +8,7 @@ const routes = [
       { path: 'download', component: () => import('pages/Download.vue') },
       //下载地址（软件本体）
       { path: 'download_latest', beforeEnter() {
-        window.open('https://gitee.com/deepin-community-store/spark-store/attach_files/1023491/download/spark-store_3.0.3-11_amd64.deb')
+        window.open('https://gitee.com/deepin-community-store/spark-store/attach_files/1039274/download/spark-store_3.0.3-12_amd64.deb')
       } },
       //下载地址（依赖包）
       { path: 'download_dependencies_latest', beforeEnter() {
