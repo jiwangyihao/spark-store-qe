@@ -73,6 +73,15 @@ const qaMessages = [
 //时间线中的更新日志
 const updateHistory= [
 {
+    version: "3.0.3-12",
+    time: "2022-04-22 17:07",
+    details: [
+      "重新使用 DApplication::loadDXcbPlugin(); 在ubuntu下正常显示标题栏",
+      "现在可以在debian 11上免依赖运行",
+      "现在可以在ubuntu 22.04上免依赖运行"
+    ]
+  },
+  {
     version: "3.0.3-11",
     time: "2022-04-11 11:43",
     details: [
