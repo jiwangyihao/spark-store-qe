@@ -40,7 +40,7 @@ const qaMessages = [
   },
   {
     question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
-    answer: ["可以，但是请先下载依赖补充包"]
+    answer: ["可以。对于Debian 11/Ubunutu 22.04：直接安装；对于Ubuntu 20.04，先安装依赖包"]
   },
   {
     question: ["下载的web应用不能启动怎么办？"],
@@ -268,7 +268,7 @@ const updateHistory= [
             <img src="../assets/img/download/download-debian.png" alt="">
           </q-avatar>
           <div class="row" style="flex-direction:column; align-items: flex-start;margin-left:2vmin">
-            <h3>依赖包</h3>
+            <h3>依赖包(仅Ubuntu 20.04需要)</h3>
             <div class="row">
               <q-btn
                 color="primary"
