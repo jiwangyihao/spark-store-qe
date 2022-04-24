@@ -73,6 +73,17 @@ const qaMessages = [
 //时间线中的更新日志
 const updateHistory= [
 {
+    version: "3.0.3-13",
+    time: "2022-04-24 16:20 ",
+    details: [
+      "更新ssinstall脚本. 现在支持使用apt-fast来加速下载",
+      "ssinstall（星火内置安装器安装）现在会在安装前临时提升星火源的优先级以正确安装依赖",
+      "改变关于窗口的风格",
+      "更改了依赖以防止不支持处理Provides的deb安装器错误地认为依赖不满足",
+      "更新了文案：现在Ubuntu的tag注释改为适配22.04"
+    ]
+  },
+{
     version: "3.0.3-12",
     time: "2022-04-22 17:07",
     details: [
