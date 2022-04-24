@@ -18,7 +18,7 @@ useMeta({
         <h1 class="app_name">
           Spark Store
           <q-chip size="2vmin" icon="get_app">
-            3.0.3-12
+            3.0.3-13
           </q-chip>
         </h1>
         <h2>Debian 系发行版的专属应用商店</h2>
