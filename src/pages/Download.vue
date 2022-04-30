@@ -268,7 +268,7 @@ const updateHistory= [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.0.3-12</span>
+              <span>最新版本 3.0.3-13</span>
             </div>
           </div>
         </div>
