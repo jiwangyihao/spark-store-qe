@@ -18,22 +18,23 @@
 
 网站制作管理：chaodn Playhi momen jiwangyihao 时间世界 moshengrenx
 
-UI概念设计师：PossibleVing qygwhk
+UI 概念设计师：PossibleVing qygwhk
 
 ## 加入我们
+
 ### 软件维护员
 
-  - 职位描述
+- 职位描述
 
-    - 能力要求：会使用 deepin V20 或其它 Linux 发行版，会打字，会上网，会下载 Linux 软件包，有责任心，有电脑；
+  - 能力要求：会使用 deepin V20 或其它 Linux 发行版，会打字，会上网，会下载 Linux 软件包，有责任心，有电脑；
 
-    - 职责：搜集软件，打包软件。维护者可以不是开发者，但必须有认真负责的态度。若不能继续维护，请在星火钉钉/QQ群通知管理员；
+  - 职责：搜集软件，打包软件。维护者可以不是开发者，但必须有认真负责的态度。若不能继续维护，请在星火钉钉/QQ 群通知管理员；
 
-    - 投递须知：[https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit](https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit)。
+  - 投递须知：[https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit](https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit)。
 
 ### 联系方式
 
-- QQ群：872690351
+- QQ 群：872690351
 
 ## 温馨提示
 
@@ -43,9 +44,9 @@ UI概念设计师：PossibleVing qygwhk
 
 ## GitHub Action 构建说明
 
-1. 在[GitHub](https://github.com/jiwangyihao/spark-store-qe)上Fork本仓库
-2. 将更改推送至你Fork的仓库
-3. 在Action/SPA Build中查看并下载构建
+1. 在[GitHub](https://github.com/jiwangyihao/spark-store-qe)上 Fork 本仓库
+2. 将更改推送至你 Fork 的仓库
+3. 在 Action/SPA Build 中查看并下载构建
 
 ---
 
@@ -53,26 +54,30 @@ UI概念设计师：PossibleVing qygwhk
 
 ### 环境准备
 
-1. 安装nvm（这是直到2022/4/15时的最新版本，参见[nvm项目安装说明](https://github.com/nvm-sh/nvm#installing-and-updating)）
+1. 安装 nvm（这是直到 2022/4/15 时的最新版本，参见[nvm 项目安装说明](https://github.com/nvm-sh/nvm#installing-and-updating)）
+
    ```bash
    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
    ```
+
    执行`command -v nvm`检查安装
 
+2. 安装 Node.js
 
-2. 安装Node.js
    ```bash
    nvm install --lts
    ```
 
-3. 安装Yarn
+3. 安装 Yarn
+
    ```bash
    corepack enable
    ```
-   **！注意：如果你正在使用<16.10的Node.js（如果始终按照上述提示操作请略过此提示），应当使用`npm i -g corepack`安装Yarn**
 
+   **！注意：如果你正在使用<16.10 的 Node.js（如果始终按照上述提示操作请略过此提示），应当使用`npm i -g corepack`安装 Yarn**
 
-4. 安装Quasar CLI
+4. 安装 Quasar CLI
+
    ```bash
    yarn global add @quasar/cli
    ```
@@ -85,33 +90,51 @@ UI概念设计师：PossibleVing qygwhk
 ### 调试编译
 
 - 本地服务器调试
-   ```bash
-   quasar dev
-   ```
+
+  ```bash
+  quasar dev
+  ```
 
 - 构建用于生产的版本
-   ```bash
-   quasar build
-   ```
-   构建的文件位于路径`/dist/spa`中
+
+  ```bash
+  quasar build
+  ```
+
+  构建的文件位于路径`/dist/spa`中
+
+- 使用 Lint 检查代码
+
+  ```bash
+  yarn lint
+  # or
+  npm run lint
+  ```
+
+- 格式化代码
+  ```bash
+  yarn format
+  # or
+  npm run format
+  ```
 
 ---
 
-#### 于2022/4/13增加的内容：
+#### 于 2022/4/13 增加的内容：
 
 **！注意：没有其他问题的情况下仍然建议使用上述步骤配置环境**
 
-#### 下载nodejs 12.22.1
+#### 下载 nodejs 12.22.1
 
-​	解压后，添加临时环境变量 语法`export    PATH=路径:$PATH`
+​ 解压后，添加临时环境变量 语法`export PATH=路径:$PATH`
 
 export PATH=/home/momen/node-v12.22.1-linux-x64/bin:$PATH
 
 `请使用绝对路径`
 
-检查node -v 是否可用
+检查 node -v 是否可用
 
-#### 安装yarn
+#### 安装 yarn
 
 `yarn global add @quasar/cli`
 
@@ -142,12 +165,10 @@ info Visit https://yarnpkg.com/en/docs/cli/create for documentation about this c
 
 ```
 
-重点：Command为quasar路径，加在临时环境变量中
+重点：Command 为 quasar 路径，加在临时环境变量中
 
 `export PATH=/home/momen/.yarn/bin:$PATH`
 
-
-
-#### 生成quasar
+#### 生成 quasar
 
 进入网页根目录 `quasar build`

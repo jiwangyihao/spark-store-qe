@@ -7,50 +7,79 @@
   background-size: cover;
   background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.webp");
   background-image: -webkit-image-set(
-    url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.avif") type("image/avif"),
-    url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.webp") type("image/webp"));
+    url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.avif")
+      type("image/avif"),
+    url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.webp")
+      type("image/webp")
+  );
   background-image: image-set(
-      url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.avif") type("image/avif"),
-      url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.webp") type("image/webp"));
-
+    url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.avif")
+      type("image/avif"),
+    url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-origin.webp")
+      type("image/webp")
+  );
 
   @media screen and (min-aspect-ratio: 1/1) {
     //横屏
     @media (max-width: 3840px) {
       background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.webp");
       background-image: -webkit-image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.webp")
+          type("image/webp")
+      );
       background-image: image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-3840.webp")
+          type("image/webp")
+      );
     }
     @media (max-width: 1920px) {
       background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.webp");
       background-image: -webkit-image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.webp")
+          type("image/webp")
+      );
       background-image: image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1920.webp")
+          type("image/webp")
+      );
     }
     @media (max-width: 1366px) {
       background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.webp");
       background-image: -webkit-image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.webp")
+          type("image/webp")
+      );
       background-image: image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-1366.webp")
+          type("image/webp")
+      );
     }
     @media (max-width: 640px) {
       background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.webp");
       background-image: -webkit-image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.webp")
+          type("image/webp")
+      );
       background-image: image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-landscape-640.webp")
+          type("image/webp")
+      );
     }
   }
 
@@ -58,46 +87,76 @@
     //竖屏
     background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.webp");
     background-image: -webkit-image-set(
-        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.avif") type("image/avif"),
-        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.webp") type("image/webp"));
+      url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.avif")
+        type("image/avif"),
+      url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.webp")
+        type("image/webp")
+    );
     background-image: image-set(
-        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.avif") type("image/avif"),
-        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.webp") type("image/webp"));
+      url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.avif")
+        type("image/avif"),
+      url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-origin.webp")
+        type("image/webp")
+    );
     @media (max-height: 3840px) {
       background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.webp");
       background-image: -webkit-image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.webp")
+          type("image/webp")
+      );
       background-image: image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-3840.webp")
+          type("image/webp")
+      );
     }
     @media (max-height: 1920px) {
       background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.webp");
       background-image: -webkit-image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.webp")
+          type("image/webp")
+      );
       background-image: image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1920.webp")
+          type("image/webp")
+      );
     }
     @media (max-height: 1366px) {
       background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.webp");
       background-image: -webkit-image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.webp")
+          type("image/webp")
+      );
       background-image: image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-1366.webp")
+          type("image/webp")
+      );
     }
     @media (max-height: 640px) {
       background-image: url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.webp");
       background-image: -webkit-image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.webp")
+          type("image/webp")
+      );
       background-image: image-set(
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.avif") type("image/avif"),
-          url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.webp") type("image/webp"));
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.avif")
+          type("image/avif"),
+        url("../assets/img/#{$page}/#{$page}-#{$picName}-portrait-640.webp")
+          type("image/webp")
+      );
     }
   }
 }

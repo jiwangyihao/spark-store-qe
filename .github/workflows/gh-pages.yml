@@ -18,7 +18,7 @@ jobs:
         run: |
           yarn global add @quasar/cli
           yarn
-          cp ghpage_quasar.conf.js quasar.conf.js
+          cp ghpage_quasar.config.js quasar.config.js
           quasar build
           cp dist/spa/index.html dist/spa/404.html
         shell: bash

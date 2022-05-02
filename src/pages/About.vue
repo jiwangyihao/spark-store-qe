@@ -1,38 +1,47 @@
 <!--suppress NpmUsedModulesInstalled -->
 <script setup>
-import {ref} from "vue";
-import { useMeta } from 'quasar'
-import FooterView from '../components/FooterView'
+import { ref } from "vue";
+import { useMeta } from "quasar";
+import FooterView from "../components/FooterView.vue";
 
-const module = ref("about")
+const module = ref("about");
 
 function goWanted() {
-  module.value="wanted"
+  module.value = "wanted";
 }
 
 useMeta({
-  title: '关于',
+  title: "关于",
   // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
-  titleTemplate: title => `${title} - 星火应用商店`,
-})
+  titleTemplate: (title) => `${title} - 星火应用商店`,
+});
 </script>
 
 <template>
-  <q-page class="flex flex-center" style="align-items:flex-start">
+  <q-page class="flex flex-center" style="align-items: flex-start">
     <transition-group
       enter-active-class="animated backInRight"
       enter-leave-class="animated backOutLeft"
     >
-      <div v-show="module==='about'" class="row aboutPage" key="about">
+      <div v-show="module === 'about'" class="row aboutPage" key="about">
         <div class="row">
           <h1>关于</h1>
           <h2>ABOUT US</h2>
         </div>
         <div class="row">
-          <p>由深度科技论坛（bbs.deepin.org） shenmo 发起的星火工作组致力于丰富 Linux 生态，</p>
+          <p>
+            由深度科技论坛（bbs.deepin.org） shenmo 发起的星火工作组致力于丰富
+            Linux 生态，
+          </p>
           <p>取“星星之火，可以燎原”之意，组建了星火应用商店。</p>
-          <p>我们是个年轻的团队，大部分成员是 00 后，有小学生，中学生，大学生，来自五湖四海。</p>
-          <p>尽管我们年龄不同，资历不同，但是我们努力建设 Linux 生态的目标是相同的，</p>
+          <p>
+            我们是个年轻的团队，大部分成员是 00
+            后，有小学生，中学生，大学生，来自五湖四海。
+          </p>
+          <p>
+            尽管我们年龄不同，资历不同，但是我们努力建设 Linux
+            生态的目标是相同的，
+          </p>
           <p>我们有信心、也有勇气做到这些！</p>
           <p></p>
           <p>如果你与我们志同道合，欢迎加入我们！</p>
@@ -40,26 +49,40 @@ useMeta({
         <q-btn
           color="white"
           text-color="rgb(61,49,56)"
-          style="padding: 0 3vmin; font-weight:bold"
+          style="padding: 0 3vmin; font-weight: bold"
           @click="goWanted"
           rounded
         >
           招贤纳士 >
         </q-btn>
       </div>
-      <div v-show="module==='wanted'" class="row wantedPage" key="wanted">
+      <div v-show="module === 'wanted'" class="row wantedPage" key="wanted">
         <div class="row title">
           <h1>招贤纳士</h1>
           <h2>WE WANT YOU</h2>
         </div>
         <div class="row method">
-          联系方式：872690351<span style="color: rgb(132,128,126)">（QQ 群）</span>
+          联系方式：872690351<span style="color: rgb(132, 128, 126)"
+            >（QQ 群）</span
+          >
         </div>
         <div class="row jobCard">
           <h4>软件维护员</h4>
-          <p><strong>能力要求：</strong>会使用 deepin V20 或其它 Linux 发行版，会打字，会上网，会下载 Linux 软件包，有责任心，有电脑；</p>
-          <p><strong>职责：</strong>搜集软件，打包软件。维护者可以不是开发者，但必须有认真负责的态度。若不能继续维护，请在星火钉钉/QQ群通知管理员。</p>
-          <p><strong>投递须知：</strong><a href="https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit">https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit</a></p>
+          <p>
+            <strong>能力要求：</strong>会使用 deepin V20 或其它 Linux
+            发行版，会打字，会上网，会下载 Linux 软件包，有责任心，有电脑；
+          </p>
+          <p>
+            <strong>职责：</strong
+            >搜集软件，打包软件。维护者可以不是开发者，但必须有认真负责的态度。若不能继续维护，请在星火钉钉/QQ群通知管理员。
+          </p>
+          <p>
+            <strong>投递须知：</strong
+            ><a
+              href="https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit"
+              >https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit</a
+            >
+          </p>
         </div>
       </div>
     </transition-group>
@@ -68,7 +91,7 @@ useMeta({
 </template>
 
 <style scoped lang="scss">
-@use '../css/var-image-bg';
+@use "../css/var-image-bg";
 
 .aboutPage {
   position: relative;
@@ -81,7 +104,7 @@ useMeta({
   padding-top: 10vmin;
 
   &::before {
-    @include var-image-bg.image("about",'background');
+    @include var-image-bg.image("about", "background");
     content: "";
     width: 100%;
     height: 100%;
@@ -145,7 +168,7 @@ useMeta({
   flex-grow: 1;
 
   &::before {
-    @include var-image-bg.image("about",'banner');
+    @include var-image-bg.image("about", "banner");
     content: "";
     width: 100%;
     height: 56vh;
@@ -153,7 +176,7 @@ useMeta({
     top: 0;
     left: 0;
     z-index: -1;
-    filter: 'brightness(0.7)'
+    filter: "brightness(0.7)";
   }
 
   .title {
@@ -168,7 +191,7 @@ useMeta({
   }
 
   h2 {
-    color: rgba(255,255,255,0.42);
+    color: rgba(255, 255, 255, 0.42);
     margin: 0 0 0 3vmin;
     font-size: 6vmin;
     font-weight: 400;
@@ -188,7 +211,7 @@ useMeta({
     padding: 0.4vmin 4vmin;
     font-size: 2vmin;
     box-shadow: 0 0 28px 0 rgb(0 0 0 / 30%);
-    color: rgb(25,46,66);
+    color: rgb(25, 46, 66);
   }
 
   .jobCard {

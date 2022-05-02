@@ -3,9 +3,14 @@
 </template>
 <script>
 // noinspection NpmUsedModulesInstalled
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
+import { useStore } from "stores/store";
 
 export default defineComponent({
-  name: 'App'
-})
+  name: "App",
+  preFetch() {
+    const store = useStore();
+    // do something with myStore
+  },
+});
 </script>

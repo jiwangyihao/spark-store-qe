@@ -1,19 +1,19 @@
 <!--suppress NpmUsedModulesInstalled -->
 <script setup>
-import {onMounted, ref, watch} from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
-const route = useRoute()
+const route = useRoute();
 
 const state = ref({
   home: !route.path.match("store"),
   navigation: true,
   hoverP: false,
   hoverS: false,
-  primary: !(route.path.match("sorts") || route.path.match("application")),
-  secondary: route.path.match("sorts") || route.path.match("application"),
-  active: true
-})
+  primary: !(route.path.match("sort") || route.path.match("application")),
+  secondary: route.path.match("sort") || route.path.match("application"),
+  active: true,
+});
 
 const topTabGroup = ref([
   {
@@ -22,7 +22,7 @@ const topTabGroup = ref([
     path: "/",
     label: "首页",
     active: true,
-    el: null
+    el: null,
   },
   {
     id: 2,
@@ -30,7 +30,7 @@ const topTabGroup = ref([
     path: "/download",
     label: "下载",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 3,
@@ -38,7 +38,7 @@ const topTabGroup = ref([
     path: "/store",
     label: "商店",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 4,
@@ -46,7 +46,7 @@ const topTabGroup = ref([
     path: "/forum",
     label: "社区",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 5,
@@ -54,9 +54,9 @@ const topTabGroup = ref([
     path: "/about",
     label: "关于",
     active: false,
-    el: null
-  }
-])
+    el: null,
+  },
+]);
 
 const tabGroup = ref([
   {
@@ -66,7 +66,7 @@ const tabGroup = ref([
     label: "推荐",
     icon: "recommend",
     active: true,
-    el: null
+    el: null,
   },
   {
     id: 2,
@@ -75,242 +75,278 @@ const tabGroup = ref([
     label: "排行",
     icon: "format_list_numbered",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 3,
-    name: "sorts",
-    path: "/store/sorts/games",
+    name: "sort",
+    path: "/store/sort/games",
     label: "分类",
     icon: "queue",
     active: false,
-    el: null
-  }
-])
+    el: null,
+  },
+]);
 
 const secondTabGroup = ref([
   {
     id: 1,
     name: "games",
-    path: "/store/sorts/games",
+    path: "/store/sort/games",
     label: "游戏",
     icon: "sports_esports",
     active: true,
-    el: null
+    el: null,
   },
   {
     id: 2,
     name: "network",
-    path: "/store/sorts/network",
+    path: "/store/sort/network",
     label: "网络",
     icon: "travel_explore",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 3,
     name: "chat",
-    path: "/store/sorts/chat",
+    path: "/store/sort/chat",
     label: "社交",
     icon: "question_answer",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 4,
     name: "music",
-    path: "/store/sorts/music",
+    path: "/store/sort/music",
     label: "音乐",
     icon: "library_music",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 5,
     name: "video",
-    path: "/store/sorts/video",
+    path: "/store/sort/video",
     label: "视频",
     icon: "smart_display",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 6,
     name: "image_graphics",
-    path: "/store/sorts/image_graphics",
+    path: "/store/sort/image_graphics",
     label: "图形",
     icon: "image",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 7,
     name: "office",
-    path: "/store/sorts/office",
+    path: "/store/sort/office",
     label: "办公",
     icon: "business_center",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 8,
     name: "reading",
-    path: "/store/sorts/reading",
+    path: "/store/sort/reading",
     label: "阅读",
     icon: "auto_stories",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 9,
     name: "development",
-    path: "/store/sorts/development",
+    path: "/store/sort/development",
     label: "开发",
     icon: "developer_board",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 10,
     name: "tools",
-    path: "/store/sorts/tools",
+    path: "/store/sort/tools",
     label: "工具",
     icon: "handyman",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 11,
     name: "themes",
-    path: "/store/sorts/themes",
+    path: "/store/sort/themes",
     label: "美化",
     icon: "extension",
     active: false,
-    el: null
+    el: null,
   },
   {
     id: 12,
     name: "others",
-    path: "/store/sorts/others",
+    path: "/store/sort/others",
     label: "其他",
     icon: "pending",
     active: false,
-    el: null
-  }
-])
+    el: null,
+  },
+]);
 
-const topTabGroupByName = ref({})
+const topTabGroupByName = ref({});
 
-const topTabGroupByPath = ref({})
+const topTabGroupByPath = ref({});
 
 for (const tab of topTabGroup.value) {
-  topTabGroupByName.value[tab.name] = tab
-  topTabGroupByPath.value[tab.path] = tab
+  topTabGroupByName.value[tab.name] = tab;
+  topTabGroupByPath.value[tab.path] = tab;
 }
 
-const tabGroupByName = ref({})
+const tabGroupByName = ref({});
 
-const tabGroupByPath = ref({})
+const tabGroupByPath = ref({});
 
 for (const tab of tabGroup.value) {
-  tabGroupByName.value[tab.name] = tab
-  tabGroupByPath.value[tab.path] = tab
+  tabGroupByName.value[tab.name] = tab;
+  tabGroupByPath.value[tab.path] = tab;
 }
 
-const secondTabGroupByName = ref({})
+const secondTabGroupByName = ref({});
 
-const secondTabGroupByPath = ref({})
+const secondTabGroupByPath = ref({});
 
 for (const tab of secondTabGroup.value) {
-  secondTabGroupByName.value[tab.name] = tab
-  secondTabGroupByPath.value[tab.path] = tab
+  secondTabGroupByName.value[tab.name] = tab;
+  secondTabGroupByPath.value[tab.path] = tab;
 }
 
-const topActiveTab = ref(topTabGroup.value[0])
+const topActiveTab = ref(topTabGroup.value[0]);
 
-const activeTab = ref(tabGroup.value[0])
+const activeTab = ref(tabGroup.value[0]);
 
-const secondActiveTab = ref(tabGroup.value[0])
+const secondActiveTab = ref(tabGroup.value[0]);
 
 function toTab(path) {
   if (path.match("store")) {
-    if (path.match("sorts")) {
+    if (path.match("sort")) {
       if (secondTabGroupByPath.value.hasOwnProperty(path)) {
-        return [topTabGroupByName.value['store'], tabGroupByName.value['sorts'], secondTabGroupByPath.value[path]]
+        return [
+          topTabGroupByName.value["store"],
+          tabGroupByName.value["sort"],
+          secondTabGroupByPath.value[path],
+        ];
       } else {
-        return [topTabGroupByName.value['store'], tabGroupByName.value['sorts'], secondTabGroup.value[0]]
+        return [
+          topTabGroupByName.value["store"],
+          tabGroupByName.value["sort"],
+          secondTabGroup.value[0],
+        ];
       }
     } else if (path.match("application")) {
-      return [topTabGroupByName.value['store'], tabGroupByName.value['sorts'], secondActiveTab.value]
+      return [
+        topTabGroupByName.value["store"],
+        tabGroupByName.value["sort"],
+        secondActiveTab.value,
+      ];
     } else {
       if (tabGroupByPath.value.hasOwnProperty(path)) {
-        return [topTabGroupByName.value['store'], tabGroupByPath.value[path], secondTabGroup.value[0]]
+        return [
+          topTabGroupByName.value["store"],
+          tabGroupByPath.value[path],
+          secondTabGroup.value[0],
+        ];
       } else {
-        return [topTabGroupByName.value['store'], tabGroup.value[0], secondTabGroup.value[0]]
+        return [
+          topTabGroupByName.value["store"],
+          tabGroup.value[0],
+          secondTabGroup.value[0],
+        ];
       }
     }
   }
   if (topTabGroupByPath.value.hasOwnProperty(path)) {
-    return [topTabGroupByPath.value[path], tabGroupByName.value['recommend'], secondTabGroup.value[0]]
+    return [
+      topTabGroupByPath.value[path],
+      tabGroupByName.value["recommend"],
+      secondTabGroup.value[0],
+    ];
   } else {
-    return [topTabGroup.value[0], tabGroupByName.value['recommend'], secondTabGroup.value[0]]
+    return [
+      topTabGroup.value[0],
+      tabGroupByName.value["recommend"],
+      secondTabGroup.value[0],
+    ];
   }
 }
 
 watch(
   () => route.path,
-  async newPath => {
-    topActiveTab.value.active = false
-    activeTab.value.active = false
-    secondActiveTab.value.active = false
-    const activeTabs = toTab(newPath)
-    topActiveTab.value = activeTabs[0]
-    activeTab.value = activeTabs[1]
-    secondActiveTab.value = activeTabs[2]
-    topActiveTab.value.active = true
-    activeTab.value.active = true
-    secondActiveTab.value.active = true
-    state.value.home = !route.path.match("store")
-    state.value.primary = !activeTab.value.name.match("sorts")
-    state.value.secondary = activeTab.value.name.match("sorts")
+  async (newPath) => {
+    topActiveTab.value.active = false;
+    activeTab.value.active = false;
+    secondActiveTab.value.active = false;
+    const activeTabs = toTab(newPath);
+    topActiveTab.value = activeTabs[0];
+    activeTab.value = activeTabs[1];
+    secondActiveTab.value = activeTabs[2];
+    topActiveTab.value.active = true;
+    activeTab.value.active = true;
+    secondActiveTab.value.active = true;
+    state.value.home = !route.path.match("store");
+    state.value.primary = !activeTab.value.name.match("sort");
+    state.value.secondary = activeTab.value.name.match("sort");
     for (const topTab of topTabGroup.value) {
       // noinspection JSUnresolvedVariable
-      topTab.el.$el.style=`--j-offset:${(topActiveTab.value.id - topTab.id) * 78}px`
+      topTab.el.$el.style = `--j-offset:${
+        (topActiveTab.value.id - topTab.id) * 78
+      }px`;
     }
     for (const tab of tabGroup.value) {
-      tab.el.style=`--j-offset:${(activeTab.value.id - tab.id) * 52}px`
+      tab.el.style = `--j-offset:${(activeTab.value.id - tab.id) * 52}px`;
     }
     for (const secondTab of secondTabGroup.value) {
       // noinspection JSUnresolvedVariable
-      secondTab.el.$el.style=`--j-offset:${(secondActiveTab.value.id - secondTab.id) * 52}px`
+      secondTab.el.$el.style = `--j-offset:${
+        (secondActiveTab.value.id - secondTab.id) * 52
+      }px`;
     }
   }
-)
+);
 
 onMounted(() => {
-  topActiveTab.value.active = false
-  activeTab.value.active = false
-  secondActiveTab.value.active = false
-  const activeTabs = toTab(route.path)
-  topActiveTab.value = activeTabs[0]
-  activeTab.value = activeTabs[1]
-  secondActiveTab.value = activeTabs[2]
-  topActiveTab.value.active = true
-  activeTab.value.active = true
-  secondActiveTab.value.active = true
-  state.value.home = !route.path.match("store")
+  topActiveTab.value.active = false;
+  activeTab.value.active = false;
+  secondActiveTab.value.active = false;
+  const activeTabs = toTab(route.path);
+  topActiveTab.value = activeTabs[0];
+  activeTab.value = activeTabs[1];
+  secondActiveTab.value = activeTabs[2];
+  topActiveTab.value.active = true;
+  activeTab.value.active = true;
+  secondActiveTab.value.active = true;
+  state.value.home = !route.path.match("store");
   for (const topTab of topTabGroup.value) {
     // noinspection JSUnresolvedVariable
-    topTab.el.$el.style=`--j-offset:${(topActiveTab.value.id - topTab.id) * 78}px`
+    topTab.el.$el.style = `--j-offset:${
+      (topActiveTab.value.id - topTab.id) * 78
+    }px`;
   }
   for (const tab of tabGroup.value) {
-    tab.el.style=`--j-offset:${(activeTab.value.id - tab.id) * 52}px`
+    tab.el.style = `--j-offset:${(activeTab.value.id - tab.id) * 52}px`;
   }
   for (const secondTab of secondTabGroup.value) {
     // noinspection JSUnresolvedVariable
-    secondTab.el.$el.style=`--j-offset:${(secondActiveTab.value.id - secondTab.id) * 52}px`
+    secondTab.el.$el.style = `--j-offset:${
+      (secondActiveTab.value.id - secondTab.id) * 52
+    }px`;
   }
-})
+});
 </script>
 
 <template>
@@ -321,17 +357,39 @@ onMounted(() => {
       </router-link>
       <q-space />
       <div class="navBtnGroup">
-        <router-link v-for="topTab in topTabGroup" :to="topTab.path" :class="['navBtn', {active: topTab.active}]" :ref="el => { topTab.el = el }" :key="topTab.name">
+        <router-link
+          v-for="topTab in topTabGroup"
+          :to="topTab.path"
+          :class="['navBtn', { active: topTab.active }]"
+          :ref="
+            (el) => {
+              topTab.el = el;
+            }
+          "
+          :key="topTab.name"
+        >
           <span class="indicator"></span>
           <span class="label">{{ topTab.label }}</span>
         </router-link>
       </div>
     </header>
-    <nav class="primary" @mouseenter="state.hoverP=true" @mouseleave="state.hoverP=false">
-      <router-link to="/" class="logo">
-      </router-link>
+    <nav
+      class="primary"
+      @mouseenter="state.hoverP = true"
+      @mouseleave="state.hoverP = false"
+    >
+      <router-link to="/" class="logo"> </router-link>
       <div class="navBtnGroup">
-        <div v-for="tab in tabGroup" :key="tab.name" :class="['navBtn', {active: tab.active}]" :ref="el => { tab.el = el }">
+        <div
+          v-for="tab in tabGroup"
+          :key="tab.name"
+          :class="['navBtn', { active: tab.active }]"
+          :ref="
+            (el) => {
+              tab.el = el;
+            }
+          "
+        >
           <span class="indicator"></span>
           <q-icon :name="tab.icon" size="24px" />
           <span class="label">{{ tab.label }}</span>
@@ -345,11 +403,25 @@ onMounted(() => {
           <router-link to="/" class="cover"></router-link>
         </div>
       </div>
-      <span class="activeCtrl" @click="state.active=!state.active"></span>
+      <span class="activeCtrl" @click="state.active = !state.active"></span>
     </nav>
-    <nav class="secondary" @mouseenter="state.hoverS=true" @mouseleave="state.hoverS=false">
+    <nav
+      class="secondary"
+      @mouseenter="state.hoverS = true"
+      @mouseleave="state.hoverS = false"
+    >
       <div class="navBtnGroup">
-        <router-link v-for="secondTab in secondTabGroup" :to="secondTab.path" :class="['navBtn', {active: secondTab.active}]" :ref="el => { secondTab.el = el }" :key="secondTab.name">
+        <router-link
+          v-for="secondTab in secondTabGroup"
+          :to="secondTab.path"
+          :class="['navBtn', { active: secondTab.active }]"
+          :ref="
+            (el) => {
+              secondTab.el = el;
+            }
+          "
+          :key="secondTab.name"
+        >
           <span class="indicator"></span>
           <q-icon :name="secondTab.icon" size="24px" />
           <span class="label">{{ secondTab.label }}</span>
@@ -364,7 +436,7 @@ onMounted(() => {
 
 span.navigation {
   position: fixed;
-  z-index: 10;
+  z-index: 9999;
 
   > nav {
     height: 100vh;
@@ -373,12 +445,9 @@ span.navigation {
     left: 0;
     transform: translate3d(-156px, 0, 0);
     backdrop-filter: blur(24px);
-    box-shadow:
-      1px 0 2.1px rgba(0, 0, 0, 0.03),
-      2.6px 0 5.2px rgba(0, 0, 0, 0.039),
-      5.3px 0 10.6px rgba(0, 0, 0, 0.044),
-      11px 0 21.9px rgba(0, 0, 0, 0.051),
-      30px 0 60px rgba(0, 0, 0, 0.07);
+    box-shadow: 1px 0 2.1px rgba(0, 0, 0, 0.03),
+      2.6px 0 5.2px rgba(0, 0, 0, 0.039), 5.3px 0 10.6px rgba(0, 0, 0, 0.044),
+      11px 0 21.9px rgba(0, 0, 0, 0.051), 30px 0 60px rgba(0, 0, 0, 0.07);
     transition: {
       property: transform, opacity, box-shadow;
       duration: 500ms;
@@ -419,12 +488,12 @@ span.navigation {
         repeat: no-repeat;
         size: cover;
         position: center;
-      };
+      }
       transition: {
         property: transform;
         duration: 500ms;
         delay: 500ms;
-      };
+      }
     }
 
     .logo::after {
@@ -439,13 +508,13 @@ span.navigation {
       left: 50%;
       bottom: 0;
       opacity: 0;
-      transform: scale3d(.1, .1, .1) translate3d(-50%, 60px, 0);
+      transform: scale3d(0.1, 0.1, 0.1) translate3d(-50%, 60px, 0);
       transition: {
-        property: opacity,transform;
+        property: opacity, transform;
         duration: 500ms;
         delay: 500ms;
-      };
-      will-change: opacity,transform;
+      }
+      will-change: opacity, transform;
     }
 
     .navBtnGroup {
@@ -457,7 +526,7 @@ span.navigation {
         property: transform;
         duration: 500ms;
         delay: 500ms;
-      };
+      }
       will-change: transform;
 
       .navBtn {
@@ -473,7 +542,7 @@ span.navigation {
           transition: {
             property: transform;
             duration: 500ms;
-          };
+          }
           will-change: transform;
         }
 
@@ -482,12 +551,12 @@ span.navigation {
           position: absolute;
           top: 12px;
           right: 80px;
-          transform: scale3d(.1, .1, 1) translate3d(-120px, 0, 0);
+          transform: scale3d(0.1, 0.1, 1) translate3d(-120px, 0, 0);
           opacity: 0;
           transition: {
             property: transform, opacity;
             duration: 500ms;
-          };
+          }
           will-change: transform, opscity;
         }
 
@@ -507,7 +576,7 @@ span.navigation {
           transition: {
             property: transform, opacity, width, height;
             duration: 500ms;
-          };
+          }
           will-change: transform, opscity, width, height;
         }
 
@@ -526,12 +595,12 @@ span.navigation {
           transition: {
             property: transform, width, opacity;
             duration: 500ms;
-          };
+          }
           will-change: transform, width, opscity;
         }
 
         .cover:hover {
-          opacity: .1;
+          opacity: 0.1;
         }
       }
     }
@@ -540,7 +609,7 @@ span.navigation {
       font-weight: 700;
       text-align: center;
       transform: translate3d(38px, 0, 0);
-      transition: transform .5s .5s;
+      transition: transform 0.5s 0.5s;
       white-space: nowrap;
       width: 80px;
       position: relative;
@@ -557,7 +626,7 @@ span.navigation {
         height: 20.8px;
         border-radius: 6px;
         opacity: 1;
-        transform: translate3d(28px,0,0);
+        transform: translate3d(28px, 0, 0);
         will-change: opacity, background-color, transform;
         transition-property: opacity, background-color, transform;
         transition-duration: 0.5s, 0.35s, 1s;
@@ -573,16 +642,17 @@ span.navigation {
         height: 20.8px;
         border-radius: 6px;
         opacity: 0;
-        transform: translate3d(-20px,0,0);
-        will-change: opacity, background-color,transform;
+        transform: translate3d(-20px, 0, 0);
+        will-change: opacity, background-color, transform;
         transition-property: opacity, background-color, transform;
         transition-duration: 0.5s, 0.35s, 1s;
         transition-delay: 0.5s;
       }
 
       &:hover {
-        &::before, &::after {
-          background-color: rgba(0,0,0,0.1);
+        &::before,
+        &::after {
+          background-color: rgba(0, 0, 0, 0.1);
         }
       }
     }
@@ -591,7 +661,7 @@ span.navigation {
   .secondary {
     width: 156px;
     height: 100vh;
-    background-color: rgba(255, 255, 255, .2);
+    background-color: rgba(255, 255, 255, 0.2);
     left: 60px;
     opacity: 0;
     z-index: 0;
@@ -614,7 +684,7 @@ span.navigation {
         border-radius: 6px;
         position: relative;
         --j-offset: 0px;
-        transition: background-color .5s;
+        transition: background-color 0.5s;
 
         &:hover {
           background-color: rgba(0, 0, 0, 0.1);
@@ -629,7 +699,7 @@ span.navigation {
           width: 100%;
           height: 100%;
           border-radius: 6px;
-          opacity: .2;
+          opacity: 0.2;
           --j-offset: inherit;
           visibility: hidden;
           position: absolute;
@@ -637,7 +707,7 @@ span.navigation {
           left: 0;
           background-color: $primary;
           transform: translate3d(0, var(--j-offset), 0);
-          transition: transform .5s;
+          transition: transform 0.5s;
         }
 
         &.active {
@@ -665,8 +735,8 @@ span.navigation {
     transition: {
       property: transform, opacity;
       duration: 500ms;
-    };
-    will-change: transform,opacity;
+    }
+    will-change: transform, opacity;
 
     .logo {
       display: flex;
@@ -681,7 +751,7 @@ span.navigation {
           image: url("../assets/icons/favicon-96x96.png");
           repeat: no-repeat;
           size: contain;
-        };
+        }
         width: 38px;
         height: 38px;
       }
@@ -692,8 +762,8 @@ span.navigation {
           size: 21px;
           family: "Comfortaa-Light", sans-serif;
           weight: 700;
-        };
-        letter-spacing: .01em;
+        }
+        letter-spacing: 0.01em;
         line-height: 1.5;
         margin: 0 0 0 6px;
       }
@@ -718,10 +788,10 @@ span.navigation {
         transition: {
           property: background-color;
           duration: 500ms;
-        };
+        }
 
         &:hover {
-          background-color: rgba(0, 0, 0, .1);
+          background-color: rgba(0, 0, 0, 0.1);
         }
 
         .indicator {
@@ -740,7 +810,7 @@ span.navigation {
 
         &.active {
           color: $primary;
-          background-color: rgba($primary, .1);
+          background-color: rgba($primary, 0.1);
 
           .indicator {
             visibility: visible;
@@ -750,7 +820,8 @@ span.navigation {
     }
   }
 
-  &.hoverP, &.hoverS {
+  &.hoverP,
+  &.hoverS {
     &.active.primary > nav.primary {
       transform: translate3d(0, 0, 0);
       transition-delay: 0s;
@@ -771,7 +842,6 @@ span.navigation {
         transition-delay: 0s;
 
         .navBtn {
-
           i {
             transform: translate3d(-78px, 0, 0);
             transition-delay: 500ms;
@@ -787,7 +857,7 @@ span.navigation {
             width: 196px;
             height: 48px;
             transform: translate3d(-78px, calc(var(--j-offset) - 17px), 0);
-            opacity: .2;
+            opacity: 0.2;
             transition-delay: 500ms;
           }
 
