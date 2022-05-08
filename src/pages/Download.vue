@@ -289,7 +289,7 @@ const updateHistory = [
               margin-left: 2vmin;
             "
           >
-            <h3>依赖包(仅Ubuntu 20.04需要)</h3>
+            <h3>依赖包(Ubuntu 20.04/Debian 11)</h3>
             <div class="row">
               <q-btn
                 color="primary"
