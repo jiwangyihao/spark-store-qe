@@ -16,9 +16,9 @@ useMeta({
       <div class="row P1st">
         <h1 class="app_name">
           Spark Store
-          <q-chip size="2vmin" icon="get_app"> 3.0.3-13 </q-chip>
+          <q-chip size="2vmin" icon="get_app"> 3.1.0 </q-chip>
         </h1>
-        <h2>Debian 系发行版的专属应用商店</h2>
+        <h2>Debian 系发行版的应用商店</h2>
         <div class="row window">
           <div class="row">
             <div class="row" style="flex-direction: column; flex-wrap: nowrap">
