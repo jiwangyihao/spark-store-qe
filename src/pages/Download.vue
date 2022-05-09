@@ -18,13 +18,7 @@ const showTips = ref(false);
 //Q&A中的消息内容
 const qaMessages = [
   {
-    //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
-    question: ["我在使用UOS但我不想打开开发者模式"],
-    answer: [
-      "看看这个：<a href='https://gitee.com/deepin-community-store/spark-store-uos/releases'>https://gitee.com/deepin-community-store/spark-store-uos/releases</a>",
-    ],
-  },
-  {
+      //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ["在哪进交流群？"],
     answer: ["872690351"],
   },
@@ -43,15 +37,7 @@ const qaMessages = [
   {
     question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
     answer: [
-      "可以。对于Debian 11/Ubunutu 22.04：直接安装；对于Ubuntu 20.04，先安装依赖包",
-    ],
-  },
-  {
-    question: ["下载的web应用不能启动怎么办？"],
-    answer: [
-      "如果你在使用ubuntu 20.04，推荐更新dtk到5.4版本，也可参考Debian11的解决方法",
-      "如果你是使用Debian 11的用户，理论上不会出问题，如果闪退，请卸载spark-webapp-runtime并下载swrt-lite包来修复",
-      "sudo apt remove spark-webapp-runtime -y && sudo apt install swrt-lite -y",
+      "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10/Debian 11，先安装依赖包",
     ],
   },
   {
@@ -78,6 +64,14 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
+ {
+    version: "3.1.0",
+    time: "2022-05-09 18:41 ",
+    details: [
+      "Debian 11系统需要先安依赖包",
+      "添加免密码安装功能",
+    ],
+  },
   {
     version: "3.0.3-13",
     time: "2022-04-24 16:20 ",
