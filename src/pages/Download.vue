@@ -65,6 +65,14 @@ const qaMessages = [
 //时间线中的更新日志
 const updateHistory = [
  {
+    version: "3.1.1",
+    time: "2022-05-13 22:28  ",
+    details: [
+      "修复了免密安装失败的问题 #I5775W:免密安装失败",
+      "卸载时会清理自动安装的policy。目前的策略是每次更新都清理",
+    ],
+  },
+ {
     version: "3.1.0",
     time: "2022-05-09 18:41 ",
     details: [
