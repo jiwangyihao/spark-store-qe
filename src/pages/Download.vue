@@ -41,8 +41,11 @@ const qaMessages = [
     ],
   },
   {
-    question: ["wine应用不能启动"],
-    answer: ["带上你的发行版名称&版本去应用反馈/催更"],
+    question: ["我可以用dpkg -i安装吗？"],
+    answer: [
+        "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi/deepin-deb-installer/kylin-installer等等等等图形化的安装器！！！",
+        "已经有不下20个人被这个坑了。CSDN害人不浅"
+    ],
   },
   {
     question: ["星火商店会影响系统正常更新吗？"],
@@ -273,7 +276,7 @@ const updateHistory = [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.0.3-13</span>
+              <span>最新版本 3.1.1</span>
             </div>
           </div>
         </div>
