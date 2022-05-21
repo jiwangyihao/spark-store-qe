@@ -1,6 +1,6 @@
 <!--suppress JSUnresolvedVariable, NpmUsedModulesInstalled, CssInvalidFunction, HtmlUnknownTag -->
 <script setup>
-import Navigation from "../components/Navigation.vue";
+import Navigation from "components/NavigateBar.vue";
 
 function min() {
   electron.min();

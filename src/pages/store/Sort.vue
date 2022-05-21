@@ -36,13 +36,80 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 const store = useStore();
-const appList = ref(store.appList);
+const sourceAppList = ref(store["appList"]);
+const appList = ref([]);
 const source = ref(store["source"]);
 const sort = ref(route.params.sort.toString());
 store.$subscribe((mutation, state) => {
-  appList.value = state["appList"];
+  sourceAppList.value = state["appList"];
+  if (container.value) {
+    appList.value = layoutAppCard(sourceAppList);
+  }
   sort.value = route.params.sort.toString();
 });
+
+const container = ref();
+
+const containerState = ref({
+  container: true,
+  active: false,
+  animation: false,
+});
+
+function resizeCardView(e) {
+  console.log(e);
+  appList.value = layoutAppCard(sourceAppList);
+}
+
+window.addEventListener("resize", resizeCardView);
+
+function layoutAppCard(appList) {
+  let cardWidth = 264;
+  let cardHeight = 92;
+  let verticalPadding = 50;
+  let horizonPadding = 16;
+  let gap = 32;
+
+  let list = JSON.parse(JSON.stringify(appList.value));
+  let containerWidth = container.value.clientWidth;
+  let column = Math.floor(
+    (containerWidth + gap - horizonPadding * 2) / (cardWidth + gap)
+  );
+  let horizonGap =
+    (containerWidth - (cardWidth + gap) * column + gap - horizonPadding * 2) /
+    (column + 1);
+  container.value.style.height = `${
+    Math.ceil(list.length / column) * (cardHeight + gap) +
+    gap +
+    verticalPadding * 1.5
+  }px`;
+  list.forEach((item, index) => {
+    item.position = {
+      left:
+        (index % column) * (horizonGap + gap + cardWidth) +
+        horizonPadding +
+        horizonGap,
+      top: Math.floor(index / column) * (cardHeight + gap) + verticalPadding,
+    };
+    item.style = `transform:translate(${item.position.left}px,${item.position.top}px)`;
+  });
+  return list;
+}
+
+function appCardDown() {
+  containerState.value.active = true;
+  containerState.value.animation = true;
+}
+
+function appCardUp() {
+  containerState.value.active = false;
+}
+
+function appCardAnimated(event) {
+  if (event.propertyName === "transform") {
+    containerState.value.animation = false;
+  }
+}
 
 onUnmounted(() => {
   store.appList = [];
@@ -50,8 +117,27 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="container">
-    <div v-for="(app, index) in appList" :id="'app_' + index" :key="index">
+  <div
+    :class="containerState"
+    :ref="
+      (el) => {
+        container = el;
+      }
+    "
+  >
+    <div
+      v-for="(app, index) in appList"
+      :style="app.style"
+      :key="index"
+      :ref="
+        (el) => {
+          app.el = el;
+        }
+      "
+      @mousedown="appCardDown"
+      @mouseup="appCardUp"
+      @transitionend="appCardAnimated"
+    >
       <!-- @click="openApp(app.application_id,index)" -->
       <img
         :src="
@@ -74,22 +160,24 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 264px);
-  grid-auto-rows: 92px;
-  justify-content: space-evenly;
-  grid-gap: 32px;
-  padding: 50px 16px;
-
   > div {
     display: flex;
+    width: 264px;
+    height: 92px;
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
     align-items: center;
     justify-content: space-evenly;
     padding: 12px;
     border-radius: 2vmin;
     box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
       0 3px 1px -4px #0000002e;
-    transition: box-shadow 0.35s;
+    transition: {
+      property: box-shadow, transform;
+      duration: 0.35s, 0.75s;
+    }
     will-change: box-shadow;
 
     &:hover {
@@ -128,6 +216,13 @@ onUnmounted(() => {
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
       }
+    }
+  }
+
+  &.active,
+  &.animation {
+    & > div {
+      transform: scale(0.9);
     }
   }
 }

@@ -18,7 +18,7 @@ const showTips = ref(false);
 //Q&A中的消息内容
 const qaMessages = [
   {
-      //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
+    //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ["在哪进交流群？"],
     answer: ["872690351"],
   },
@@ -43,8 +43,8 @@ const qaMessages = [
   {
     question: ["我可以用dpkg -i安装吗？"],
     answer: [
-        "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi/deepin-deb-installer/kylin-installer等等等等图形化的安装器！！！",
-        "已经有不下20个人被这个坑了。CSDN害人不浅"
+      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi/deepin-deb-installer/kylin-installer等等等等图形化的安装器！！！",
+      "已经有不下20个人被这个坑了。CSDN害人不浅",
     ],
   },
   {
@@ -67,7 +67,7 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
- {
+  {
     version: "3.1.1",
     time: "2022-05-13 22:28  ",
     details: [
@@ -75,13 +75,10 @@ const updateHistory = [
       "卸载时会清理自动安装的policy。目前的策略是每次更新都清理",
     ],
   },
- {
+  {
     version: "3.1.0",
     time: "2022-05-09 18:41 ",
-    details: [
-      "Debian 11系统需要先安依赖包",
-      "添加免密码安装功能",
-    ],
+    details: ["Debian 11系统需要先安依赖包", "添加免密码安装功能"],
   },
   {
     version: "3.0.3-13",
