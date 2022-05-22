@@ -1,95 +1,10 @@
-<!--suppress CssUnusedSymbol, JSUnresolvedVariable -->
 <script setup>
-// noinspection NpmUsedModulesInstalled
-import { onMounted, ref, watch } from "vue";
-// noinspection NpmUsedModulesInstalled
-import { useRouter, useRoute } from "vue-router";
-import axios from "axios";
 import { useMeta } from "quasar";
-
-const router = useRouter();
-const route = useRoute();
 
 useMeta({
   title: "WEB商店",
   // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
   titleTemplate: (title) => `${title} - 星火应用商店`,
-});
-
-const appList = ref([]);
-//const source = ref("https://d.store.deepinos.org.cn");
-//const imgSource = ref("https://cdn.jsdelivr.net/gh/Jerrywang959/jsonpng")
-const dataSource = ref("https://store.deepinos.org/api/");
-//const searchStr = ref("");
-const loaded = ref(true);
-const sortId = ref({});
-
-function getSortId() {
-  axios.post(`${dataSource.value}type/get_type_list`).then((res) => {
-    res.data.data.forEach((e) => {
-      sortId.value[e.orig_name] = e.type_id;
-    });
-    getAppList(route.params);
-  });
-}
-
-function getAppList(params) {
-  if (params.hasOwnProperty("sort")) {
-    // noinspection SpellCheckingInspection
-    if (sortId.value.hasOwnProperty(params.sort)) {
-      axios
-        .post(`${dataSource.value}application/get_application_list`, {
-          size: 10000,
-          type_id: sortId.value[params.sort],
-        })
-        //appList.json 软件列表
-        .then((res) => {
-          appList.value = res.data.data.data;
-          loaded.value = true;
-        });
-    } else {
-      router.push("/Error404");
-    }
-  }
-}
-
-//function openApp(appId, cardIndex) {
-//  console.log(appId, cardIndex);
-//}
-
-watch(
-  () => route.params,
-  async (toParams) => {
-    // 对路由变化做出响应...
-    if (toParams.hasOwnProperty("sort")) {
-      loaded.value = false;
-    } else {
-      appList.value = [];
-    }
-    getAppList(toParams);
-  }
-);
-
-watch(
-  () => route.path,
-  async (toPath) => {
-    // 对路由变化做出响应...
-    if (toPath.match("store")) {
-      if (!toPath.match("sorts")) {
-        loaded.value = false;
-        setTimeout(() => {
-          loaded.value = true;
-        }, 500);
-      }
-    }
-  }
-);
-
-onMounted(() => {
-  if (route.params.hasOwnProperty("sort")) {
-    loaded.value = false;
-  }
-  getSortId();
 });
 </script>
 
@@ -105,6 +20,7 @@ onMounted(() => {
         </q-input>
       </div>
     </div>-->
+    <!--suppress JSValidateTypes -->
     <q-scroll-area
       style="width: 100%"
       :thumb-style="{ 'z-index': 2, 'border-radius': '100px' }"

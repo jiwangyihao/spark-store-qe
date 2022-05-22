@@ -1,25 +1,22 @@
 <script>
-import { api } from "boot/axios";
+import { api } from "boot/api";
 import { useStore } from "stores/store";
 const store = useStore();
 
 export default {
   preFetch({ currentRoute }) {
-    api.post("/type/get_type_list").then((res) => {
-      let listId;
-      res.data.data.forEach((e) => {
-        listId =
-          e["orig_name"] === currentRoute.params.sort ? e["type_id"] : listId;
+    api.getTypeList().then((typeList) => {
+      let typeId;
+      typeList.forEach((e) => {
+        typeId =
+          e["orig_name"] === currentRoute.params.sort ? e["type_id"] : typeId;
       });
-      if (listId) {
+      if (typeId) {
         api
-          .post("/application/get_application_list", {
-            size: 10000,
-            type_id: listId,
-          })
+          .getApplicationList(typeId)
           //appList.json 软件列表
-          .then((res) => {
-            store["appList"] = res.data.data.data;
+          .then((applicationList) => {
+            store["appList"] = applicationList;
           });
       } else {
         currentRoute.push("/Error404");
@@ -115,6 +112,7 @@ function layoutAppCard(appList) {
     item.class = {
       active: false,
       animation: false,
+      appCard: true,
     };
   });
   return list;
@@ -220,9 +218,10 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .container {
-  > div {
+  .appCard {
     width: 264px;
     height: 92px;
+    cursor: pointer;
     position: absolute;
     top: 0;
     left: 0;
@@ -290,8 +289,8 @@ onUnmounted(() => {
 
   &.active,
   &.animation {
-    & > div.active,
-    & > div.animation {
+    .appCard.active,
+    .appCard.animation {
       > div {
         transform: scale(0.96);
       }
