@@ -1,1 +1,0 @@
-import{_ as a,q as _,s,B as t,C as o,t as c}from"./index.dbeb2a32.js";const n={},d=e=>(t("data-v-3461faa9"),e=e(),o(),e),r={class:"container"},p=d(()=>c("h5",null,"\u65BD\u5DE5ing...",-1)),i=[p];function l(e,f){return _(),s("div",r,i)}var h=a(n,[["render",l],["__scopeId","data-v-3461faa9"]]);export{h as default};
