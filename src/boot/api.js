@@ -12,6 +12,7 @@ import { getStorage } from "@sifrr/storage";
 let api = {
   axios: axios.create({ baseURL: "https://store.deepinos.org/api/" }),
   storage: getStorage({
+    priority: ["indexeddb", "websql", "localstorage"],
     name: "apiCache", // name of table (treat this as a variable name, i.e. no Spaces or special characters allowed)
     version: 1, // version number (integer / float / string), 1 is treated same as '1'
     description: "Cache for Spark Store API", // description (text)

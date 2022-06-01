@@ -27,11 +27,25 @@ export default {
 </script>
 
 <script setup>
-import { onUnmounted, ref } from "vue";
+import { onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import BezierEasing from "bezier-easing";
 
 const route = useRoute();
+
+const config = {
+  cardWidth: 264, //卡片宽度
+  cardHeight: 92, //卡片高度
+  verticalPadding: 50, //垂直边距（下边距只有1/2）
+  horizonPadding: 16, //水平边距
+  gap: 32, //卡片间距
+};
+
+const scroll = ref({
+  originTop: 0,
+  targetTop: 0,
+  animationId: 0,
+});
 
 const store = useStore();
 const sourceAppList = ref(store["appList"]);
@@ -63,50 +77,36 @@ function resizeCardView() {
 window.addEventListener("resize", resizeCardView);
 
 function layoutAppCard(appList) {
-  let cardWidth = 264;
-  let cardHeight = 92;
-  let verticalPadding = 50;
-  let horizonPadding = 16;
-  let gap = 32;
-
   let list = JSON.parse(JSON.stringify(appList.value));
   let containerWidth = container.value.clientWidth;
   let scrollRatio =
     container.value.parentElement.parentElement.scrollTop /
     container.value.clientHeight;
-  let ifScroll;
-  if (
-    column.value !==
-    Math.floor((containerWidth + gap - horizonPadding * 2) / (cardWidth + gap))
-  ) {
-    ifScroll = true;
-  }
   column.value = Math.floor(
-    (containerWidth + gap - horizonPadding * 2) / (cardWidth + gap)
+    (containerWidth + config.gap - config.horizonPadding * 2) /
+      (config.cardWidth + config.gap)
   );
   let horizonGap =
     (containerWidth -
-      (cardWidth + gap) * column.value +
-      gap -
-      horizonPadding * 2) /
+      (config.cardWidth + config.gap) * column.value +
+      config.gap -
+      config.horizonPadding * 2) /
     (column.value + 1);
   container.value.style.height = `${
-    Math.ceil(list.length / column.value) * (cardHeight + gap) +
-    gap +
-    verticalPadding * 1.5
+    Math.ceil(list.length / column.value) * (config.cardHeight + config.gap) +
+    config.gap +
+    config.verticalPadding * 1.5
   }px`;
-  if (ifScroll) {
-    scrollAnimation(scrollRatio);
-  }
 
   list.forEach((item, index) => {
     item.position = {
       left:
-        (index % column.value) * (horizonGap + gap + cardWidth) +
-        horizonPadding +
+        (index % column.value) * (horizonGap + config.gap + config.cardWidth) +
+        config.horizonPadding +
         horizonGap,
       top:
-        Math.floor(index / column.value) * (cardHeight + gap) + verticalPadding,
+        Math.floor(index / column.value) * (config.cardHeight + config.gap) +
+        config.verticalPadding,
     };
     item.style = `transform:translate(${item.position.left}px,${item.position.top}px)`;
     item.class = {
@@ -118,11 +118,9 @@ function layoutAppCard(appList) {
   return list;
 }
 
-function scrollAnimation(scrollRatio) {
+function scrollAnimation(scrollStart, scrollEnd) {
   let start;
-  const scrollStart = container.value.parentElement.parentElement.scrollTop;
-  const scrollDistance =
-    scrollRatio * container.value.clientHeight - scrollStart;
+  const scrollDistance = scrollEnd - scrollStart;
   const easing = BezierEasing(0.25, 0.1, 0.25, 1.0);
   function scrollStep(timestamp) {
     if (start === undefined) {
@@ -132,7 +130,7 @@ function scrollAnimation(scrollRatio) {
 
     const process = elapsed / 600;
 
-    //这里使用`Math.min()`确保元素刚好停在200px的位置。
+    //这里使用`Math.min()`确保元素刚好停在目标位置。
     container.value.parentElement.parentElement.scrollTo(
       0,
       scrollStart + scrollDistance * easing(Math.min(process, 1))
@@ -140,11 +138,32 @@ function scrollAnimation(scrollRatio) {
 
     if (process < 1) {
       // 在0.6秒后停止动画
-      requestAnimationFrame(scrollStep);
+      scroll.value.animationId = requestAnimationFrame(scrollStep);
+    } else {
+      scroll.value.targetTop = 0;
     }
   }
-  requestAnimationFrame(scrollStep);
+  scroll.value.animationId = requestAnimationFrame(scrollStep);
 }
+
+watch(column, (newColumn, oldColumn) => {
+  cancelAnimationFrame(scroll.value.animationId);
+  let scrollTop = scroll.value.targetTop
+    ? scroll.value.targetTop
+    : container.value.parentElement.parentElement.scrollTop;
+  scroll.value.targetTop =
+    ((scrollTop -
+      config.verticalPadding +
+      container.value.parentElement.parentElement.clientHeight / 2) *
+      oldColumn) /
+      newColumn -
+    container.value.parentElement.parentElement.clientHeight / 2 +
+    config.verticalPadding;
+  scrollAnimation(
+    container.value.parentElement.parentElement.scrollTop,
+    scroll.value.targetTop
+  );
+});
 
 function appCardDown(app) {
   containerState.value.active = true;

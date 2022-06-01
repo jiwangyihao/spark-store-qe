@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@sifrr/storage": "^0.0.9",
     "axios": "^0.21.1",
     "bezier-easing": "^2.1.0",
     "pinia": "^2.0.11",
