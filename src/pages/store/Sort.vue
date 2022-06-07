@@ -1,6 +1,7 @@
 <script>
 import { api } from "boot/api";
 import { useStore } from "stores/store";
+
 const store = useStore();
 
 export default {
@@ -27,9 +28,11 @@ export default {
 </script>
 
 <script setup>
-import { onUnmounted, ref, watch } from "vue";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import BezierEasing from "bezier-easing";
+
+import defaultIcon from "../../assets/img/store/application.svg";
 
 const route = useRoute();
 
@@ -47,13 +50,14 @@ const scroll = ref({
   animationId: 0,
 });
 
+//const defaultIcon = require("../../assets/img/store/application.svg");
 const store = useStore();
 const sourceAppList = ref(store["appList"]);
 const appList = ref([]);
 const source = ref(store["source"]);
 const sort = ref(route.params.sort.toString());
 store.$subscribe((mutation, state) => {
-  sourceAppList.value = state["appList"];
+  sourceAppList.value = JSON.parse(JSON.stringify(state["appList"]));
   if (container.value) {
     appList.value = layoutAppCard(sourceAppList);
   }
@@ -61,11 +65,25 @@ store.$subscribe((mutation, state) => {
 });
 
 const container = ref();
+const cover = ref();
 
 const containerState = ref({
   container: true,
   active: false,
   animation: false,
+});
+const coverState = ref({
+  coverCard: true,
+  active: false,
+  animation: false,
+});
+
+const activeCard = ref({
+  position: {
+    left: 0,
+    top: 0,
+  },
+  class: {},
 });
 
 const column = ref(0);
@@ -77,11 +95,8 @@ function resizeCardView() {
 window.addEventListener("resize", resizeCardView);
 
 function layoutAppCard(appList) {
-  let list = JSON.parse(JSON.stringify(appList.value));
+  let list = appList.value;
   let containerWidth = container.value.clientWidth;
-  let scrollRatio =
-    container.value.parentElement.parentElement.scrollTop /
-    container.value.clientHeight;
   column.value = Math.floor(
     (containerWidth + config.gap - config.horizonPadding * 2) /
       (config.cardWidth + config.gap)
@@ -109,11 +124,17 @@ function layoutAppCard(appList) {
         config.verticalPadding,
     };
     item.style = `transform:translate(${item.position.left}px,${item.position.top}px)`;
-    item.class = {
-      active: false,
-      animation: false,
-      appCard: true,
-    };
+    if (!item.hasOwnProperty("class")) {
+      item.class = {
+        active: false,
+        animation: false,
+        appCard: true,
+        cover: false,
+      };
+    }
+    item.imgSrc = `${source.value}/store/${route.params.sort}/${item[
+      "package"
+    ].replace("+", "%2B")}/icon.png`;
   });
   return list;
 }
@@ -163,18 +184,24 @@ watch(column, (newColumn, oldColumn) => {
     container.value.parentElement.parentElement.scrollTop,
     scroll.value.targetTop
   );
+  moveCover(activeCard.value);
 });
 
 function appCardDown(app) {
   containerState.value.active = true;
   containerState.value.animation = true;
+  activeCard.value.class.cover = false;
   app.class.active = true;
   app.class.animation = true;
+  activeCard.value = app;
+  moveCover(activeCard.value);
 }
 
 function appCardUp(app) {
   containerState.value.active = false;
   app.class.active = false;
+  app.class.cover = true;
+  coverState.value.active = true;
 }
 
 function appCardAnimated(app, event) {
@@ -183,6 +210,29 @@ function appCardAnimated(app, event) {
     app.class.animation = false;
   }
 }
+
+function moveCover(app) {
+  cover.value.style = `--j-left:${
+    app.position.left - container.value.clientWidth / 2
+  }px;--j-top:${
+    app.position.top -
+    container.value.parentElement.parentElement.clientHeight / 2 -
+    container.value.parentElement.parentElement.scrollTop
+  }px;`;
+}
+
+function coverAnimationEnd(e) {
+  if (e.propertyName === "transform") {
+    coverState.value.animation = false;
+    activeCard.value.class.cover = coverState.value.active;
+  }
+}
+
+onMounted(() => {
+  container.value.parentElement.parentElement.addEventListener("scroll", () => {
+    moveCover(activeCard.value);
+  });
+});
 
 onUnmounted(() => {
   store.appList = [];
@@ -199,6 +249,34 @@ onUnmounted(() => {
       }
     "
   >
+    <!--suppress JSUndeclaredVariable -->
+    <div
+      :class="coverState"
+      :ref="
+        (el) => {
+          cover = el;
+        }
+      "
+      @click="
+        coverState.active = false;
+        coverState.animation = true;
+      "
+    >
+      <div class="card" @transitionend="coverAnimationEnd">
+        <div @transitionend.stop>
+          <div class="toolBox"></div>
+          <img
+            :src="activeCard['imgSrc']"
+            alt=""
+            @error="activeCard.imgSrc = defaultIcon"
+          />
+          <div class="description">
+            <h6>{{ activeCard["application_name_zh"] }}</h6>
+            <p>{{ activeCard["more"] }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       v-for="(app, index) in appList"
       :style="app.style"
@@ -215,18 +293,8 @@ onUnmounted(() => {
       <!-- @click="openApp(app.application_id,index)" -->
       <div @transitionend="(e) => appCardAnimated(app, e)">
         <!--suppress JSUnresolvedVariable -->
-        <img
-          :src="
-            source +
-            '/store/' +
-            sort +
-            '/' +
-            app.package.replace('+', '%2B') +
-            '/icon.png'
-          "
-          alt=""
-        />
-        <div>
+        <img :src="app['imgSrc']" alt="" @error="app.imgSrc = defaultIcon" />
+        <div class="description">
           <h6>{{ app["application_name_zh"] }}</h6>
           <p>{{ app["more"] }}</p>
         </div>
@@ -237,25 +305,26 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .container {
+  &::before {
+    content: "";
+    width: 100%;
+    height: 120px;
+    position: fixed;
+    top: -30px;
+    z-index: 1;
+    background: linear-gradient(#fff 36%, #0000);
+    pointer-events: none;
+  }
+
+  .card,
   .appCard {
     width: 264px;
     height: 92px;
-    cursor: pointer;
     position: absolute;
-    top: 0;
-    left: 0;
-    transition: {
-      property: transform;
-      duration: 0.6s;
-    }
     will-change: transform;
 
     > div {
-      display: flex;
       background-color: white;
-      align-items: center;
-      justify-content: space-evenly;
-      padding: 12px;
       border-radius: 2vmin;
       box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
         0 3px 1px -4px #0000002e;
@@ -274,9 +343,11 @@ onUnmounted(() => {
         width: 64px;
         height: 64px;
         object-fit: contain;
+        padding: 2px;
+        border-radius: 2vmin;
       }
 
-      div {
+      .description {
         width: 170px;
         height: 68px;
         padding-left: 10px;
@@ -306,10 +377,180 @@ onUnmounted(() => {
     }
   }
 
+  .coverCard {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    pointer-events: none;
+    visibility: hidden;
+    cursor: default;
+    user-select: none;
+
+    &.active,
+    &.animation {
+      visibility: visible;
+    }
+
+    &::before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.2);
+      position: absolute;
+      top: 0;
+      left: 0;
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: {
+        property: opacity;
+        duration: 1s;
+      }
+      will-change: opacity;
+    }
+
+    &.active::before {
+      opacity: 1;
+    }
+
+    .card {
+      top: 50%;
+      left: 50%;
+      z-index: 1;
+      transform: translate(var(--j-left), var(--j-top));
+
+      > div {
+        width: 100%;
+        height: 100%;
+
+        img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-118px, -32px);
+          transition: {
+            property: transform, filter;
+            duration: 1s;
+          }
+        }
+
+        .description {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-52px, -34px);
+          opacity: 1;
+          transition: {
+            property: transform, opacity;
+            duration: 1s;
+          }
+        }
+      }
+    }
+
+    .toolBox {
+      width: 300px;
+      height: 80px;
+      background-color: white;
+      border-radius: 2vmin;
+      box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
+        0 3px 1px -4px #0000002e;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      z-index: 1;
+      transform: translate(-50%, -50%) scale(0.1);
+      opacity: 0;
+      transition: {
+        property: transform, opacity;
+        duration: 0.6s;
+        delay: 0s;
+      }
+    }
+
+    &.active {
+      pointer-events: unset;
+      .card {
+        width: 300px;
+        height: calc(100% - 72px - 80px);
+        transform: translate(-50%, calc(-50% - 40px - 12px));
+
+        > div {
+          img {
+            transform: translate(-50%, -50%) scale(1.5);
+            filter: drop-shadow(0 1px 5px #0004);
+          }
+
+          .description {
+            transform: translate(-50%, -50%) scale(0.1);
+            opacity: 0;
+
+            h6 {
+              font-size: 14px;
+              font-weight: 700;
+              line-height: 20px;
+              margin: 0;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+            }
+
+            p {
+              color: gray;
+              font-size: 13px;
+              line-height: 16px;
+              margin: 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 3;
+              -webkit-box-orient: vertical;
+            }
+          }
+        }
+      }
+      .toolBox {
+        transform: translate(-50%, calc(100% + 24px));
+        opacity: 1;
+        transition-delay: 0.4s;
+      }
+    }
+
+    &.animation .card,
+    &.active .card {
+      transition: {
+        property: transform, width, height;
+        duration: 1s;
+      }
+    }
+  }
+  .appCard {
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    transition: {
+      property: transform, visibility;
+      duration: 0.6s, 0s;
+      delay: 0s;
+    }
+
+    &.cover {
+      visibility: hidden;
+    }
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 12px;
+    }
+  }
+
   &.active,
   &.animation {
     .appCard.active,
-    .appCard.animation {
+    .appCard.animation,
+    .coverCard .card {
       > div {
         transform: scale(0.96);
       }

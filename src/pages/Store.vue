@@ -36,17 +36,6 @@ useMeta({
   padding-top: 30px;
   padding-left: 60px;
   overflow-y: unset;
-
-  &::before {
-    content: "";
-    width: 100%;
-    height: 120px;
-    position: absolute;
-    top: 0;
-    z-index: 1;
-    background: linear-gradient(#fff 36%, #0000);
-    pointer-events: none;
-  }
 }
 
 .storePage .topBar {
