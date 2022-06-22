@@ -67,12 +67,14 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
+    
   {
-    version: "3.1.1",
-    time: "2022-05-13 22:28  ",
+    version: "3.1.2",
+    time: "2022-06-21 22:59   ",
     details: [
-      "修复了免密安装失败的问题 #I5775W:免密安装失败",
-      "卸载时会清理自动安装的policy。目前的策略是每次更新都清理",
+      "新增： ss-apt-fast 从多个指定的镜像源下载文件",
+      "调整：现在应用更新和依赖处理已切换到ss-apt-fast",
+      "调整： 使用 dtk5.4编译",
     ],
   },
   {
@@ -273,7 +275,7 @@ const updateHistory = [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.1.1</span>
+              <span>最新版本 3.1.2</span>
             </div>
           </div>
         </div>
