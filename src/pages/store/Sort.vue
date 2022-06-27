@@ -15,7 +15,7 @@ export default {
       if (typeId) {
         api
           .getApplicationList(typeId)
-          //appList.json 软件列表
+          //appList.json
           .then((applicationList) => {
             store["appList"] = applicationList;
           });
@@ -28,7 +28,7 @@ export default {
 </script>
 
 <script setup>
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import BezierEasing from "bezier-easing";
 
@@ -55,6 +55,7 @@ const store = useStore();
 const sourceAppList = ref(store["appList"]);
 const appList = ref([]);
 const source = ref(store["source"]);
+const debSource = ref(store["debSource"]);
 const sort = ref(route.params.sort.toString());
 store.$subscribe((mutation, state) => {
   sourceAppList.value = JSON.parse(JSON.stringify(state["appList"]));
@@ -76,6 +77,8 @@ const coverState = ref({
   coverCard: true,
   active: false,
   animation: false,
+  loaded: false,
+  open: false,
 });
 
 const activeCard = ref({
@@ -195,6 +198,7 @@ function appCardDown(app) {
   app.class.animation = true;
   activeCard.value = app;
   moveCover(activeCard.value);
+  fetchAppInfo(app.application_id);
 }
 
 function appCardUp(app) {
@@ -202,6 +206,7 @@ function appCardUp(app) {
   app.class.active = false;
   app.class.cover = true;
   coverState.value.active = true;
+  containerState.value.cover = true;
 }
 
 function appCardAnimated(app, event) {
@@ -225,6 +230,7 @@ function coverAnimationEnd(e) {
   if (e.propertyName === "transform") {
     coverState.value.animation = false;
     activeCard.value.class.cover = coverState.value.active;
+    coverState.value.open = coverState.value.active;
   }
 }
 
@@ -237,6 +243,26 @@ onMounted(() => {
 onUnmounted(() => {
   store.appList = [];
 });
+
+//应用详情
+const appDetail = ref({});
+
+function fetchAppInfo(appId) {
+  api.getApplicationDetail(appId).then((detail) => {
+    appDetail.value = detail;
+    coverState.value.loaded = true;
+  });
+}
+
+const appDebHref = computed(
+  () =>
+    `${debSource.value}/store/${appDetail.value["orig_name"]}/${appDetail.value["package"]}/${appDetail.value["package"]}_${appDetail.value["version"]}_${appDetail.value["arch"]}.deb`
+);
+
+const appTorrentHref = computed(
+  () =>
+    `${source.value}/store/${appDetail.value["orig_name"]}/${appDetail.value["package"]}/${appDetail.value["package"]}_${appDetail.value["version"]}_${appDetail.value["arch"]}.deb.torrent`
+);
 </script>
 
 <template>
@@ -259,12 +285,14 @@ onUnmounted(() => {
       "
       @click="
         coverState.active = false;
+        coverState.open = false;
+        coverState.loaded = false;
+        containerState.cover = false;
         coverState.animation = true;
       "
     >
-      <div class="card" @transitionend="coverAnimationEnd">
-        <div @transitionend.stop>
-          <div class="toolBox"></div>
+      <div class="card" @transitionend="coverAnimationEnd" @click.stop>
+        <div class="cardView" @transitionend.stop>
           <img
             :src="activeCard['imgSrc']"
             alt=""
@@ -274,7 +302,35 @@ onUnmounted(() => {
             <h6>{{ activeCard["application_name_zh"] }}</h6>
             <p>{{ activeCard["more"] }}</p>
           </div>
+          <div class="detail">
+            <h1 class="name">{{ appDetail["application_name_zh"] }}</h1>
+            <span class="version">{{ appDetail["version"] }}</span>
+            <div class="tags">
+              <span v-for="tag in appDetail['tags']" :key="tag">{{ tag }}</span>
+            </div>
+            <p class="description">{{ appDetail["more"] }}</p>
+            <q-btn-dropdown
+              split
+              :ripple="false"
+              :href="appDebHref"
+              color="primary"
+              label="下载（DEB）"
+              menu-anchor="bottom middle"
+              menu-self="top middle"
+              padding="sm xl"
+              @click.stop
+            >
+              <q-list>
+                <q-item clickable v-close-popup :href="appTorrentHref">
+                  <q-item-section>
+                    <q-item-label>BT（多源下载更快）</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </div>
         </div>
+        <div class="toolBox" @transitionend.stop>查看详情</div>
       </div>
     </div>
     <div
@@ -291,7 +347,7 @@ onUnmounted(() => {
       @mouseup="(e) => appCardUp(app, e)"
     >
       <!-- @click="openApp(app.application_id,index)" -->
-      <div @transitionend="(e) => appCardAnimated(app, e)">
+      <div class="cardView" @transitionend="(e) => appCardAnimated(app, e)">
         <!--suppress JSUnresolvedVariable -->
         <img :src="app['imgSrc']" alt="" @error="app.imgSrc = defaultIcon" />
         <div class="description">
@@ -305,7 +361,8 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .container {
-  &::before {
+  &::before,
+  &::after {
     content: "";
     width: 100%;
     height: 120px;
@@ -314,6 +371,23 @@ onUnmounted(() => {
     z-index: 1;
     background: linear-gradient(#fff 36%, #0000);
     pointer-events: none;
+    transition: {
+      property: opacity;
+      duration: 1s;
+    }
+    will-change: opacity;
+  }
+
+  &::before,
+  &.cover::after {
+    opacity: 0;
+    transition-timing-function: cubic-bezier(0.86, 0.14, 1, 1);
+  }
+
+  &::after,
+  &.cover::before {
+    opacity: 1;
+    transition-timing-function: cubic-bezier(0, 0, 0.14, 0.86);
   }
 
   .card,
@@ -419,22 +493,25 @@ onUnmounted(() => {
       z-index: 1;
       transform: translate(var(--j-left), var(--j-top));
 
-      > div {
+      .cardView {
         width: 100%;
         height: 100%;
+        overflow: hidden;
 
         img {
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-118px, -32px);
+          z-index: 1;
           transition: {
             property: transform, filter;
             duration: 1s;
           }
+          will-change: transform, filter;
         }
 
-        .description {
+        > .description {
           position: absolute;
           top: 50%;
           left: 50%;
@@ -444,13 +521,67 @@ onUnmounted(() => {
             property: transform, opacity;
             duration: 1s;
           }
+          will-change: transform, opacity;
+        }
+
+        .detail {
+          display: flex;
+          height: calc(100% - 64px - 60px * 1.8);
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          transform: translateY(calc(64px + 48px * 1.8));
+
+          > * {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: {
+              property: transform, opacity;
+              duration: 0.5s;
+            }
+            will-change: transform, opacity;
+          }
+
+          h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            line-height: 2rem;
+            font-weight: bold;
+          }
+
+          .tags {
+            span {
+              display: inline-block;
+              padding: 2px 0.5em;
+              margin: 2px;
+              background-color: #ddd;
+              border-radius: 0.3em;
+            }
+          }
+
+          .description {
+            width: 80%;
+            height: auto;
+            min-height: 84px;
+            max-height: 105px;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+          }
+
+          .description::-webkit-scrollbar {
+            width: 0;
+          }
         }
       }
     }
 
     .toolBox {
       width: 300px;
-      height: 80px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
       background-color: white;
       border-radius: 2vmin;
       box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
@@ -462,10 +593,11 @@ onUnmounted(() => {
       transform: translate(-50%, -50%) scale(0.1);
       opacity: 0;
       transition: {
-        property: transform, opacity;
-        duration: 0.6s;
+        property: transform, opacity, box-shadow;
+        duration: 0.6s, 0.6s, 0.5s;
         delay: 0s;
       }
+      will-change: transform, opacity, box-shadow;
     }
 
     &.active {
@@ -475,13 +607,13 @@ onUnmounted(() => {
         height: calc(100% - 72px - 80px);
         transform: translate(-50%, calc(-50% - 40px - 12px));
 
-        > div {
+        .cardView {
           img {
-            transform: translate(-50%, -50%) scale(1.5);
+            transform: translate(-50%, -50%) scale(1.8);
             filter: drop-shadow(0 1px 5px #0004);
           }
 
-          .description {
+          > .description {
             transform: translate(-50%, -50%) scale(0.1);
             opacity: 0;
 
@@ -512,7 +644,7 @@ onUnmounted(() => {
       .toolBox {
         transform: translate(-50%, calc(100% + 24px));
         opacity: 1;
-        transition-delay: 0.4s;
+        transition-delay: 0.4s, 0.4s, 0s;
       }
     }
 
@@ -521,6 +653,58 @@ onUnmounted(() => {
       transition: {
         property: transform, width, height;
         duration: 1s;
+      }
+      will-change: transform, width, height;
+    }
+
+    &.open.loaded {
+      .card {
+        .cardView {
+          img {
+            transform: translate(
+                -50%,
+                calc(30px * 1.8 - 50vh + 15px + 36px + 40px)
+              )
+              scale(1.8);
+          }
+
+          .detail {
+            > * {
+              opacity: 1;
+              transform: unset;
+            }
+
+            & > *:nth-child(1) {
+              transition-delay: 0.5s;
+            }
+
+            & > *:nth-child(2) {
+              transition-delay: 0.6s;
+            }
+
+            & > *:nth-child(3) {
+              transition-delay: 0.7s;
+            }
+
+            & > *:nth-child(4) {
+              transition-delay: 0.8s;
+            }
+
+            & > *:nth-child(5) {
+              transition-delay: 0.9s;
+            }
+          }
+        }
+      }
+    }
+
+    &.animation {
+      .card {
+        .detail {
+          > * {
+            transform: translateY(-60px);
+          }
+        }
       }
     }
   }
@@ -533,6 +717,7 @@ onUnmounted(() => {
       duration: 0.6s, 0s;
       delay: 0s;
     }
+    will-change: transform;
 
     &.cover {
       visibility: hidden;
@@ -551,7 +736,7 @@ onUnmounted(() => {
     .appCard.active,
     .appCard.animation,
     .coverCard .card {
-      > div {
+      .cardView {
         transform: scale(0.96);
       }
     }

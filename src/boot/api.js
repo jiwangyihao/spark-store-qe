@@ -9,6 +9,7 @@ import { getStorage } from "@sifrr/storage";
 // "export default () => {}" function below (which runs individually
 // for each client)
 // Options with default values
+// noinspection JSCheckFunctionSignatures
 let api = {
   axios: axios.create({ baseURL: "https://store.deepinos.org/api/" }),
   storage: getStorage({
@@ -57,6 +58,30 @@ let api = {
         ttl: 10 * 60 * 1000, //保留10分钟
       });
       return res.data.data.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  getApplicationDetail: async function (appId) {
+    try {
+      let applicationDetail = await this.storage.get(
+        `applicationDetail_${appId}`
+      );
+      if (applicationDetail[`applicationDetail_${appId}`]) {
+        return applicationDetail[`applicationDetail_${appId}`];
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    try {
+      let res = await this.axios.post("/application/get_application_detail", {
+        application_id: appId,
+      });
+      await this.storage.set(`applicationDetail_${appId}`, {
+        value: res.data.data,
+        ttl: 10 * 60 * 1000, //保留10分钟
+      });
+      return res.data.data;
     } catch (e) {
       console.error(e);
     }
