@@ -1,80 +1,16 @@
-<script>
-import { api } from "boot/api";
-import { useStore } from "stores/store";
-
-const store = useStore();
-
-export default {
-  preFetch({ currentRoute }) {
-    api.getTypeList().then((typeList) => {
-      let typeId;
-      typeList.forEach((e) => {
-        typeId =
-          e["orig_name"] === currentRoute.params.sort ? e["type_id"] : typeId;
-      });
-      if (typeId) {
-        api
-          .getApplicationList(typeId)
-          //appList.json
-          .then((applicationList) => {
-            store["appList"] = applicationList;
-          });
-      } else {
-        currentRoute.push("/Error404");
-      }
-    });
-  },
-};
-</script>
-
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
-import BezierEasing from "bezier-easing";
-
+//综合
+import { computed, onMounted, ref, watch } from "vue";
 import defaultIcon from "../../assets/img/store/application.svg";
 
-const route = useRoute();
-
-const config = {
-  cardWidth: 264, //卡片宽度
-  cardHeight: 92, //卡片高度
-  verticalPadding: 50, //垂直边距（下边距只有1/2）
-  horizonPadding: 16, //水平边距
-  gap: 32, //卡片间距
-};
-
-const scroll = ref({
-  originTop: 0,
-  targetTop: 0,
-  animationId: 0,
-});
-
-//const defaultIcon = require("../../assets/img/store/application.svg");
-const store = useStore();
-const sourceAppList = ref(store["appList"]);
-const appList = ref([]);
-const source = ref(store["source"]);
-const debSource = ref(store["debSource"]);
-const sort = ref(route.params.sort.toString());
-store.$subscribe((mutation, state) => {
-  sourceAppList.value = JSON.parse(JSON.stringify(state["appList"]));
-  if (container.value) {
-    appList.value = layoutAppCard(sourceAppList);
-  }
-  sort.value = route.params.sort.toString();
-});
-
-const container = ref();
-const cover = ref();
+const container = ref(null);
+const cover = ref({});
 
 const containerState = ref({
-  container: true,
   active: false,
   animation: false,
 });
 const coverState = ref({
-  coverCard: true,
   active: false,
   animation: false,
   loaded: false,
@@ -89,44 +25,123 @@ const activeCard = ref({
   class: {},
 });
 
-const column = ref(0);
+//数据请求
+import { api } from "boot/api";
 
-function resizeCardView() {
-  appList.value = layoutAppCard(sourceAppList);
-}
+import { useRoute, useRouter } from "vue-router";
 
-window.addEventListener("resize", resizeCardView);
+const route = useRoute();
+const router = useRouter();
 
-function layoutAppCard(appList) {
-  let list = appList.value;
-  let containerWidth = container.value.clientWidth;
-  column.value = Math.floor(
-    (containerWidth + config.gap - config.horizonPadding * 2) /
-      (config.cardWidth + config.gap)
+import { useStore } from "stores/store";
+
+const store = useStore();
+
+const appList = ref([]);
+const source = ref(store["source"]);
+const debSource = ref(store["debSource"]);
+const sort = ref(route.params.sort.toString());
+
+onMounted(() => {
+  watch(
+    () => route.params.sort, //当分类被切换时
+    () => {
+      //单独定义 async 的原因：下面要调用两次以及 await 很好用
+      async function fetchData() {
+        const typeList = await api.getTypeList();
+        let typeId;
+        typeList.forEach((e) => {
+          typeId = e["orig_name"] === route.params.sort ? e["type_id"] : typeId;
+        });
+        if (typeId) {
+          appList.value = layoutAppCard(await api.getApplicationList(typeId)); //通知卡片排布
+          sort.value = route.params.sort.toString(); //单独赋值是为了确保类别与卡片信息同时更新
+
+          //重置滚动高度
+          cancelAnimationFrame(scroll.value.animationId);
+          scrollAnimation(
+            container.value.parentElement.parentElement.scrollTop,
+            0
+          );
+        } else {
+          await router.push("/Error404");
+        }
+      }
+
+      if (coverState.value.active) {
+        //关闭已经打开的卡片
+        coverState.value.active = false;
+        coverState.value.open = false;
+        coverState.value.loaded = false;
+        containerState.value.cover = false;
+        coverState.value.animation = true;
+        setTimeout(fetchData, 2000); //为卡片关闭动画留出时间
+      } else {
+        fetchData();
+      }
+    },
+    { immediate: true } //立即执行一次
   );
-  let horizonGap =
-    (containerWidth -
+});
+
+//卡片排布
+const config = {
+  cardWidth: 264, //卡片宽度
+  cardHeight: 92, //卡片高度
+  verticalPadding: 50, //垂直边距（下边距只有1/2）
+  horizonPadding: 16, //水平边距
+  gap: 32, //卡片间距
+};
+
+const clientWidth = ref(0);
+
+const containerHeight = computed(
+  () =>
+    `${
+      Math.ceil(appList.value.length / column.value) *
+        (config.cardHeight + config.gap) +
+      config.gap +
+      config.verticalPadding * 1.5
+    }px`
+);
+
+const column = computed(() =>
+  Math.floor(
+    (clientWidth.value + config.gap - config.horizonPadding * 2) /
+      (config.cardWidth + config.gap)
+  )
+);
+
+const horizonGap = computed(
+  () =>
+    (clientWidth.value -
       (config.cardWidth + config.gap) * column.value +
       config.gap -
       config.horizonPadding * 2) /
-    (column.value + 1);
-  container.value.style.height = `${
-    Math.ceil(list.length / column.value) * (config.cardHeight + config.gap) +
-    config.gap +
-    config.verticalPadding * 1.5
-  }px`;
+    (column.value + 1)
+);
 
-  list.forEach((item, index) => {
+function layoutAppCard(appList) {
+  appList.forEach((item, index) => {
     item.position = {
-      left:
-        (index % column.value) * (horizonGap + config.gap + config.cardWidth) +
-        config.horizonPadding +
-        horizonGap,
-      top:
-        Math.floor(index / column.value) * (config.cardHeight + config.gap) +
-        config.verticalPadding,
+      left: computed(() => {
+        return (
+          (index % column.value) *
+            (horizonGap.value + config.gap + config.cardWidth) +
+          config.horizonPadding +
+          horizonGap.value
+        );
+      }),
+      top: computed(
+        () =>
+          Math.floor(index / column.value) * (config.cardHeight + config.gap) +
+          config.verticalPadding
+      ),
     };
-    item.style = `transform:translate(${item.position.left}px,${item.position.top}px)`;
+    item.style = computed(
+      () =>
+        `transform:translate(${item.position.left.value}px,${item.position.top.value}px)`
+    );
     if (!item.hasOwnProperty("class")) {
       item.class = {
         active: false,
@@ -135,17 +150,61 @@ function layoutAppCard(appList) {
         cover: false,
       };
     }
-    item.imgSrc = `${source.value}/store/${route.params.sort}/${item[
-      "package"
-    ].replace("+", "%2B")}/icon.png`;
+    item.imgError = ref(false);
+    item.imgSrc = computed(() =>
+      item.imgError.value
+        ? defaultIcon
+        : `${source.value}/store/${sort.value}/${item["package"].replace(
+            "+",
+            "%2B"
+          )}/icon.png`
+    );
   });
-  return list;
+
+  const scrollTop = ref(container.value.parentElement.parentElement.scrollTop);
+
+  cover.value.style = computed(() => {
+    return `--j-left:${
+      activeCard.value.position.left - clientWidth.value / 2
+    }px;--j-top:${
+      activeCard.value.position.top -
+      container.value.parentElement.parentElement.clientHeight / 2 -
+      scrollTop.value
+    }px;`;
+  });
+
+  container.value.parentElement.parentElement.addEventListener("scroll", () => {
+    scrollTop.value = container.value.parentElement.parentElement.scrollTop;
+  });
+  return appList;
 }
 
+onMounted(() => {
+  //初始化 clientWidth 的值
+  clientWidth.value = container.value.clientWidth;
+
+  //在窗口尺寸变化时自动调整 clientWidth
+  window.addEventListener("resize", () => {
+    clientWidth.value = container.value.clientWidth;
+  });
+});
+
+//滚动动画
+import BezierEasing from "bezier-easing"; //贝塞尔曲线
+
+const scroll = ref({
+  //滚动状态
+  originTop: 0, //原始距离
+  targetTop: 0, //目标距离
+  animationId: 0, //动画ID
+});
+
 function scrollAnimation(scrollStart, scrollEnd) {
+  //动画函数，实话实说是 MDN 示例改的
   let start;
   const scrollDistance = scrollEnd - scrollStart;
   const easing = BezierEasing(0.25, 0.1, 0.25, 1.0);
+
   function scrollStep(timestamp) {
     if (start === undefined) {
       start = timestamp;
@@ -161,7 +220,7 @@ function scrollAnimation(scrollStart, scrollEnd) {
     );
 
     if (process < 1) {
-      // 在0.6秒后停止动画
+      // 完成后停止动画
       scroll.value.animationId = requestAnimationFrame(scrollStep);
     } else {
       scroll.value.targetTop = 0;
@@ -170,26 +229,32 @@ function scrollAnimation(scrollStart, scrollEnd) {
   scroll.value.animationId = requestAnimationFrame(scrollStep);
 }
 
-watch(column, (newColumn, oldColumn) => {
-  cancelAnimationFrame(scroll.value.animationId);
-  let scrollTop = scroll.value.targetTop
-    ? scroll.value.targetTop
-    : container.value.parentElement.parentElement.scrollTop;
-  scroll.value.targetTop =
-    ((scrollTop -
-      config.verticalPadding +
-      container.value.parentElement.parentElement.clientHeight / 2) *
-      oldColumn) /
-      newColumn -
-    container.value.parentElement.parentElement.clientHeight / 2 +
-    config.verticalPadding;
-  scrollAnimation(
-    container.value.parentElement.parentElement.scrollTop,
-    scroll.value.targetTop
-  );
-  moveCover(activeCard.value);
+onMounted(() => {
+  watch(column, (newColumn, oldColumn) => {
+    //监听列数变化
+    cancelAnimationFrame(scroll.value.animationId);
+    //如果现在有目标高度（上一个动画尚未完成），就取该高度作为（计算时）初始高度，否则重新获取
+    const scrollTop = scroll.value.targetTop
+      ? scroll.value.targetTop
+      : container.value.parentElement.parentElement.scrollTop;
+    //更新目标高度
+    scroll.value.targetTop =
+      ((scrollTop -
+        config.verticalPadding +
+        container.value.parentElement.parentElement.clientHeight / 2) *
+        oldColumn) /
+        newColumn -
+      container.value.parentElement.parentElement.clientHeight / 2 +
+      config.verticalPadding;
+    //调用动画函数
+    scrollAnimation(
+      container.value.parentElement.parentElement.scrollTop, //动画的实际起点为实际滚动高度
+      scroll.value.targetTop
+    );
+  });
 });
 
+//卡片事件处理
 function appCardDown(app) {
   containerState.value.active = true;
   containerState.value.animation = true;
@@ -197,8 +262,7 @@ function appCardDown(app) {
   app.class.active = true;
   app.class.animation = true;
   activeCard.value = app;
-  moveCover(activeCard.value);
-  fetchAppInfo(app.application_id);
+  fetchAppInfo(app.application_id); //通知请求应用详情
 }
 
 function appCardUp(app) {
@@ -216,16 +280,6 @@ function appCardAnimated(app, event) {
   }
 }
 
-function moveCover(app) {
-  cover.value.style = `--j-left:${
-    app.position.left - container.value.clientWidth / 2
-  }px;--j-top:${
-    app.position.top -
-    container.value.parentElement.parentElement.clientHeight / 2 -
-    container.value.parentElement.parentElement.scrollTop
-  }px;`;
-}
-
 function coverAnimationEnd(e) {
   if (e.propertyName === "transform") {
     coverState.value.animation = false;
@@ -234,25 +288,8 @@ function coverAnimationEnd(e) {
   }
 }
 
-onMounted(() => {
-  container.value.parentElement.parentElement.addEventListener("scroll", () => {
-    moveCover(activeCard.value);
-  });
-});
-
-onUnmounted(() => {
-  store.appList = [];
-});
-
 //应用详情
 const appDetail = ref({});
-
-function fetchAppInfo(appId) {
-  api.getApplicationDetail(appId).then((detail) => {
-    appDetail.value = detail;
-    coverState.value.loaded = true;
-  });
-}
 
 const appDebHref = computed(
   () =>
@@ -263,26 +300,25 @@ const appTorrentHref = computed(
   () =>
     `${source.value}/store/${appDetail.value["orig_name"]}/${appDetail.value["package"]}/${appDetail.value["package"]}_${appDetail.value["version"]}_${appDetail.value["arch"]}.deb.torrent`
 );
+
+function fetchAppInfo(appId) {
+  api.getApplicationDetail(appId).then((detail) => {
+    appDetail.value = detail;
+    coverState.value.loaded = true;
+  });
+}
 </script>
 
 <template>
-  <!--suppress JSUndeclaredVariable -->
   <div
+    class="container"
     :class="containerState"
-    :ref="
-      (el) => {
-        container = el;
-      }
-    "
+    :style="{ height: containerHeight }"
+    ref="container"
   >
-    <!--suppress JSUndeclaredVariable -->
     <div
+      class="coverView"
       :class="coverState"
-      :ref="
-        (el) => {
-          cover = el;
-        }
-      "
       @click="
         coverState.active = false;
         coverState.open = false;
@@ -290,13 +326,14 @@ const appTorrentHref = computed(
         containerState.cover = false;
         coverState.animation = true;
       "
+      :style="cover.style"
     >
       <div class="card" @transitionend="coverAnimationEnd" @click.stop>
         <div class="cardView" @transitionend.stop>
           <img
             :src="activeCard['imgSrc']"
             alt=""
-            @error="activeCard.imgSrc = defaultIcon"
+            @error="activeCard.imgError = true"
           />
           <div class="description">
             <h6>{{ activeCard["application_name_zh"] }}</h6>
@@ -336,20 +373,14 @@ const appTorrentHref = computed(
     <div
       v-for="(app, index) in appList"
       :style="app.style"
+      class="card"
       :class="app.class"
       :key="index"
-      :ref="
-        (el) => {
-          app.el = el;
-        }
-      "
       @mousedown="(e) => appCardDown(app, e)"
       @mouseup="(e) => appCardUp(app, e)"
     >
-      <!-- @click="openApp(app.application_id,index)" -->
       <div class="cardView" @transitionend="(e) => appCardAnimated(app, e)">
-        <!--suppress JSUnresolvedVariable -->
-        <img :src="app['imgSrc']" alt="" @error="app.imgSrc = defaultIcon" />
+        <img :src="app['imgSrc']" alt="" @error="app.imgError = true" />
         <div class="description">
           <h6>{{ app["application_name_zh"] }}</h6>
           <p>{{ app["more"] }}</p>
@@ -360,7 +391,9 @@ const appTorrentHref = computed(
 </template>
 
 <style scoped lang="scss">
+//静态样式
 .container {
+  //顶部遮罩
   &::before,
   &::after {
     content: "";
@@ -378,26 +411,14 @@ const appTorrentHref = computed(
     will-change: opacity;
   }
 
-  &::before,
-  &.cover::after {
-    opacity: 0;
-    transition-timing-function: cubic-bezier(0.86, 0.14, 1, 1);
-  }
-
-  &::after,
-  &.cover::before {
-    opacity: 1;
-    transition-timing-function: cubic-bezier(0, 0, 0.14, 0.86);
-  }
-
-  .card,
-  .appCard {
+  //卡片样式
+  .card {
     width: 264px;
     height: 92px;
     position: absolute;
     will-change: transform;
 
-    > div {
+    .cardView {
       background-color: white;
       border-radius: 2vmin;
       box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
@@ -451,7 +472,7 @@ const appTorrentHref = computed(
     }
   }
 
-  .coverCard {
+  .coverView {
     width: 100%;
     height: 100%;
     position: fixed;
@@ -460,11 +481,6 @@ const appTorrentHref = computed(
     visibility: hidden;
     cursor: default;
     user-select: none;
-
-    &.active,
-    &.animation {
-      visibility: visible;
-    }
 
     &::before {
       content: "";
@@ -481,10 +497,6 @@ const appTorrentHref = computed(
         duration: 1s;
       }
       will-change: opacity;
-    }
-
-    &.active::before {
-      opacity: 1;
     }
 
     .card {
@@ -534,7 +546,7 @@ const appTorrentHref = computed(
 
           > * {
             opacity: 0;
-            transform: translateY(60px);
+            transform: translateY(60px) scale(0.9);
             transition: {
               property: transform, opacity;
               duration: 0.5s;
@@ -550,6 +562,10 @@ const appTorrentHref = computed(
           }
 
           .tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+
             span {
               display: inline-block;
               padding: 2px 0.5em;
@@ -599,9 +615,54 @@ const appTorrentHref = computed(
       }
       will-change: transform, opacity, box-shadow;
     }
+  }
+
+  .appCard {
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    transition: {
+      property: transform, visibility;
+      duration: 0.6s, 0s;
+      delay: 0s;
+    }
+    will-change: transform;
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 12px;
+    }
+  }
+}
+
+.container {
+  &::before,
+  &.cover::after {
+    opacity: 0;
+    transition-timing-function: cubic-bezier(0.86, 0.14, 1, 1);
+  }
+
+  &::after,
+  &.cover::before {
+    opacity: 1;
+    transition-timing-function: cubic-bezier(0, 0, 0.14, 0.86);
+  }
+
+  .coverView {
+    &.active,
+    &.animation {
+      visibility: visible;
+    }
+
+    &.active::before {
+      opacity: 1;
+    }
 
     &.active {
       pointer-events: unset;
+
       .card {
         width: 300px;
         height: calc(100% - 72px - 80px);
@@ -702,32 +763,15 @@ const appTorrentHref = computed(
       .card {
         .detail {
           > * {
-            transform: translateY(-60px);
+            transform: translateY(-60px) scale(0.9);
           }
         }
       }
     }
   }
   .appCard {
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    transition: {
-      property: transform, visibility;
-      duration: 0.6s, 0s;
-      delay: 0s;
-    }
-    will-change: transform;
-
     &.cover {
       visibility: hidden;
-    }
-
-    > div {
-      display: flex;
-      align-items: center;
-      justify-content: space-evenly;
-      padding: 12px;
     }
   }
 
