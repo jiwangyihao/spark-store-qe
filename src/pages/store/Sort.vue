@@ -2,6 +2,7 @@
 //综合
 import { computed, onMounted, ref, watch } from "vue";
 import defaultIcon from "../../assets/img/store/application.svg";
+import { debounce } from "quasar";
 
 const container = ref(null);
 const cover = ref({});
@@ -46,38 +47,42 @@ onMounted(() => {
   watch(
     () => route.params.sort, //当分类被切换时
     () => {
-      //单独定义 async 的原因：下面要调用两次以及 await 很好用
-      async function fetchData() {
-        const typeList = await api.getTypeList();
-        let typeId;
-        typeList.forEach((e) => {
-          typeId = e["orig_name"] === route.params.sort ? e["type_id"] : typeId;
-        });
-        if (typeId) {
-          appList.value = layoutAppCard(await api.getApplicationList(typeId)); //通知卡片排布
-          sort.value = route.params.sort.toString(); //单独赋值是为了确保类别与卡片信息同时更新
+      //解决离开应用列表就 404 的 BUG
+      if (route.params.sort) {
+        //单独定义 async 的原因：下面要调用两次以及 await 很好用
+        async function fetchData() {
+          const typeList = await api.getTypeList();
+          let typeId;
+          typeList.forEach((e) => {
+            typeId =
+              e["orig_name"] === route.params.sort ? e["type_id"] : typeId;
+          });
+          if (typeId) {
+            appList.value = layoutAppCard(await api.getApplicationList(typeId)); //通知卡片排布
+            sort.value = route.params.sort.toString(); //单独赋值是为了确保类别与卡片信息同时更新
 
-          //重置滚动高度
-          cancelAnimationFrame(scroll.value.animationId);
-          scrollAnimation(
-            container.value.parentElement.parentElement.scrollTop,
-            0
-          );
-        } else {
-          await router.push("/Error404");
+            //重置滚动高度
+            cancelAnimationFrame(scroll.value.animationId);
+            scrollAnimation(
+              container.value.parentElement.parentElement.scrollTop,
+              0
+            );
+          } else {
+            await router.push("/Error404");
+          }
         }
-      }
 
-      if (coverState.value.active) {
-        //关闭已经打开的卡片
-        coverState.value.active = false;
-        coverState.value.open = false;
-        coverState.value.loaded = false;
-        containerState.value.cover = false;
-        coverState.value.animation = true;
-        setTimeout(fetchData, 2000); //为卡片关闭动画留出时间
-      } else {
-        fetchData();
+        if (coverState.value.active) {
+          //关闭已经打开的卡片
+          coverState.value.active = false;
+          coverState.value.open = false;
+          coverState.value.loaded = false;
+          containerState.value.cover = false;
+          coverState.value.animation = true;
+          setTimeout(fetchData, 2000); //为卡片关闭动画留出时间
+        } else {
+          fetchData();
+        }
       }
     },
     { immediate: true } //立即执行一次
@@ -95,6 +100,8 @@ const config = {
 
 const clientWidth = ref(0);
 
+//别问我下面的式子怎么来的，问就是数学的力量
+//反正我不想再算一遍了，布局效果应该基本和display:grid一致
 const containerHeight = computed(
   () =>
     `${
@@ -173,9 +180,13 @@ function layoutAppCard(appList) {
     }px;`;
   });
 
-  container.value.parentElement.parentElement.addEventListener("scroll", () => {
-    scrollTop.value = container.value.parentElement.parentElement.scrollTop;
-  });
+  container.value.parentElement.parentElement.addEventListener(
+    "scroll",
+    debounce(() => {
+      if (!scroll.value.animationId)
+        scrollTop.value = container.value.parentElement.parentElement.scrollTop;
+    }, 250)
+  );
   return appList;
 }
 
@@ -184,9 +195,12 @@ onMounted(() => {
   clientWidth.value = container.value.clientWidth;
 
   //在窗口尺寸变化时自动调整 clientWidth
-  window.addEventListener("resize", () => {
-    clientWidth.value = container.value.clientWidth;
-  });
+  window.addEventListener(
+    "resize",
+    debounce(() => {
+      clientWidth.value = container.value.clientWidth;
+    }, 250)
+  );
 });
 
 //滚动动画
@@ -224,6 +238,7 @@ function scrollAnimation(scrollStart, scrollEnd) {
       scroll.value.animationId = requestAnimationFrame(scrollStep);
     } else {
       scroll.value.targetTop = 0;
+      scroll.value.animationId = 0;
     }
   }
   scroll.value.animationId = requestAnimationFrame(scrollStep);
