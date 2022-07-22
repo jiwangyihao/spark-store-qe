@@ -27,6 +27,7 @@ let api = {
       }
     } catch (e) {
       console.error(e);
+      throw e;
     }
     try {
       let res = await this.axios.post("/type/get_type_list");
@@ -37,6 +38,7 @@ let api = {
       return res.data.data;
     } catch (e) {
       console.error(e);
+      throw e;
     }
   },
   getApplicationList: async function (typeId) {
@@ -47,6 +49,7 @@ let api = {
       }
     } catch (e) {
       console.error(e);
+      throw e;
     }
     try {
       let res = await this.axios.post("/application/get_application_list", {
@@ -60,6 +63,7 @@ let api = {
       return res.data.data.data;
     } catch (e) {
       console.error(e);
+      throw e;
     }
   },
   getApplicationDetail: async function (appId) {
@@ -72,6 +76,7 @@ let api = {
       }
     } catch (e) {
       console.error(e);
+      throw e;
     }
     try {
       let res = await this.axios.post("/application/get_application_detail", {
@@ -84,6 +89,7 @@ let api = {
       return res.data.data;
     } catch (e) {
       console.error(e);
+      throw e;
     }
   },
 };

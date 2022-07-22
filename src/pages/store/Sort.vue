@@ -2,7 +2,10 @@
 //综合
 import { computed, onMounted, ref, watch } from "vue";
 import defaultIcon from "../../assets/img/store/application.svg";
-import { debounce } from "quasar";
+import { debounce, useQuasar } from "quasar";
+
+// noinspection JSUnusedGlobalSymbols
+const $q = useQuasar();
 
 const container = ref(null);
 const cover = ref({});
@@ -81,7 +84,12 @@ onMounted(() => {
           coverState.value.animation = true;
           setTimeout(fetchData, 2000); //为卡片关闭动画留出时间
         } else {
-          fetchData();
+          fetchData().catch((reason) => {
+            $q.notify({
+              type: "negative",
+              message: reason.toString(),
+            });
+          });
         }
       }
     },
@@ -317,10 +325,18 @@ const appTorrentHref = computed(
 );
 
 function fetchAppInfo(appId) {
-  api.getApplicationDetail(appId).then((detail) => {
-    appDetail.value = detail;
-    coverState.value.loaded = true;
-  });
+  api
+    .getApplicationDetail(appId)
+    .then((detail) => {
+      appDetail.value = detail;
+      coverState.value.loaded = true;
+    })
+    .catch((reason) => {
+      $q.notify({
+        type: "negative",
+        message: reason.toString(),
+      });
+    });
 }
 </script>
 
@@ -436,18 +452,6 @@ function fetchAppInfo(appId) {
     .cardView {
       background-color: white;
       border-radius: 2vmin;
-      box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
-        0 3px 1px -4px #0000002e;
-      transition: {
-        property: box-shadow, transform;
-        duration: 0.5s, 0.25s;
-      }
-      will-change: box-shadow, transform;
-
-      &:hover {
-        box-shadow: 0 1px 5px #0003, 0 2px 2px #00000024,
-          0 3px 1px -2px #0000001f;
-      }
 
       img {
         width: 64px;
@@ -615,20 +619,12 @@ function fetchAppInfo(appId) {
       text-align: center;
       background-color: white;
       border-radius: 2vmin;
-      box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
-        0 3px 1px -4px #0000002e;
       position: absolute;
       bottom: 0;
       left: 50%;
       z-index: 1;
       transform: translate(-50%, -50%) scale(0.1);
       opacity: 0;
-      transition: {
-        property: transform, opacity, box-shadow;
-        duration: 0.6s, 0.6s, 0.5s;
-        delay: 0s;
-      }
-      will-change: transform, opacity, box-shadow;
     }
   }
 
@@ -798,6 +794,66 @@ function fetchAppInfo(appId) {
       .cardView {
         transform: scale(0.96);
       }
+    }
+  }
+}
+
+//MD2 样式
+.md2 {
+  .cardView {
+    box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
+      0 3px 1px -4px #0000002e;
+    transition: {
+      property: box-shadow, transform;
+      duration: 0.5s, 0.25s;
+    }
+
+    &:hover {
+      box-shadow: 0 1px 5px #0003, 0 2px 2px #00000024, 0 3px 1px -2px #0000001f;
+    }
+  }
+
+  .toolBox {
+    box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
+      0 3px 1px -4px #0000002e;
+    transition: {
+      property: transform, opacity, box-shadow;
+      duration: 0.6s, 0.6s, 0.5s;
+      delay: 0s;
+    }
+
+    &:hover {
+      box-shadow: 0 1px 5px #0003, 0 2px 2px #00000024, 0 3px 1px -2px #0000001f;
+    }
+  }
+}
+
+//MD3 样式
+.md3 {
+  .cardView {
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    transition: {
+      property: border, transform;
+      duration: 0.5s, 0.25s;
+    }
+
+    //noinspection SassScssResolvedByNameOnly
+    &:hover {
+      border-color: rgba($primary, 0.5);
+    }
+  }
+
+  .toolBox {
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    transition: {
+      property: transform, opacity, border;
+      duration: 0.6s, 0.6s, 0.5s;
+      delay: 0s;
+    }
+
+    //noinspection SassScssResolvedByNameOnly
+    &:hover {
+      border-color: rgba($primary, 0.5);
     }
   }
 }

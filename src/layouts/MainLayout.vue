@@ -14,7 +14,7 @@ function close() {
 </script>
 
 <template>
-  <q-layout view="lhr lpR fFf">
+  <q-layout view="lhr lpR fFf" class="md3">
     <q-ajax-bar ref="bar" position="top" color="primary" />
     <div v-if="$q.platform.is.electron" class="toolbox">
       <q-btn color="white" padding="xs" icon="minimize" @click="min" />
