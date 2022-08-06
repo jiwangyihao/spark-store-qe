@@ -67,7 +67,21 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
-    
+   {
+    version: "3.1.4",
+    time: "2022-08-06 11:43    ",
+    details: [
+      "修复：安装时使用wget的问题",
+      "调整：屏蔽了ssinstall之外的安装方式",
+      "调整：修复pkexec下ssinstall不处理依赖的bug",
+      "调整：现在与系统更新分开，不再导致系统更新失败",
+      "调整：支持直接更新软件源文件，不再让d.吃全部更新流量",
+      "ss-apt-fast不再强制root权限",
+      "修改ss-apt-fast的策略，现在除了安装，下载和更新都改用apt",
+      "ssinstall 现在也会在不适用ss-apt-fast的时候模拟源了（针对UOS）",
+      "修复 下载提前退出",
+    ],
+  }, 
   {
     version: "3.1.2",
     time: "2022-06-21 22:59   ",
