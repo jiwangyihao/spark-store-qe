@@ -67,6 +67,14 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
+    {
+    version: "3.1.4-1",
+    time: "2022-08-08 12:44     ",
+    details: [
+      "修复：ssinstall在没有安装apt-fast的情况下首次安装需要依赖的软件时安装失败 ",
+      "调整：安装脚本和检测更新脚本检查网络时间超时时间延长至5s  ",
+    ],
+  }, 
    {
     version: "3.1.4",
     time: "2022-08-06 11:43    ",
@@ -289,7 +297,7 @@ const updateHistory = [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.1.4</span>
+              <span>最新版本 3.1.4-1</span>
             </div>
           </div>
         </div>
