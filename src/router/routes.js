@@ -10,7 +10,7 @@ const routes = [
         path: "download_latest",
         beforeEnter() {
           window.open(
-            "https://gitee.com/deepin-community-store/spark-store/releases/download/3.1.4/spark-store_3.1.4_amd64.deb"
+            "https://gitee.com/deepin-community-store/spark-store/releases/download/3.1.4-1/spark-store_3.1.4-1_amd64.deb"
           );
         },
       },
