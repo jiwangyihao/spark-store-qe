@@ -23,8 +23,8 @@ const qaMessages = [
     answer: ["872690351"],
   },
   {
-    question: ["如何开启多线程下载？"],
-    answer: ["右上角菜单--->设置--->源列表旁边的刷新按钮，然后重启应用"],
+    question: ["我是国产架构，怎么获取应用？"],
+    answer: ["<a href='https://deepin-community-store.gitee.io/other-architecture-apps/'>点击这里</a>来查看非X86软件收集。如果你想分享更多应用，请查看例子和教程分类的README.md"],
   },
   {
     question: ["去哪反馈？"],
@@ -67,6 +67,15 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
+    {
+    version: "3.1.5",
+    time: "2022-08-15 23:03      ",
+    details: [
+      "修复：改变更新策略，现在支持应用在更新时引入新依赖 ",
+      "调整：ss-apt-fast现在默认允许降级，以与apt使用体验一致  ",
+    ],
+  }, 
+
     {
     version: "3.1.4-1",
     time: "2022-08-08 12:44     ",
@@ -297,7 +306,7 @@ const updateHistory = [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.1.4-1</span>
+              <span>最新版本 3.1.5</span>
             </div>
           </div>
         </div>
