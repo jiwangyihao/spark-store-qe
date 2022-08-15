@@ -10,7 +10,7 @@ const routes = [
         path: "download_latest",
         beforeEnter() {
           window.open(
-            "https://gitee.com/deepin-community-store/spark-store/releases/download/3.1.4-1/spark-store_3.1.4-1_amd64.deb"
+            "https://gitee.com/deepin-community-store/spark-store/releases/download/3.1.5/spark-store_3.1.5_amd64.deb"
           );
         },
       },
@@ -19,7 +19,7 @@ const routes = [
         path: "download_dependencies_latest",
         beforeEnter() {
           window.open(
-            "https://d.store.deepinos.org.cn/spark-store-dependencies-kylin.zip"
+            "https://code.gitlink.org.cn/shenmo7192/spark-store-dependencies/raw/branch/master/spark-store-dependencies-kylin.zip"
           );
         },
       },
