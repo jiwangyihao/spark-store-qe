@@ -67,6 +67,14 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
+     {
+    version: "3.1.6",
+    time: "2022-08-15 23:03      ",
+    details: [
+      "修复：修复部分情况下无法选中正确的镜像源的问题 ",
+      "调整：合入3.1.5以来的各项修改  ",
+    ],
+  }, 
     {
     version: "3.1.5",
     time: "2022-08-15 23:03      ",
@@ -306,7 +314,7 @@ const updateHistory = [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.1.5</span>
+              <span>最新版本 3.1.6</span>
             </div>
           </div>
         </div>
