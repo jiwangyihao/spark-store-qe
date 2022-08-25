@@ -10,7 +10,7 @@ const routes = [
         path: "download_latest",
         beforeEnter() {
           window.open(
-            "https://gitee.com/deepin-community-store/spark-store/releases"
+            "https://gitee.com/deepin-community-store/spark-store/releases/latest"
           );
         },
       },
