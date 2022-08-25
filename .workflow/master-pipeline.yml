@@ -16,7 +16,7 @@ stages:
       - step: build@nodejs
         name: build_nodejs
         displayName: Nodejs 构建
-        nodeVersion: 17.8.0
+        nodeVersion: 16.14.2
         commands:
           - npm install -g yarn
           - yarn global add @quasar/cli
