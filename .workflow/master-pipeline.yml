@@ -18,10 +18,9 @@ stages:
         displayName: Nodejs 构建
         nodeVersion: 16.14.2
         commands:
-          - npm install -g yarn
-          - yarn config set registry https://registry.npm.taobao.org --global
-          - yarn global add @quasar/cli
-          - 'yarn '
+          - npm install -g cnpm
+          - cnpm install -g @quasar/cli
+          - 'cnpm install '
           - quasar build
         artifacts:
           - name: BUILD_ARTIFACT
