@@ -38,18 +38,19 @@ const qaMessages = [
     question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
     answer: [
       "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10/Debian 11，先安装依赖包",
+      "Debian 11的安装方式是加源再安装，在安装前请确认你明白你在做什么！",
     ],
   },
   {
     question: ["我可以用dpkg -i安装吗？"],
     answer: [
-      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi/deepin-deb-installer/kylin-installer等等等等图形化的安装器！！！",
+      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！",
       "已经有不下20个人被这个坑了。CSDN害人不浅",
     ],
   },
   {
     question: ["星火商店会影响系统正常更新吗？"],
-    answer: ["星火商店的源优先级被调的低于系统默认，不会影响"],
+    answer: ["自从3.1.4版本开始，星火商店的更新服务已与系统分开，不会影响了"],
   },
   {
     question: ["有些应用已经过时或者失效了，我想让他下架"],
@@ -67,6 +68,20 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
+      {
+    version: "3.2",
+    time: "2022-08-30 02:00       ",
+    details: [
+      "新增 下载量统计功能 ",
+      "新增 显示下载量",
+      "修复 spk链接生成错误",
+      "调整 启动时检测并更新商店applist源",
+      "新增 applist cdn加速",
+      "调整 ssupdate不再更新/etc/aptss下的cache，如要更新自动补全，请使用aptss update",
+      "修复 在更新检测设置中的是否开启自动更新检测设置项的显示不随开启或关闭状态改变",
+      "修复 在检测更新时临时降低优先级到100，防止系统源中有且版本一致的包被反复来回更新",
+    ],
+  }, 
     {
     version: "3.1.5",
     time: "2022-08-15 23:03      ",
