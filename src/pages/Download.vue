@@ -37,31 +37,28 @@ const qaMessages = [
   {
     question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
     answer: [
-      "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10/Debian 11，先安装依赖包",
-      "Debian 11的安装方式是加源再安装，在安装前请确认你明白你在做什么！",
+      "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10，先安装依赖包",
+      "Debian 11在3.3.3版本之后应该可以直接装了，正在收集反馈",
     ],
   },
   {
     question: ["我可以用dpkg -i安装吗？"],
     answer: [
       "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！",
-      "已经有不下20个人被这个坑了。CSDN害人不浅",
+      "sudo apt install gdebi 来安装gdebi",
     ],
   },
   {
     question: ["星火商店会影响系统正常更新吗？"],
-    answer: ["自从3.1.4版本开始，星火商店的更新服务已与系统分开，不会影响了"],
+    answer: [
+      "星火商店现已将源与系统分开，不再影响系统更新。相应的，星火商店中的应用也不会随着系统更新。请在右上角的应用更新和安装设置来操作更新",
+      "如果希望在命令行中安装星火源的应用，请使用aptss.aptss类似apt,但是加入了星火源和多线程下载支持",
+    ],
   },
   {
     question: ["有些应用已经过时或者失效了，我想让他下架"],
     answer: [
       "前往<a href='https://gitee.com/deepin-community-store/software_-issue'>https://gitee.com/deepin-community-store/software_-issue</a>",
-    ],
-  },
-  {
-    question: ["提示有更新之后在菜单里的Auto Upgrade操作却提示更新了0个软件包"],
-    answer: [
-      "这个软件包所需要的依赖高于你的系统依赖。这可能是为了其他发行版编译的软件包，不能安装是正常的。如果觉得烦。。。可以在设置中按1关闭更新提醒服务",
     ],
   },
 ];
