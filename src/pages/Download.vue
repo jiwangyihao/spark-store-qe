@@ -37,8 +37,8 @@ const qaMessages = [
   {
     question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
     answer: [
-      "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10，先安装依赖包",
-      "Debian 11的依赖包正在制作中",
+      "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10/Debian11，先安装依赖包",
+      "Ubuntu 22.04 原版可能会出现SSL错误，暂无解决方案，可尝试其他衍生版本",
     ],
   },
   {
