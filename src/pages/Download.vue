@@ -38,7 +38,7 @@ const qaMessages = [
     question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
     answer: [
       "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10，先安装依赖包",
-      "Debian 11在3.3.3版本之后应该可以直接装了，正在收集反馈",
+      "Debian 11的依赖包正在制作中",
     ],
   },
   {
