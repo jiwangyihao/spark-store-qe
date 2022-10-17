@@ -4,7 +4,7 @@ export const useStore = defineStore("store", {
   state: () => ({
     appList: {},
     source: "https://d.store.deepinos.org.cn",
-    debSource: "http://cdn.dl.uniartisan.com:9000/deepinos",
+    debSource: "https://mirrors.sdu.edu.cn/spark-store-repository/",
   }),
   getters: {
     //doubleCount: (state) => state.counter * 2,
