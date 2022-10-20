@@ -27,8 +27,8 @@ const qaMessages = [
     answer: ["<a href='https://deepin-community-store.gitee.io/other-architecture-apps/'>点击这里</a>来查看非X86软件收集。如果你想分享更多应用，请查看例子和教程分类的README.md"],
   },
   {
-    question: ["去哪反馈？"],
-    answer: ["应用详情页面有按钮"],
+    question: ["wine应用安装之后没有图标，安装详情里显示安装完又卸载了怎么办？"],
+    answer: ["多半是你使用的发行版默认没有启动i386架构软件包支持，执行 sudo dpkg --add-architecture i386 && sudo apt update 后再安装即可解决"],
   },
   {
     question: ["在哪里投稿？"],
