@@ -20,15 +20,15 @@ const qaMessages = [
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ["在哪进交流群？"],
-    answer: ["872690351"],
+    answer: ["星火商店交流平台 <a href='https://www.deepinos.org/d/1207/'>点击这里进入</a>"],
   },
   {
     question: ["我是国产架构，怎么获取应用？"],
     answer: ["<a href='https://deepin-community-store.gitee.io/other-architecture-apps/'>点击这里</a>来查看非X86软件收集。如果你想分享更多应用，请查看例子和教程分类的README.md"],
   },
   {
-    question: ["wine应用安装之后没有图标，安装详情里显示安装完又卸载了怎么办？"],
-    answer: ["多半是你使用的发行版默认没有启动i386架构软件包支持，执行 sudo dpkg --add-architecture i386 && sudo apt update 后再安装即可解决"],
+    question: ["安装依赖包出现错误"],
+    answer: ["UOS或者deepin不需要安装，请不要安装；Kali Linux/Kdeneon请自行编译安装，暂不支持；依赖包支持的发行版却报无法安装错误：尝试sudo apt update后再运行。如果仍然无法排查出问题，请参考第一条进入交流平台寻求帮助。"],
   },
   {
     question: ["在哪里投稿？"],
@@ -52,7 +52,7 @@ const qaMessages = [
     question: ["星火商店会影响系统正常更新吗？"],
     answer: [
       "星火商店现已将源与系统分开，不再影响系统更新。相应的，星火商店中的应用也不会随着系统更新。请在右上角的应用更新和安装设置来操作更新",
-      "如果希望在命令行中安装星火源的应用，请使用aptss.aptss类似apt,但是加入了星火源和多线程下载支持",
+      "如果希望在命令行中安装星火源的应用，请使用aptss. aptss类似apt,但是加入了星火源和多线程下载支持",
     ],
   },
   {
@@ -65,6 +65,13 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
+      {
+    version: "3.3.x",
+    time: "2022-08-30 之后       ",
+    details: [
+      "现在当期的更新日志将会在下载界面显示，暂停更新此日志 ",
+    ],
+  }, 
       {
     version: "3.2",
     time: "2022-08-30 02:00       ",
