@@ -20,15 +20,15 @@ const qaMessages = [
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ["在哪进交流群？"],
-    answer: ["872690351"],
+    answer: ["星火商店交流平台 <a href='https://www.deepinos.org/d/1207/'>点击这里进入</a>"],
   },
   {
     question: ["我是国产架构，怎么获取应用？"],
     answer: ["<a href='https://deepin-community-store.gitee.io/other-architecture-apps/'>点击这里</a>来查看非X86软件收集。如果你想分享更多应用，请查看例子和教程分类的README.md"],
   },
   {
-    question: ["去哪反馈？"],
-    answer: ["应用详情页面有按钮"],
+    question: ["安装依赖包出现错误"],
+    answer: ["UOS或者deepin不需要安装，请不要安装；Kali Linux/Kdeneon请自行编译安装，暂不支持；依赖包支持的发行版却报无法安装错误：尝试sudo apt update后再运行。如果仍然无法排查出问题，请参考第一条进入交流平台寻求帮助。"],
   },
   {
     question: ["在哪里投稿？"],
@@ -37,19 +37,25 @@ const qaMessages = [
   {
     question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
     answer: [
-      "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10/Debian 11，先安装依赖包",
+      "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10/Debian11，先安装依赖包",
+      "Ubuntu 22.04 原版可能会出现SSL错误，暂无解决方案，可尝试其他衍生版本",
     ],
   },
   {
     question: ["我可以用dpkg -i安装吗？"],
     answer: [
       "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！",
+      "sudo apt install gdebi 来安装gdebi",
+      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！",
       "已经有不下20个人被这个坑了。CSDN害人不浅",
     ],
   },
   {
-    question: ["Ubuntu 安装wine应用失败怎么办？"],
-    answer: ["这是因为你的i386支持没打开，sudo dpkg --add-architecture i386 打开之后执行 sudo ss-apt-fast update 即可安装"],
+    question: ["星火商店会影响系统正常更新吗？"],
+    answer: [
+      "星火商店现已将源与系统分开，不再影响系统更新。相应的，星火商店中的应用也不会随着系统更新。请在右上角的应用更新和安装设置来操作更新",
+      "如果希望在命令行中安装星火源的应用，请使用aptss. aptss类似apt,但是加入了星火源和多线程下载支持",
+    ],
   },
   {
     question: ["有些应用已经过时或者失效了，我想让他下架"],
@@ -57,22 +63,29 @@ const qaMessages = [
       "前往<a href='https://gitee.com/deepin-community-store/software_-issue'>https://gitee.com/deepin-community-store/software_-issue</a>",
     ],
   },
-  {
-    question: ["提示有更新之后在菜单里的Auto Upgrade操作却提示更新了0个软件包"],
-    answer: [
-      "这个软件包所需要的依赖高于你的系统依赖。这可能是为了其他发行版编译的软件包，不能安装是正常的。如果觉得烦。。。可以在设置中按1关闭更新提醒服务",
-    ],
-  },
 ];
 
 //时间线中的更新日志
 const updateHistory = [
-     {
-    version: "3.1.6",
-    time: "2022-08-15 23:03      ",
+      {
+    version: "3.3.x",
+    time: "2022-08-30 之后       ",
     details: [
-      "修复：修复部分情况下无法选中正确的镜像源的问题 ",
-      "调整：合入3.1.5以来的各项修改  ",
+      "现在当期的更新日志将会在下载界面显示，暂停更新此日志 ",
+    ],
+  }, 
+      {
+    version: "3.2",
+    time: "2022-08-30 02:00       ",
+    details: [
+      "新增 下载量统计功能 ",
+      "新增 显示下载量",
+      "修复 spk链接生成错误",
+      "调整 启动时检测并更新商店applist源",
+      "新增 applist cdn加速",
+      "调整 ssupdate不再更新/etc/aptss下的cache，如要更新自动补全，请使用aptss update",
+      "修复 在更新检测设置中的是否开启自动更新检测设置项的显示不随开启或关闭状态改变",
+      "修复 在检测更新时临时降低优先级到100，防止系统源中有且版本一致的包被反复来回更新",
     ],
   }, 
     {
@@ -314,7 +327,7 @@ const updateHistory = [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.1.6</span>
+              <span>最新版本 3.2</span>
             </div>
           </div>
         </div>
