@@ -43,13 +43,13 @@ const qaMessages = [
   {
     question: ["我可以用dpkg -i安装吗？"],
     answer: [
-      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi/deepin-deb-installer/kylin-installer等等等等图形化的安装器！！！",
+      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！",
       "已经有不下20个人被这个坑了。CSDN害人不浅",
     ],
   },
   {
-    question: ["星火商店会影响系统正常更新吗？"],
-    answer: ["星火商店的源优先级被调的低于系统默认，不会影响"],
+    question: ["Ubuntu 安装wine应用失败怎么办？"],
+    answer: ["这是因为你的i386支持没打开，sudo dpkg --add-architecture i386 打开之后执行 sudo ss-apt-fast update 即可安装"],
   },
   {
     question: ["有些应用已经过时或者失效了，我想让他下架"],
@@ -67,6 +67,14 @@ const qaMessages = [
 
 //时间线中的更新日志
 const updateHistory = [
+     {
+    version: "3.1.6",
+    time: "2022-08-15 23:03      ",
+    details: [
+      "修复：修复部分情况下无法选中正确的镜像源的问题 ",
+      "调整：合入3.1.5以来的各项修改  ",
+    ],
+  }, 
     {
     version: "3.1.5",
     time: "2022-08-15 23:03      ",
@@ -306,7 +314,7 @@ const updateHistory = [
               >
                 点击下载
               </q-btn>
-              <span>最新版本 3.1.5</span>
+              <span>最新版本 3.1.6</span>
             </div>
           </div>
         </div>
