@@ -23,6 +23,11 @@ const qaMessages = [
     answer: ["星火商店交流平台 <a href='https://www.deepinos.org/d/1207/'>点击这里进入</a>"],
   },
   {
+    //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
+    question: ["上面这个链接挂了，显示进不去"],
+    answer: ["我们还有QQ群作为备份，群号是 872690351"],
+  },
+  {
     question: ["我是国产架构，怎么获取应用？"],
     answer: ["<a href='https://deepin-community-store.gitee.io/other-architecture-apps/'>点击这里</a>来查看非X86软件收集。如果你想分享更多应用，请查看例子和教程分类的README.md"],
   },
