@@ -7,6 +7,11 @@ useMeta({
   title: "首页",
   // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
   titleTemplate: (title) => `${title} - 星火应用商店`,
+  meta: {
+      description: { name: 'description', content: '星火应用商店spark store官网' },
+      keywords: { name: 'keywords', content: 'spark store,星火应用商店,星火商店'},
+      equiv: { 'http-equiv': 'Content-Type', content: 'text/html; charset=UTF-8' }
+    }
 });
 </script>
 
