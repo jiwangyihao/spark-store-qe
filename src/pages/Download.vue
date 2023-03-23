@@ -30,11 +30,11 @@ const qaMessages = [
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ["上面这个链接挂了，显示进不去"],
-    answer: ["我们还有QQ群作为备份，群号是 872690351"],
+    answer: ["我们还有QQ群作为备份，群号是 872690351 群2 865922727。<a href='https://www.deepinos.org/'>这里还有论坛</a>"],
   },
   {
     question: ["我是国产架构，怎么获取应用？"],
-    answer: ["<a href='https://deepin-community-store.gitee.io/other-architecture-apps/'>点击这里</a>来查看非X86软件收集。如果你想分享更多应用，请查看例子和教程分类的README.md"],
+    answer: ["目前星火商店支持arm架构的国产芯片，请下载arm64架构的deb包。请注意：支持是实验性的，请积极在星火交流平台，QQ群或论坛向我们反馈！"],
   },
   {
     question: ["安装依赖包出现错误"],
@@ -42,7 +42,7 @@ const qaMessages = [
   },
   {
     question: ["在哪里投稿？"],
-    answer: ["右上角菜单--->投递应用"],
+    answer: ["右上角菜单--->投递应用。对于已经上架的应用的更新，建议使用投稿器一键填写投稿信息"],
   },
   {
     question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
