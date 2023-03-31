@@ -19,7 +19,7 @@ const routes = [
         path: "download_dependencies_latest",
         beforeEnter() {
           window.open(
-            "https://zunyun01.store.deepinos.org.cn/store/spark-store-dependencies-kylin.zip"
+            "https://zunyun01.store.deepinos.org.cn/spark-store-dependencies-kylin.zip"
           );
         },
       },
