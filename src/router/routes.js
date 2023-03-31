@@ -19,7 +19,7 @@ const routes = [
         path: "download_dependencies_latest",
         beforeEnter() {
           window.open(
-            "https://code.gitlink.org.cn/shenmo7192/spark-store-dependencies/raw/branch/master/spark-store-dependencies-kylin.zip"
+            "https://shenmo.lanzoul.com/in7lV0rnknpe"
           );
         },
       },
