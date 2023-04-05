@@ -172,3 +172,8 @@ info Visit https://yarnpkg.com/en/docs/cli/create for documentation about this c
 #### 生成 quasar
 
 进入网页根目录 `quasar build`
+
+#### 于2023.4.5更新：
+官方推荐node>=14 亲测>16可用
+git clone 项目后，应当在项目中使用`npm install` 补齐依赖
+然后使用quasar build打包
