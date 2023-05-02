@@ -30,7 +30,7 @@ const qaMessages = [
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ["上面这个链接挂了，显示进不去"],
-    answer: ["我们还有QQ群作为备份，群号是 872690351 群2 865922727。<a href='https://www.deepinos.org/'>这里还有论坛</a>"],
+    answer: ["我们还有QQ群作为备份，群号是 872690351 群2 865927727。<a href='https://www.deepinos.org/'>这里还有论坛</a>"],
   },
   {
     question: ["我是国产架构，怎么获取应用？"],
