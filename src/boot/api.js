@@ -12,6 +12,7 @@ import { getStorage } from "@sifrr/storage";
 // noinspection JSCheckFunctionSignatures
 let api = {
   axios: axios.create({ baseURL: "https://store.deepinos.org/api/" }),
+  server:axios.create({ baseURL: "https://server.jwyihao.top" }), //测试后端，搭建在 Railway 上
   storage: getStorage({
     priority: ["indexeddb", "websql", "localstorage"],
     name: "apiCache", // name of table (treat this as a variable name, i.e. no Spaces or special characters allowed)
@@ -19,6 +20,50 @@ let api = {
     description: "Cache for Spark Store API", // description (text)
     ttl: 0, // Time to live/expire for data in table (in ms), 0 = forever, data will expire ttl ms after saving
   }),
+  getLatest: async function () {
+    try {
+      let latest = await this.storage.get("latest");
+      if (latest["latest"]) {
+        return latest["latest"];
+      }
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+    try {
+      let res = await this.server.get("/latest");
+      await this.storage.set("latest", {
+        value: res.data,
+        ttl: 24 * 60 * 60 * 1000, //保留一天
+      });
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
+  getHistory: async function (page) {
+    try {
+      let history = await this.storage.get(`history_${page}`);
+      if (history[`history_${page}`]) {
+        return history[`history_${page}`];
+      }
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+    try {
+      let res = await this.server.get(`/history?page=${page}`);
+      await this.storage.set(`history_${page}`, {
+        value: res.data,
+        ttl: 24 * 60 * 60 * 1000, //保留一天
+      });
+      return res.data;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
   getTypeList: async function () {
     try {
       let typeList = await this.storage.get("typeList");
@@ -52,7 +97,7 @@ let api = {
       throw e;
     }
     try {
-      let res = await this.axios.post("/application/get_application_list", {
+      let res = await this.server.post("/application/get_application_list", {
         size: 10000,
         type_id: typeId,
       });

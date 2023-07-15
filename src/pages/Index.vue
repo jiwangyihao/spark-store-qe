@@ -13,6 +13,15 @@ useMeta({
       equiv: { 'http-equiv': 'Content-Type', content: 'text/html; charset=UTF-8' }
     }
 });
+
+//数据请求
+import { api } from "boot/api";
+import {ref} from "vue";
+
+const version=ref('')
+api.getLatest().then((latest)=>{
+  version.value=latest.version
+})
 </script>
 
 <template>
@@ -21,7 +30,7 @@ useMeta({
       <div class="row P1st">
         <h1 class="app_name">
           Spark Store
-          <q-chip size="2vmin" icon="get_app"> 4.X </q-chip>
+          <q-chip size="2vmin" icon="get_app"> {{ version }} </q-chip>
         </h1>
         <h2>Debian 系发行版的应用商店</h2>
         <div class="row window">
