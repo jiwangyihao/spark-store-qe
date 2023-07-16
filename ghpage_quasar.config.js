@@ -1,4 +1,5 @@
 /* eslint-env node */
+// noinspection JSValidateTypes
 
 /*
  * This file runs in a Node context (it's NOT transpiled by Babel), so use only
@@ -11,7 +12,7 @@
 const { configure } = require("quasar/wrappers");
 const path = require("path");
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function( /* ctx */ ) {
   return {
     eslint: {
       // fix: true,
@@ -28,7 +29,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
-    boot: ["i18n", "axios"],
+    boot: ["i18n", "api"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
@@ -108,7 +109,10 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: [
+        'Notify',
+        'Meta'
+      ],
     },
 
     // animations: 'all', // --- includes all animations
