@@ -92,9 +92,22 @@ api.getLatest().then((res)=>{
 
 //时间线中的更新日志
 const updateHistory = ref([]);
-api.getHistory().then((res)=>{
-  updateHistory.value=res
+api.getHistory(1).then((res)=>{
+  updateHistory.value=res.data
 })
+
+const disableLoad = ref(false)
+
+const loadHistory =(index, done)=>{
+  api.getHistory(index).then((res)=>{
+    updateHistory.value=updateHistory.value.concat(res.data);
+    if (res["isEnded"]) {
+      disableLoad.value=true
+    }
+    done()
+  })
+  console.log(index);
+}
 </script>
 
 <template>
@@ -164,20 +177,32 @@ api.getHistory().then((res)=>{
           </div>
         </div>
       </div>
-      <q-timeline color="primary" layout="comfortable">
-        <q-timeline-entry
-          v-for="(v, k) in updateHistory"
-          :key="k"
-          :title="v.version"
-          :subtitle="v.time"
-        >
-          <div>
-            <ul style="padding-inline-start: 0">
-              <li v-for="(t, key) in v.details" :key="key">{{ t }}</li>
-            </ul>
+
+      <!--suppress CssInvalidPropertyValue -->
+      <q-infinite-scroll @load="loadHistory" :initial-index="1" scroll-target=".downPage" :disable="disableLoad" style="width: -webkit-fill-available;">
+        <q-timeline color="primary" layout="comfortable">
+          <q-timeline-entry
+            v-for="(v, k) in updateHistory"
+            :key="k"
+            :title="v.version"
+            :subtitle="v.time"
+          >
+            <div>
+              <ul style="padding-inline-start: 0">
+                <li v-for="(t, key) in v.details" :key="key">{{ t }}</li>
+              </ul>
+            </div>
+          </q-timeline-entry>
+        </q-timeline>
+
+        <p v-if="disableLoad" class="text-center text-grey"> ~ 已经到底了哦 (●'◡'●) ~ </p>
+
+        <template v-slot:loading>
+          <div class="row justify-center q-my-md">
+            <q-spinner-dots color="primary" size="40px" />
           </div>
-        </q-timeline-entry>
-      </q-timeline>
+        </template>
+      </q-infinite-scroll>
     </div>
 
     <!-- 安装说明（Q&A）弹窗 -->
