@@ -1,1 +1,0 @@
-import{_ as t,v as a,x as c,E as o,G as s,y as n}from"./index.2d859bae.js";const _={},d=e=>(o("data-v-19f6ea85"),e=e(),s(),e),r={class:"container"},i=d(()=>n("h5",null,"\u65BD\u5DE5ing...",-1)),p=[i];function l(e,f){return a(),c("div",r,p)}var u=t(_,[["render",l],["__scopeId","data-v-19f6ea85"]]);export{u as default};
