@@ -1,6 +1,6 @@
 # Spark Store QE
 
-这是星火应用商店官网的开发分支.
+星火应用商店官网，使用 Vue3 + Quasar 开发。
 
 ## 链接地址
 
@@ -12,33 +12,13 @@
 
 - [实时构建（Gitee Pages）](https://deepin-community-store.gitee.io/spark-store-qe/)
 
-## 团队介绍
+## 项目历程
 
-由深度科技论坛（bbs.deepin.org）shenmo 发起的星火工作组致力于丰富 Linux 生态，取「星星之火，可以燎原」之意，组建了星火应用商店。我们是个年轻的团队，大部分成员是 00 后，有小学生，中学生，大学生，来自五湖四海。尽管我们年龄不同，资历不同，但是我们努力建设 Linux 生态的目标是相同的，我们有信心、也有勇气做到这些！如果你与我们志同道合，欢迎加入我们！
+星火应用商店的官网最初由 @chaodn 和 @Playhi 搭建，后由 @吉王义昊 使用 Quasar 和 Vue3 以 @PossibleVing 的设计稿为蓝本重新构建。现在主要开发工作由 @吉王义昊 负责，日常运维由 @shenmo 和 @momen 完成。
 
-网站制作管理：chaodn Playhi momen jiwangyihao 时间世界 moshengrenx
+现在的开发目标是进一步完善 web 商店和进行对应用投递及审核的整合（开发者中心的构建）。
 
-UI 概念设计师：PossibleVing qygwhk
-
-## 加入我们
-
-### 软件维护员
-
-- 职位描述
-
-  - 能力要求：会使用 deepin V20 或其它 Linux 发行版，会打字，会上网，会下载 Linux 软件包，有责任心，有电脑；
-
-  - 职责：搜集软件，打包软件。维护者可以不是开发者，但必须有认真负责的态度。若不能继续维护，请在星火钉钉/QQ 群通知管理员；
-
-  - 投递须知：[https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit](https://deepin-community-store.gitee.io/spark-wiki/#/Submit/Submit)。
-
-### 联系方式
-
-- QQ 群：872690351
-
-## 温馨提示
-
-- `clone` 的时候如果速度太慢或者内容太多，一般情况下可以利用 `--depth=1`。
+曾参与过或正在参与网站制作管理的人：chaodn Playhi momen 吉王义昊 时间世界 moshengrenx PossibleVing qygwhk
 
 ---
 
@@ -84,7 +64,7 @@ UI 概念设计师：PossibleVing qygwhk
 
 5. 安装依赖
    ```bash
-   yarn
+   yarn install
    ```
 
 ### 调试编译
