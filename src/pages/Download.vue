@@ -2,7 +2,7 @@
 //下载地址在/src/router/routes.js中设置
 
 // noinspection NpmUsedModulesInstalled
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import { useMeta } from "quasar";
 import FooterView from "../components/FooterView.vue";
 import { api } from "boot/api";
@@ -12,10 +12,20 @@ useMeta({
   // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
   titleTemplate: (title) => `${title} - 星火应用商店`,
   meta: {
-      description: { name: 'description', content: '星火应用商店spark store官方下载' },
-      keywords: { name: 'keywords', content: 'spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin'},
-      equiv: { 'http-equiv': 'Content-Type', content: 'text/html; charset=UTF-8' }
-    }
+    description: {
+      name: "description",
+      content: "星火应用商店spark store官方下载",
+    },
+    keywords: {
+      name: "keywords",
+      content:
+        "spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin",
+    },
+    equiv: {
+      "http-equiv": "Content-Type",
+      content: "text/html; charset=UTF-8",
+    },
+  },
 });
 
 //控制安装说明（Q&A）弹窗的显示
@@ -26,12 +36,16 @@ const qaMessages = [
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ["在哪进交流群？"],
-    answer: ["星火商店交流平台 <a href='https://www.deepinos.org/d/1207/'>点击这里进入</a>"],
+    answer: [
+      "星火商店交流平台 <a href='https://www.deepinos.org/d/1207/'>点击这里进入</a>",
+    ],
   },
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ["上面这个链接挂了，显示进不去"],
-    answer: ["我们还有QQ群作为备份，群号是 872690351 群2 865927727。<a href='https://www.deepinos.org/'>这里还有论坛</a>"],
+    answer: [
+      "我们还有QQ群作为备份，群号是 872690351 群2 865927727。<a href='https://www.deepinos.org/'>这里还有论坛</a>",
+    ],
   },
   {
     question: ["我是国产架构，怎么获取应用？"],
@@ -39,15 +53,19 @@ const qaMessages = [
       "目前星火商店支持arm架构的国产芯片，请下载arm64架构的deb包。请注意：支持是实验性的，请积极在星火交流平台，QQ群或论坛向我们反馈！",
       "目前支持的发行版有 UOS 专业版，Ubuntu 22.04以及有限的支持了银河麒麟V10（仅保证客户端可运行，上架应用未经过测试）",
       "银河麒麟用户请下载依赖包",
-    ]
+    ],
   },
   {
     question: ["安装依赖包出现错误"],
-    answer: ["UOS或者deepin不需要安装，请不要安装；Kali Linux/Kdeneon请自行编译安装，暂不支持；依赖包支持的发行版却报无法安装错误：尝试sudo apt update后再运行。如果仍然无法排查出问题，请参考第一条进入交流平台寻求帮助。"],
+    answer: [
+      "UOS或者deepin不需要安装，请不要安装；Kali Linux/Kdeneon请自行编译安装，暂不支持；依赖包支持的发行版却报无法安装错误：尝试sudo apt update后再运行。如果仍然无法排查出问题，请参考第一条进入交流平台寻求帮助。",
+    ],
   },
   {
     question: ["在哪里投稿？"],
-    answer: ["右上角菜单--->投递应用。对于已经上架的应用的更新，建议使用投稿器一键填写投稿信息"],
+    answer: [
+      "右上角菜单--->投递应用。对于已经上架的应用的更新，建议使用投稿器一键填写投稿信息",
+    ],
   },
   {
     question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
@@ -81,33 +99,36 @@ const qaMessages = [
 ];
 
 //获取最新版本
-const latest=ref({
-  version:'',
-  time:'',
-  details:[]
-})
-api.getLatest().then((res)=>{
-  latest.value=res
-})
+const latest = ref({
+  version: "",
+  time: "",
+  details: [],
+});
+api.getLatest().then((res) => {
+  latest.value = res;
+});
 
 //时间线中的更新日志
 const updateHistory = ref([]);
-api.getHistory(1).then((res)=>{
-  updateHistory.value=res.data
-})
 
-const disableLoad = ref(false)
+const disableLoad = ref(false);
 
-const loadHistory =(index, done)=>{
-  api.getHistory(index).then((res)=>{
-    updateHistory.value=updateHistory.value.concat(res.data);
+const historyView = ref();
+
+nextTick(() => {
+  historyView.value.trigger();
+});
+
+const loadHistory = (index, done) => {
+  api.getHistory(index).then((res) => {
+    updateHistory.value = updateHistory.value.concat(res.data);
     if (res["isEnded"]) {
-      disableLoad.value=true
+      disableLoad.value = true;
     }
-    done()
-  })
+    done();
+  });
   console.log(index);
-}
+};
 </script>
 
 <template>
@@ -141,7 +162,7 @@ const loadHistory =(index, done)=>{
               >
                 点击下载
               </q-btn>
-              <span>最新版本 {{latest.version}}</span>
+              <span>最新版本 {{ latest.version }}</span>
             </div>
           </div>
         </div>
@@ -179,7 +200,14 @@ const loadHistory =(index, done)=>{
       </div>
 
       <!--suppress CssInvalidPropertyValue -->
-      <q-infinite-scroll @load="loadHistory" :initial-index="1" scroll-target=".downPage" :disable="disableLoad" style="width: -webkit-fill-available;">
+      <q-infinite-scroll
+        @load="loadHistory"
+        :initial-index="0"
+        scroll-target=".downPage"
+        :disable="disableLoad"
+        style="width: -webkit-fill-available; min-height: 60vh"
+        ref="historyView"
+      >
         <q-timeline color="primary" layout="comfortable">
           <q-timeline-entry
             v-for="(v, k) in updateHistory"
@@ -187,15 +215,17 @@ const loadHistory =(index, done)=>{
             :title="v.version"
             :subtitle="v.time"
           >
-            <div>
-              <ul style="padding-inline-start: 0">
+            <div style="max-width: 600px">
+              <ul style="padding-inline-start: 0; word-break: break-word">
                 <li v-for="(t, key) in v.details" :key="key">{{ t }}</li>
               </ul>
             </div>
           </q-timeline-entry>
         </q-timeline>
 
-        <p v-if="disableLoad" class="text-center text-grey"> ~ 已经到底了哦 (●'◡'●) ~ </p>
+        <p v-if="disableLoad" class="text-center text-grey">
+          ~ 已经到底了哦 (●'◡'●) ~
+        </p>
 
         <template v-slot:loading>
           <div class="row justify-center q-my-md">
@@ -499,5 +529,15 @@ const loadHistory =(index, done)=>{
   .q-message-text:last-child {
     min-height: unset;
   }
+}
+
+.q-timeline--comfortable .q-timeline__subtitle {
+  width: 20vw;
+  max-width: 180px;
+}
+
+.q-timeline--comfortable--right .q-timeline__content {
+  width: 80vw;
+  max-width: 400px;
 }
 </style>
