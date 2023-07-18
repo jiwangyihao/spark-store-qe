@@ -1,0 +1,1 @@
+import{_,y as a,z as s,H as t,I as o,A as c}from"./index.a6cf12b2.js";const n={},d=e=>(t("data-v-fff10650"),e=e(),o(),e),r={class:"container"},p=d(()=>c("h5",null,"\u65BD\u5DE5ing...",-1)),f=[p];function i(e,l){return a(),s("div",r,f)}var h=_(n,[["render",i],["__scopeId","data-v-fff10650"]]);export{h as default};
