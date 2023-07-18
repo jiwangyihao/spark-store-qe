@@ -2,28 +2,28 @@
 //下载地址在/src/router/routes.js中设置
 
 // noinspection NpmUsedModulesInstalled
-import { nextTick, ref } from "vue";
-import { useMeta } from "quasar";
-import FooterView from "../components/FooterView.vue";
-import { api } from "boot/api";
+import { nextTick, ref } from 'vue';
+import { useMeta } from 'quasar';
+import FooterView from '../components/FooterView.vue';
+import { api } from 'boot/api';
 
 useMeta({
-  title: "下载",
+  title: '下载',
   // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
   titleTemplate: (title) => `${title} - 星火应用商店`,
   meta: {
     description: {
-      name: "description",
-      content: "星火应用商店spark store官方下载",
+      name: 'description',
+      content: '星火应用商店spark store官方下载',
     },
     keywords: {
-      name: "keywords",
+      name: 'keywords',
       content:
-        "spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin",
+        'spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin',
     },
     equiv: {
-      "http-equiv": "Content-Type",
-      content: "text/html; charset=UTF-8",
+      'http-equiv': 'Content-Type',
+      content: 'text/html; charset=UTF-8',
     },
   },
 });
@@ -35,63 +35,63 @@ const showTips = ref(false);
 const qaMessages = [
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
-    question: ["在哪进交流群？"],
+    question: ['在哪进交流群？'],
     answer: [
       "星火商店交流平台 <a href='https://www.deepinos.org/d/1207/'>点击这里进入</a>",
     ],
   },
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
-    question: ["上面这个链接挂了，显示进不去"],
+    question: ['上面这个链接挂了，显示进不去'],
     answer: [
       "我们还有QQ群作为备份，群号是 872690351 群2 865927727。<a href='https://www.deepinos.org/'>这里还有论坛</a>",
     ],
   },
   {
-    question: ["我是国产架构，怎么获取应用？"],
+    question: ['我是国产架构，怎么获取应用？'],
     answer: [
-      "目前星火商店支持arm架构的国产芯片，请下载arm64架构的deb包。请注意：支持是实验性的，请积极在星火交流平台，QQ群或论坛向我们反馈！",
-      "目前支持的发行版有 UOS 专业版，Ubuntu 22.04以及有限的支持了银河麒麟V10（仅保证客户端可运行，上架应用未经过测试）",
-      "银河麒麟用户请下载依赖包",
+      '目前星火商店支持arm架构的国产芯片，请下载arm64架构的deb包。请注意：支持是实验性的，请积极在星火交流平台，QQ群或论坛向我们反馈！',
+      '目前支持的发行版有 UOS 专业版，Ubuntu 22.04以及有限的支持了银河麒麟V10（仅保证客户端可运行，上架应用未经过测试）',
+      '银河麒麟用户请下载依赖包',
     ],
   },
   {
-    question: ["安装依赖包出现错误"],
+    question: ['安装依赖包出现错误'],
     answer: [
-      "UOS或者deepin不需要安装，请不要安装；Kali Linux/Kdeneon请自行编译安装，暂不支持；依赖包支持的发行版却报无法安装错误：尝试sudo apt update后再运行。如果仍然无法排查出问题，请参考第一条进入交流平台寻求帮助。",
+      'UOS或者deepin不需要安装，请不要安装；Kali Linux/Kdeneon请自行编译安装，暂不支持；依赖包支持的发行版却报无法安装错误：尝试sudo apt update后再运行。如果仍然无法排查出问题，请参考第一条进入交流平台寻求帮助。',
     ],
   },
   {
-    question: ["在哪里投稿？"],
+    question: ['在哪里投稿？'],
     answer: [
-      "右上角菜单--->投递应用。对于已经上架的应用的更新，建议使用投稿器一键填写投稿信息",
+      '右上角菜单--->投递应用。对于已经上架的应用的更新，建议使用投稿器一键填写投稿信息',
     ],
   },
   {
-    question: ["我不是deepin/UOS用户，可以使用星火应用商店吗？"],
+    question: ['我不是deepin/UOS用户，可以使用星火应用商店吗？'],
     answer: [
-      "可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10/Debian11，先安装依赖包",
-      "Ubuntu 22.04 原版可能会出现SSL错误，暂无解决方案，可尝试其他衍生版本",
+      '可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10/Debian11，先安装依赖包',
+      'Ubuntu 22.04 原版可能会出现SSL错误，暂无解决方案，可尝试其他衍生版本',
     ],
   },
   {
-    question: ["我可以用dpkg -i安装吗？"],
+    question: ['我可以用dpkg -i安装吗？'],
     answer: [
-      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！",
-      "sudo apt install gdebi 来安装gdebi",
-      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！",
-      "已经有不下20个人被这个坑了。CSDN害人不浅",
+      '不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！',
+      'sudo apt install gdebi 来安装gdebi',
+      '不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！',
+      '已经有不下20个人被这个坑了。CSDN害人不浅',
     ],
   },
   {
-    question: ["星火商店会影响系统正常更新吗？"],
+    question: ['星火商店会影响系统正常更新吗？'],
     answer: [
-      "星火商店现已将源与系统分开，不再影响系统更新。相应的，星火商店中的应用也不会随着系统更新。请在右上角的应用更新和安装设置来操作更新",
-      "如果希望在命令行中安装星火源的应用，请使用aptss. aptss类似apt,但是加入了星火源和多线程下载支持",
+      '星火商店现已将源与系统分开，不再影响系统更新。相应的，星火商店中的应用也不会随着系统更新。请在右上角的应用更新和安装设置来操作更新',
+      '如果希望在命令行中安装星火源的应用，请使用aptss. aptss类似apt,但是加入了星火源和多线程下载支持',
     ],
   },
   {
-    question: ["有些应用已经过时或者失效了，我想让他下架"],
+    question: ['有些应用已经过时或者失效了，我想让他下架'],
     answer: [
       "前往<a href='https://gitee.com/deepin-community-store/software_-issue'>https://gitee.com/deepin-community-store/software_-issue</a>",
     ],
@@ -100,8 +100,8 @@ const qaMessages = [
 
 //获取最新版本
 const latest = ref({
-  version: "",
-  time: "",
+  version: '',
+  time: '',
   details: [],
 });
 api.getLatest().then((res) => {
@@ -122,7 +122,7 @@ nextTick(() => {
 const loadHistory = (index, done) => {
   api.getHistory(index).then((res) => {
     updateHistory.value = updateHistory.value.concat(res.data);
-    if (res["isEnded"]) {
+    if (res['isEnded']) {
       disableLoad.value = true;
     }
     done();
@@ -279,8 +279,8 @@ const loadHistory = (index, done) => {
 </template>
 
 <style scoped lang="scss">
-@use "../css/var-image-bg";
-@import "../css/quasar.variables";
+@use '../css/var-image-bg';
+@import '../css/quasar.variables';
 
 .downPage {
   position: relative;
@@ -292,8 +292,8 @@ const loadHistory = (index, done) => {
   flex-wrap: nowrap;
 
   &.varImageBg.downBackground::before {
-    @include var-image-bg.image("download", "background");
-    content: "";
+    @include var-image-bg.image('download', 'background');
+    content: '';
     width: 100%;
     height: 56vh;
     max-height: calc(68vmin + 48px);
@@ -311,7 +311,7 @@ const loadHistory = (index, done) => {
     position: relative;
 
     &::after {
-      content: "";
+      content: '';
       width: 1.2em;
       height: 0.16em;
       background-color: white;
@@ -392,9 +392,13 @@ const loadHistory = (index, done) => {
       background-color: white;
       border-radius: 1vmin;
       overflow: hidden;
-      box-shadow: 0 0 0 rgba(0, 0, 0, 0.056), 0 0 0.1vmin rgba(0, 0, 0, 0.081),
-        0 0 0.1vmin rgba(0, 0, 0, 0.1), 0 0 0.2vmin rgba(0, 0, 0, 0.119),
-        0 0 0.4vmin rgba(0, 0, 0, 0.144), 0 0 1vmin rgba(0, 0, 0, 0.2);
+      box-shadow:
+        0 0 0 rgba(0, 0, 0, 0.056),
+        0 0 0.1vmin rgba(0, 0, 0, 0.081),
+        0 0 0.1vmin rgba(0, 0, 0, 0.1),
+        0 0 0.2vmin rgba(0, 0, 0, 0.119),
+        0 0 0.4vmin rgba(0, 0, 0, 0.144),
+        0 0 1vmin rgba(0, 0, 0, 0.2);
 
       .logoPanel {
         display: flex;
@@ -407,21 +411,24 @@ const loadHistory = (index, done) => {
         padding-top: 1.5vmin;
 
         &::before {
-          content: "";
+          content: '';
           display: block;
           width: 7vmin;
           height: 7vmin;
           border-radius: 1vmin;
           background: {
             color: white;
-            image: url("../assets/icons/favicon-128x128.png");
+            image: url('../assets/icons/favicon-128x128.png');
             repeat: no-repeat;
             size: 4vmin;
             position: center;
           }
-          box-shadow: 0 0 0 rgba(0, 0, 0, 0.056),
-            0 0 0.1vmin rgba(0, 0, 0, 0.081), 0 0 0.1vmin rgba(0, 0, 0, 0.1),
-            0 0 0.2vmin rgba(0, 0, 0, 0.119), 0 0 0.4vmin rgba(0, 0, 0, 0.144),
+          box-shadow:
+            0 0 0 rgba(0, 0, 0, 0.056),
+            0 0 0.1vmin rgba(0, 0, 0, 0.081),
+            0 0 0.1vmin rgba(0, 0, 0, 0.1),
+            0 0 0.2vmin rgba(0, 0, 0, 0.119),
+            0 0 0.4vmin rgba(0, 0, 0, 0.144),
             0 0 1vmin rgba(0, 0, 0, 0.2);
 
           //filter: drop-shadow(0 0 0.5vmin white);
@@ -504,7 +511,7 @@ const loadHistory = (index, done) => {
 </style>
 
 <style lang="scss">
-@import "../css/quasar.variables";
+@import '../css/quasar.variables';
 .qaCard {
   .scrollarea__container {
     border-radius: 0.6vmin;

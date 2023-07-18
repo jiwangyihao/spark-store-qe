@@ -1,5 +1,5 @@
-import { store } from "quasar/wrappers";
-import { createPinia } from "pinia";
+import { store } from 'quasar/wrappers';
+import { createPinia } from 'pinia';
 
 /*
  * If not building with SSR mode, you can
@@ -11,6 +11,7 @@ import { createPinia } from "pinia";
  */
 
 export default store((/* { ssrContext } */) => {
+  // noinspection UnnecessaryLocalVariableJS
   const pinia = createPinia();
 
   // You can add Pinia plugins here

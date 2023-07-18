@@ -1,8 +1,8 @@
 <script setup>
 //综合
-import { computed, onMounted, ref, watch } from "vue";
-import defaultIcon from "../../assets/img/store/application.svg";
-import { debounce, useQuasar } from "quasar";
+import { computed, onMounted, ref, watch } from 'vue';
+import defaultIcon from '../../assets/img/store/application.svg';
+import { debounce, useQuasar } from 'quasar';
 
 // noinspection JSUnusedGlobalSymbols
 const $q = useQuasar();
@@ -30,20 +30,20 @@ const activeCard = ref({
 });
 
 //数据请求
-import { api } from "boot/api";
+import { api } from 'boot/api';
 
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
 
-import { useStore } from "stores/store";
+import { useStore } from 'stores/store';
 
 const store = useStore();
 
 const appList = ref([]);
-const source = ref(store["source"]);
-const debSource = ref(store["debSource"]);
+const source = ref(store['source']);
+const debSource = ref(store['debSource']);
 const sort = ref(route.params.sort.toString());
 
 onMounted(() => {
@@ -58,7 +58,7 @@ onMounted(() => {
           let typeId;
           typeList.forEach((e) => {
             typeId =
-              e["orig_name"] === route.params.sort ? e["type_id"] : typeId;
+              e['orig_name'] === route.params.sort ? e['type_id'] : typeId;
           });
           if (typeId) {
             appList.value = layoutAppCard(await api.getApplicationList(typeId)); //通知卡片排布
@@ -68,10 +68,10 @@ onMounted(() => {
             cancelAnimationFrame(scroll.value.animationId);
             scrollAnimation(
               container.value.parentElement.parentElement.scrollTop,
-              0
+              0,
             );
           } else {
-            await router.push("/Error404");
+            await router.push('/Error404');
           }
         }
 
@@ -86,14 +86,14 @@ onMounted(() => {
         } else {
           fetchData().catch((reason) => {
             $q.notify({
-              type: "negative",
+              type: 'negative',
               message: reason.toString(),
             });
           });
         }
       }
     },
-    { immediate: true } //立即执行一次
+    { immediate: true }, //立即执行一次
   );
 });
 
@@ -117,14 +117,14 @@ const containerHeight = computed(
         (config.cardHeight + config.gap) +
       config.gap +
       config.verticalPadding * 1.5
-    }px`
+    }px`,
 );
 
 const column = computed(() =>
   Math.floor(
     (clientWidth.value + config.gap - config.horizonPadding * 2) /
-      (config.cardWidth + config.gap)
-  )
+      (config.cardWidth + config.gap),
+  ),
 );
 
 const horizonGap = computed(
@@ -133,7 +133,7 @@ const horizonGap = computed(
       (config.cardWidth + config.gap) * column.value +
       config.gap -
       config.horizonPadding * 2) /
-    (column.value + 1)
+    (column.value + 1),
 );
 
 function layoutAppCard(appList) {
@@ -150,14 +150,14 @@ function layoutAppCard(appList) {
       top: computed(
         () =>
           Math.floor(index / column.value) * (config.cardHeight + config.gap) +
-          config.verticalPadding
+          config.verticalPadding,
       ),
     };
     item.style = computed(
       () =>
-        `transform:translate(${item.position.left.value}px,${item.position.top.value}px)`
+        `transform:translate(${item.position.left.value}px,${item.position.top.value}px)`,
     );
-    if (!item.hasOwnProperty("class")) {
+    if (!item.hasOwnProperty('class')) {
       item.class = {
         active: false,
         animation: false,
@@ -169,10 +169,10 @@ function layoutAppCard(appList) {
     item.imgSrc = computed(() =>
       item.imgError.value
         ? defaultIcon
-        : `${source.value}/store/${sort.value}/${item["package"].replace(
-            "+",
-            "%2B"
-          )}/icon.png`
+        : `${source.value}/store/${sort.value}/${item['package'].replace(
+            '+',
+            '%2B',
+          )}/icon.png`,
     );
   });
 
@@ -189,11 +189,11 @@ function layoutAppCard(appList) {
   });
 
   container.value.parentElement.parentElement.addEventListener(
-    "scroll",
+    'scroll',
     debounce(() => {
       if (!scroll.value.animationId)
         scrollTop.value = container.value.parentElement.parentElement.scrollTop;
-    }, 250)
+    }, 250),
   );
   return appList;
 }
@@ -204,15 +204,15 @@ onMounted(() => {
 
   //在窗口尺寸变化时自动调整 clientWidth
   window.addEventListener(
-    "resize",
+    'resize',
     debounce(() => {
       clientWidth.value = container.value.clientWidth;
-    }, 250)
+    }, 250),
   );
 });
 
 //滚动动画
-import BezierEasing from "bezier-easing"; //贝塞尔曲线
+import BezierEasing from 'bezier-easing'; //贝塞尔曲线
 
 const scroll = ref({
   //滚动状态
@@ -238,7 +238,7 @@ function scrollAnimation(scrollStart, scrollEnd) {
     //这里使用`Math.min()`确保元素刚好停在目标位置。
     container.value.parentElement.parentElement.scrollTo(
       0,
-      scrollStart + scrollDistance * easing(Math.min(process, 1))
+      scrollStart + scrollDistance * easing(Math.min(process, 1)),
     );
 
     if (process < 1) {
@@ -272,7 +272,7 @@ onMounted(() => {
     //调用动画函数
     scrollAnimation(
       container.value.parentElement.parentElement.scrollTop, //动画的实际起点为实际滚动高度
-      scroll.value.targetTop
+      scroll.value.targetTop,
     );
   });
 });
@@ -297,14 +297,14 @@ function appCardUp(app) {
 }
 
 function appCardAnimated(app, event) {
-  if (event.propertyName === "transform") {
+  if (event.propertyName === 'transform') {
     containerState.value.animation = false;
     app.class.animation = false;
   }
 }
 
 function coverAnimationEnd(e) {
-  if (e.propertyName === "transform") {
+  if (e.propertyName === 'transform') {
     coverState.value.animation = false;
     activeCard.value.class.cover = coverState.value.active;
     coverState.value.open = coverState.value.active;
@@ -316,12 +316,12 @@ const appDetail = ref({});
 
 const appDebHref = computed(
   () =>
-    `${debSource.value}/store/${appDetail.value["orig_name"]}/${appDetail.value["package"]}/${appDetail.value["package"]}_${appDetail.value["version"]}_${appDetail.value["arch"]}.deb`
+    `${debSource.value}/store/${appDetail.value['orig_name']}/${appDetail.value['package']}/${appDetail.value['package']}_${appDetail.value['version']}_${appDetail.value['arch']}.deb`,
 );
 
 const appTorrentHref = computed(
   () =>
-    `${source.value}/store/${appDetail.value["orig_name"]}/${appDetail.value["package"]}/${appDetail.value["package"]}_${appDetail.value["version"]}_${appDetail.value["arch"]}.deb.torrent`
+    `${source.value}/store/${appDetail.value['orig_name']}/${appDetail.value['package']}/${appDetail.value['package']}_${appDetail.value['version']}_${appDetail.value['arch']}.deb.torrent`,
 );
 
 function fetchAppInfo(appId) {
@@ -333,7 +333,7 @@ function fetchAppInfo(appId) {
     })
     .catch((reason) => {
       $q.notify({
-        type: "negative",
+        type: 'negative',
         message: reason.toString(),
       });
     });
@@ -367,16 +367,16 @@ function fetchAppInfo(appId) {
             @error="activeCard.imgError = true"
           />
           <div class="description">
-            <h6>{{ activeCard["application_name_zh"] }}</h6>
-            <p>{{ activeCard["more"] }}</p>
+            <h6>{{ activeCard['application_name_zh'] }}</h6>
+            <p>{{ activeCard['more'] }}</p>
           </div>
           <div class="detail">
-            <h1 class="name">{{ appDetail["application_name_zh"] }}</h1>
-            <span class="version">{{ appDetail["version"] }}</span>
+            <h1 class="name">{{ appDetail['application_name_zh'] }}</h1>
+            <span class="version">{{ appDetail['version'] }}</span>
             <div class="tags">
               <span v-for="tag in appDetail['tags']" :key="tag">{{ tag }}</span>
             </div>
-            <p class="description">{{ appDetail["more"] }}</p>
+            <p class="description">{{ appDetail['more'] }}</p>
             <q-btn-dropdown
               split
               :ripple="false"
@@ -413,8 +413,8 @@ function fetchAppInfo(appId) {
       <div class="cardView" @transitionend="(e) => appCardAnimated(app, e)">
         <img :src="app['imgSrc']" alt="" @error="app.imgError = true" />
         <div class="description">
-          <h6>{{ app["application_name_zh"] }}</h6>
-          <p>{{ app["more"] }}</p>
+          <h6>{{ app['application_name_zh'] }}</h6>
+          <p>{{ app['more'] }}</p>
         </div>
       </div>
     </div>
@@ -427,7 +427,7 @@ function fetchAppInfo(appId) {
   //顶部遮罩
   &::before,
   &::after {
-    content: "";
+    content: '';
     width: 100%;
     height: 120px;
     position: fixed;
@@ -502,7 +502,7 @@ function fetchAppInfo(appId) {
     user-select: none;
 
     &::before {
-      content: "";
+      content: '';
       width: 100%;
       height: 100%;
       background-color: rgba(255, 255, 255, 0.2);
@@ -801,7 +801,9 @@ function fetchAppInfo(appId) {
 //MD2 样式
 .md2 {
   .cardView {
-    box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
+    box-shadow:
+      0 1px 10px #0000004d,
+      0 2px 4px #00000036,
       0 3px 1px -4px #0000002e;
     transition: {
       property: box-shadow, transform;
@@ -809,12 +811,17 @@ function fetchAppInfo(appId) {
     }
 
     &:hover {
-      box-shadow: 0 1px 5px #0003, 0 2px 2px #00000024, 0 3px 1px -2px #0000001f;
+      box-shadow:
+        0 1px 5px #0003,
+        0 2px 2px #00000024,
+        0 3px 1px -2px #0000001f;
     }
   }
 
   .toolBox {
-    box-shadow: 0 1px 10px #0000004d, 0 2px 4px #00000036,
+    box-shadow:
+      0 1px 10px #0000004d,
+      0 2px 4px #00000036,
       0 3px 1px -4px #0000002e;
     transition: {
       property: transform, opacity, box-shadow;
@@ -823,7 +830,10 @@ function fetchAppInfo(appId) {
     }
 
     &:hover {
-      box-shadow: 0 1px 5px #0003, 0 2px 2px #00000024, 0 3px 1px -2px #0000001f;
+      box-shadow:
+        0 1px 5px #0003,
+        0 2px 2px #00000024,
+        0 3px 1px -2px #0000001f;
     }
   }
 }

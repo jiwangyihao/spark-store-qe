@@ -16,16 +16,16 @@
  *   })
  */
 
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld("electron", {
+contextBridge.exposeInMainWorld('electron', {
   min: () => {
-    ipcRenderer.send("min");
+    ipcRenderer.send('min');
   },
   max: () => {
-    ipcRenderer.send("max");
+    ipcRenderer.send('max');
   },
   close: () => {
-    ipcRenderer.send("close");
+    ipcRenderer.send('close');
   },
 });

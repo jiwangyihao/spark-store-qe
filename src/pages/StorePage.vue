@@ -1,15 +1,25 @@
 <script setup>
-import { useMeta } from "quasar";
+import { useMeta } from 'quasar';
 
 useMeta({
-  title: "WEB商店",
+  title: 'WEB商店',
   // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
   titleTemplate: (title) => `${title} - 星火应用商店`,
   meta: {
-      description: { name: 'description', content: '星火应用商店spark store官网' },
-      keywords: { name: 'keywords', content: 'spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin'},
-      equiv: { 'http-equiv': 'Content-Type', content: 'text/html; charset=UTF-8' }
-    }
+    description: {
+      name: 'description',
+      content: '星火应用商店spark store官网',
+    },
+    keywords: {
+      name: 'keywords',
+      content:
+        'spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin',
+    },
+    equiv: {
+      'http-equiv': 'Content-Type',
+      content: 'text/html; charset=UTF-8',
+    },
+  },
 });
 </script>
 
@@ -56,9 +66,13 @@ useMeta({
   height: 48px;
   border-radius: 24px;
   background: white;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.08),
-    0 4px 8px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.08),
-    0 16px 32px rgba(0, 0, 0, 0.08), 0 32px 64px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 4px 8px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.08),
+    0 16px 32px rgba(0, 0, 0, 0.08),
+    0 32px 64px rgba(0, 0, 0, 0.08);
   position: absolute;
   top: 13px;
   left: 52px;
@@ -73,8 +87,11 @@ useMeta({
 }
 .storePage .topBar .search:hover {
   width: 324px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06), 0 2px 2px rgba(0, 0, 0, 0.06),
-    0 4px 4px rgba(0, 0, 0, 0.06), 0 6px 8px rgba(0, 0, 0, 0.06),
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.06),
+    0 2px 2px rgba(0, 0, 0, 0.06),
+    0 4px 4px rgba(0, 0, 0, 0.06),
+    0 6px 8px rgba(0, 0, 0, 0.06),
     0 8px 16px rgba(0, 0, 0, 0.06);
 }
 .storePage .topBar .search .q-icon {

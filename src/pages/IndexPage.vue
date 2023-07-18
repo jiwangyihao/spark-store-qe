@@ -1,27 +1,37 @@
 <!--suppress NpmUsedModulesInstalled -->
 <script setup>
-import { useMeta } from "quasar";
-import FooterView from "../components/FooterView.vue";
+import { useMeta } from 'quasar';
+import FooterView from '../components/FooterView.vue';
 
 useMeta({
-  title: "首页",
+  title: '首页',
   // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
   titleTemplate: (title) => `${title} - 星火应用商店`,
   meta: {
-      description: { name: 'description', content: '星火应用商店spark store官网' },
-      keywords: { name: 'keywords', content: 'spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin'},
-      equiv: { 'http-equiv': 'Content-Type', content: 'text/html; charset=UTF-8' }
-    }
+    description: {
+      name: 'description',
+      content: '星火应用商店spark store官网',
+    },
+    keywords: {
+      name: 'keywords',
+      content:
+        'spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin',
+    },
+    equiv: {
+      'http-equiv': 'Content-Type',
+      content: 'text/html; charset=UTF-8',
+    },
+  },
 });
 
 //数据请求
-import { api } from "boot/api";
-import {ref} from "vue";
+import { api } from 'boot/api';
+import { ref } from 'vue';
 
-const version=ref('')
-api.getLatest().then((latest)=>{
-  version.value=latest.version
-})
+const version = ref('');
+api.getLatest().then((latest) => {
+  version.value = latest.version;
+});
 </script>
 
 <template>
@@ -347,14 +357,14 @@ api.getLatest().then((latest)=>{
 </template>
 
 <style scoped lang="scss">
-@use "../css/var-image-bg";
+@use '../css/var-image-bg';
 .q-avatar__content {
   font-size: 1em;
 }
 
 .mainPage {
   .indexBackground {
-    @include var-image-bg.image("index", "background");
+    @include var-image-bg.image('index', 'background');
   }
 
   > .row {
@@ -382,7 +392,7 @@ api.getLatest().then((latest)=>{
   }
 
   .app_name {
-    font-family: "Comfortaa-Light", sans-serif;
+    font-family: 'Comfortaa-Light', sans-serif;
     font-size: 9vmin;
     margin: 0;
     display: flex;
@@ -392,7 +402,7 @@ api.getLatest().then((latest)=>{
 
     .q-chip {
       font-size: 2vmin;
-      font-family: "Roboto", "-apple-system", "Helvetica Neue", Helvetica, Arial,
+      font-family: 'Roboto', '-apple-system', 'Helvetica Neue', Helvetica, Arial,
         sans-serif;
       font-weight: 400;
       letter-spacing: normal;
@@ -500,7 +510,7 @@ api.getLatest().then((latest)=>{
       line-height: 1.8em;
 
       &::after {
-        content: "";
+        content: '';
         width: 2em;
         height: 0.2em;
         background-color: var(--q-primary);

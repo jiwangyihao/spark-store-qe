@@ -1,6 +1,6 @@
 <!--suppress JSUnresolvedVariable, NpmUsedModulesInstalled, CssInvalidFunction, HtmlUnknownTag -->
 <script setup>
-import Navigation from "components/NavigateBar.vue";
+import Navigation from 'components/NavigateBar.vue';
 
 function min() {
   electron.min();
@@ -49,12 +49,16 @@ function close() {
   }
 
   .q-btn::before {
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 10%), 0 2px 2px rgba(0, 0, 0, 7%),
+    box-shadow:
+      0 1px 5px rgba(0, 0, 0, 10%),
+      0 2px 2px rgba(0, 0, 0, 7%),
       0 3px 1px -2px rgba(0, 0, 0, 6%);
   }
 
   .q-btn--active::before {
-    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 10%), 0 5px 8px rgba(0, 0, 0, 7%),
+    box-shadow:
+      0 3px 5px -1px rgba(0, 0, 0, 10%),
+      0 5px 8px rgba(0, 0, 0, 7%),
       0 1px 14px rgba(0, 0, 0, 6%) !important;
   }
 

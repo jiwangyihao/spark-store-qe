@@ -1,24 +1,34 @@
 <!--suppress NpmUsedModulesInstalled -->
 <script setup>
-import { ref } from "vue";
-import { useMeta } from "quasar";
-import FooterView from "../components/FooterView.vue";
+import { ref } from 'vue';
+import { useMeta } from 'quasar';
+import FooterView from '../components/FooterView.vue';
 
-const module = ref("about");
+const module = ref('about');
 
 function goWanted() {
-  module.value = "wanted";
+  module.value = 'wanted';
 }
 
 useMeta({
-  title: "关于",
+  title: '关于',
   // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
   titleTemplate: (title) => `${title} - 星火应用商店`,
   meta: {
-      description: { name: 'description', content: '关于星火应用商店spark store' },
-      keywords: { name: 'keywords', content: 'spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin'},
-      equiv: { 'http-equiv': 'Content-Type', content: 'text/html; charset=UTF-8' }
-    }
+    description: {
+      name: 'description',
+      content: '关于星火应用商店spark store',
+    },
+    keywords: {
+      name: 'keywords',
+      content:
+        'spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin',
+    },
+    equiv: {
+      'http-equiv': 'Content-Type',
+      content: 'text/html; charset=UTF-8',
+    },
+  },
 });
 </script>
 
@@ -96,7 +106,7 @@ useMeta({
 </template>
 
 <style scoped lang="scss">
-@use "../css/var-image-bg";
+@use '../css/var-image-bg';
 
 .aboutPage {
   position: relative;
@@ -109,8 +119,8 @@ useMeta({
   padding-top: 10vmin;
 
   &::before {
-    @include var-image-bg.image("about", "background");
-    content: "";
+    @include var-image-bg.image('about', 'background');
+    content: '';
     width: 100%;
     height: 100%;
     position: absolute;
@@ -133,7 +143,7 @@ useMeta({
     position: relative;
 
     &::after {
-      content: "";
+      content: '';
       width: 1.2em;
       height: 0.16em;
       background-color: white;
@@ -173,15 +183,15 @@ useMeta({
   flex-grow: 1;
 
   &::before {
-    @include var-image-bg.image("about", "banner");
-    content: "";
+    @include var-image-bg.image('about', 'banner');
+    content: '';
     width: 100%;
     height: 56vh;
     position: absolute;
     top: 0;
     left: 0;
     z-index: -1;
-    filter: "brightness(0.7)";
+    filter: 'brightness(0.7)';
   }
 
   .title {
@@ -235,7 +245,7 @@ useMeta({
       line-height: 1em;
 
       &::after {
-        content: "";
+        content: '';
         height: 1em;
         width: 0.3em;
         background-color: var(--q-primary);

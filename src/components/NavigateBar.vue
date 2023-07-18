@@ -1,58 +1,58 @@
 <!--suppress NpmUsedModulesInstalled -->
 <script setup>
-import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
 const state = ref({
-  home: !route.path.match("store"),
+  home: !route.path.match('store'),
   navigation: true,
   hoverP: false,
   hoverS: false,
-  primary: !(route.path.match("sort") || route.path.match("application")),
-  secondary: route.path.match("sort") || route.path.match("application"),
+  primary: !(route.path.match('sort') || route.path.match('application')),
+  secondary: route.path.match('sort') || route.path.match('application'),
   active: true,
 });
 
 const topTabGroup = ref([
   {
     id: 1,
-    name: "home",
-    path: "/",
-    label: "首页",
+    name: 'home',
+    path: '/',
+    label: '首页',
     active: true,
     el: null,
   },
   {
     id: 2,
-    name: "download",
-    path: "/download",
-    label: "下载",
+    name: 'download',
+    path: '/download',
+    label: '下载',
     active: false,
     el: null,
   },
   {
     id: 3,
-    name: "store",
-    path: "/store",
-    label: "商店",
+    name: 'store',
+    path: '/store',
+    label: '商店',
     active: false,
     el: null,
   },
   {
     id: 4,
-    name: "forum",
-    path: "/forum",
-    label: "社区",
+    name: 'forum',
+    path: '/forum',
+    label: '社区',
     active: false,
     el: null,
   },
   {
     id: 5,
-    name: "about",
-    path: "/about",
-    label: "关于",
+    name: 'about',
+    path: '/about',
+    label: '关于',
     active: false,
     el: null,
   },
@@ -61,28 +61,28 @@ const topTabGroup = ref([
 const tabGroup = ref([
   {
     id: 1,
-    name: "recommend",
-    path: "/store",
-    label: "推荐",
-    icon: "recommend",
+    name: 'recommend',
+    path: '/store',
+    label: '推荐',
+    icon: 'recommend',
     active: true,
     el: null,
   },
   {
     id: 2,
-    name: "rank",
-    path: "/store/rank",
-    label: "排行",
-    icon: "format_list_numbered",
+    name: 'rank',
+    path: '/store/rank',
+    label: '排行',
+    icon: 'format_list_numbered',
     active: false,
     el: null,
   },
   {
     id: 3,
-    name: "sort",
-    path: "/store/sort/games",
-    label: "分类",
-    icon: "queue",
+    name: 'sort',
+    path: '/store/sort/games',
+    label: '分类',
+    icon: 'queue',
     active: false,
     el: null,
   },
@@ -91,109 +91,109 @@ const tabGroup = ref([
 const secondTabGroup = ref([
   {
     id: 1,
-    name: "games",
-    path: "/store/sort/games",
-    label: "游戏",
-    icon: "sports_esports",
+    name: 'games',
+    path: '/store/sort/games',
+    label: '游戏',
+    icon: 'sports_esports',
     active: true,
     el: null,
   },
   {
     id: 2,
-    name: "network",
-    path: "/store/sort/network",
-    label: "网络",
-    icon: "travel_explore",
+    name: 'network',
+    path: '/store/sort/network',
+    label: '网络',
+    icon: 'travel_explore',
     active: false,
     el: null,
   },
   {
     id: 3,
-    name: "chat",
-    path: "/store/sort/chat",
-    label: "社交",
-    icon: "question_answer",
+    name: 'chat',
+    path: '/store/sort/chat',
+    label: '社交',
+    icon: 'question_answer',
     active: false,
     el: null,
   },
   {
     id: 4,
-    name: "music",
-    path: "/store/sort/music",
-    label: "音乐",
-    icon: "library_music",
+    name: 'music',
+    path: '/store/sort/music',
+    label: '音乐',
+    icon: 'library_music',
     active: false,
     el: null,
   },
   {
     id: 5,
-    name: "video",
-    path: "/store/sort/video",
-    label: "视频",
-    icon: "smart_display",
+    name: 'video',
+    path: '/store/sort/video',
+    label: '视频',
+    icon: 'smart_display',
     active: false,
     el: null,
   },
   {
     id: 6,
-    name: "image_graphics",
-    path: "/store/sort/image_graphics",
-    label: "图形",
-    icon: "image",
+    name: 'image_graphics',
+    path: '/store/sort/image_graphics',
+    label: '图形',
+    icon: 'image',
     active: false,
     el: null,
   },
   {
     id: 7,
-    name: "office",
-    path: "/store/sort/office",
-    label: "办公",
-    icon: "business_center",
+    name: 'office',
+    path: '/store/sort/office',
+    label: '办公',
+    icon: 'business_center',
     active: false,
     el: null,
   },
   {
     id: 8,
-    name: "reading",
-    path: "/store/sort/reading",
-    label: "阅读",
-    icon: "auto_stories",
+    name: 'reading',
+    path: '/store/sort/reading',
+    label: '阅读',
+    icon: 'auto_stories',
     active: false,
     el: null,
   },
   {
     id: 9,
-    name: "development",
-    path: "/store/sort/development",
-    label: "开发",
-    icon: "developer_board",
+    name: 'development',
+    path: '/store/sort/development',
+    label: '开发',
+    icon: 'developer_board',
     active: false,
     el: null,
   },
   {
     id: 10,
-    name: "tools",
-    path: "/store/sort/tools",
-    label: "工具",
-    icon: "handyman",
+    name: 'tools',
+    path: '/store/sort/tools',
+    label: '工具',
+    icon: 'handyman',
     active: false,
     el: null,
   },
   {
     id: 11,
-    name: "themes",
-    path: "/store/sort/themes",
-    label: "美化",
-    icon: "extension",
+    name: 'themes',
+    path: '/store/sort/themes',
+    label: '美化',
+    icon: 'extension',
     active: false,
     el: null,
   },
   {
     id: 12,
-    name: "others",
-    path: "/store/sort/others",
-    label: "其他",
-    icon: "pending",
+    name: 'others',
+    path: '/store/sort/others',
+    label: '其他',
+    icon: 'pending',
     active: false,
     el: null,
   },
@@ -233,37 +233,37 @@ const activeTab = ref(tabGroup.value[0]);
 const secondActiveTab = ref(tabGroup.value[0]);
 
 function toTab(path) {
-  if (path.match("store")) {
-    if (path.match("sort")) {
+  if (path.match('store')) {
+    if (path.match('sort')) {
       if (secondTabGroupByPath.value.hasOwnProperty(path)) {
         return [
-          topTabGroupByName.value["store"],
-          tabGroupByName.value["sort"],
+          topTabGroupByName.value['store'],
+          tabGroupByName.value['sort'],
           secondTabGroupByPath.value[path],
         ];
       } else {
         return [
-          topTabGroupByName.value["store"],
-          tabGroupByName.value["sort"],
+          topTabGroupByName.value['store'],
+          tabGroupByName.value['sort'],
           secondTabGroup.value[0],
         ];
       }
-    } else if (path.match("application")) {
+    } else if (path.match('application')) {
       return [
-        topTabGroupByName.value["store"],
-        tabGroupByName.value["sort"],
+        topTabGroupByName.value['store'],
+        tabGroupByName.value['sort'],
         secondActiveTab.value,
       ];
     } else {
       if (tabGroupByPath.value.hasOwnProperty(path)) {
         return [
-          topTabGroupByName.value["store"],
+          topTabGroupByName.value['store'],
           tabGroupByPath.value[path],
           secondTabGroup.value[0],
         ];
       } else {
         return [
-          topTabGroupByName.value["store"],
+          topTabGroupByName.value['store'],
           tabGroup.value[0],
           secondTabGroup.value[0],
         ];
@@ -273,13 +273,13 @@ function toTab(path) {
   if (topTabGroupByPath.value.hasOwnProperty(path)) {
     return [
       topTabGroupByPath.value[path],
-      tabGroupByName.value["recommend"],
+      tabGroupByName.value['recommend'],
       secondTabGroup.value[0],
     ];
   } else {
     return [
       topTabGroup.value[0],
-      tabGroupByName.value["recommend"],
+      tabGroupByName.value['recommend'],
       secondTabGroup.value[0],
     ];
   }
@@ -298,9 +298,9 @@ watch(
     topActiveTab.value.active = true;
     activeTab.value.active = true;
     secondActiveTab.value.active = true;
-    state.value.home = !route.path.match("store");
-    state.value.primary = !activeTab.value.name.match("sort");
-    state.value.secondary = activeTab.value.name.match("sort");
+    state.value.home = !route.path.match('store');
+    state.value.primary = !activeTab.value.name.match('sort');
+    state.value.secondary = activeTab.value.name.match('sort');
     for (const topTab of topTabGroup.value) {
       // noinspection JSUnresolvedVariable
       topTab.el.$el.style = `--j-offset:${
@@ -316,7 +316,7 @@ watch(
         (secondActiveTab.value.id - secondTab.id) * 52
       }px`;
     }
-  }
+  },
 );
 
 onMounted(() => {
@@ -330,7 +330,7 @@ onMounted(() => {
   topActiveTab.value.active = true;
   activeTab.value.active = true;
   secondActiveTab.value.active = true;
-  state.value.home = !route.path.match("store");
+  state.value.home = !route.path.match('store');
   for (const topTab of topTabGroup.value) {
     // noinspection JSUnresolvedVariable
     topTab.el.$el.style = `--j-offset:${
@@ -432,7 +432,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-@import "../css/quasar.variables";
+@import '../css/quasar.variables';
 
 span.navigation {
   position: fixed;
@@ -445,9 +445,12 @@ span.navigation {
     left: 0;
     transform: translate3d(-156px, 0, 0);
     backdrop-filter: blur(24px);
-    box-shadow: 1px 0 2.1px rgba(0, 0, 0, 0.03),
-      2.6px 0 5.2px rgba(0, 0, 0, 0.039), 5.3px 0 10.6px rgba(0, 0, 0, 0.044),
-      11px 0 21.9px rgba(0, 0, 0, 0.051), 30px 0 60px rgba(0, 0, 0, 0.07);
+    box-shadow:
+      1px 0 2.1px rgba(0, 0, 0, 0.03),
+      2.6px 0 5.2px rgba(0, 0, 0, 0.039),
+      5.3px 0 10.6px rgba(0, 0, 0, 0.044),
+      11px 0 21.9px rgba(0, 0, 0, 0.051),
+      30px 0 60px rgba(0, 0, 0, 0.07);
     transition: {
       property: transform, opacity, box-shadow;
       duration: 500ms;
@@ -475,7 +478,7 @@ span.navigation {
     }
 
     .logo::before {
-      content: "";
+      content: '';
       display: block;
       width: 32px;
       height: 32px;
@@ -484,7 +487,7 @@ span.navigation {
       right: 14px;
       transform: scale3d(0.75, 0.75, 1);
       background: {
-        image: url("../assets/icons/favicon-32x32.png");
+        image: url('../assets/icons/favicon-32x32.png');
         repeat: no-repeat;
         size: cover;
         position: center;
@@ -497,7 +500,7 @@ span.navigation {
     }
 
     .logo::after {
-      content: "Spark Web Store";
+      content: 'Spark Web Store';
       font-family: Comfortaa-Light, sans-serif;
       font-weight: 700;
       font-size: 21px;
@@ -618,7 +621,7 @@ span.navigation {
       margin-bottom: 21px;
 
       &::before {
-        content: ">";
+        content: '>';
         display: inline-block;
         text-align: center;
         overflow: hidden;
@@ -634,7 +637,7 @@ span.navigation {
       }
 
       &::after {
-        content: "<<<<<<";
+        content: '<<<<<<';
         display: inline-block;
         text-align: center;
         overflow: hidden;
@@ -745,10 +748,10 @@ span.navigation {
       align-items: center;
 
       &::before {
-        content: "";
+        content: '';
         display: inline-block;
         background: {
-          image: url("../assets/icons/favicon-96x96.png");
+          image: url('../assets/icons/favicon-96x96.png');
           repeat: no-repeat;
           size: contain;
         }
@@ -760,7 +763,7 @@ span.navigation {
         display: inline-block;
         font: {
           size: 21px;
-          family: "Comfortaa-Light", sans-serif;
+          family: 'Comfortaa-Light', sans-serif;
           weight: 700;
         }
         letter-spacing: 0.01em;

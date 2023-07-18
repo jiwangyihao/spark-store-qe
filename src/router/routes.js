@@ -1,70 +1,73 @@
 const routes = [
   {
-    path: "/",
-    component: () => import("layouts/MainLayout.vue"),
+    path: '/',
+    component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: "", component: () => import("pages/Index.vue") },
-      { path: "download", component: () => import("pages/Download.vue") },
+      { path: '', component: () => import('pages/IndexPage.vue') },
+      { path: 'download', component: () => import('pages/DownloadPage.vue') },
       //下载地址（软件本体）
       {
-        path: "download_latest",
+        path: 'download_latest',
         beforeEnter() {
           window.open(
-            "https://gitee.com/deepin-community-store/spark-store/releases/latest"
+            'https://gitee.com/deepin-community-store/spark-store/releases/latest',
           );
         },
       },
       //下载地址（依赖包）
       {
-        path: "download_dependencies_latest",
+        path: 'download_dependencies_latest',
         beforeEnter() {
           window.open(
-            "https://zunyun01.store.deepinos.org.cn/spark-store-dependencies-kylin.zip"
+            'https://zunyun01.store.deepinos.org.cn/spark-store-dependencies-kylin.zip',
           );
         },
       },
       {
-        path: "forum",
+        path: 'forum',
         beforeEnter() {
-          location.href = "https://www.deepinos.org/";
+          location.href = 'https://www.deepinos.org/';
         },
       },
       {
-        path: "feedback",
+        path: 'feedback',
         beforeEnter() {
-          location.href = "https://www.deepinos.org/";
+          location.href = 'https://www.deepinos.org/';
         },
       },
       {
-        path: "blog",
+        path: 'blog',
         beforeEnter() {
-          location.href = "https://www.deepinos.org/";
+          location.href = 'https://www.deepinos.org/';
         },
       },
-      { path: "about", component: () => import("pages/About.vue") },
+      { path: 'about', component: () => import('pages/AboutPage.vue') },
       {
-        path: "store",
-        component: () => import("pages/Store.vue"),
+        path: 'store',
+        component: () => import('pages/StorePage.vue'),
         children: [
-          { path: "", component: () => import("pages/store/Recommend.vue") },
-          { path: "rank", component: () => import("pages/store/Rank.vue") },
           {
-            path: "sort/:sort",
-            component: () => import("pages/store/Sort.vue"),
+            path: '',
+            component: () => import('pages/store/RecommendPage.vue'),
+          },
+          { path: 'rank', component: () => import('pages/store/RankPage.vue') },
+          {
+            path: 'sort/:sort',
+            component: () => import('pages/store/SortPage.vue'),
           },
           {
-            path: "application/:appId",
-            component: () => import("pages/store/Application.vue"),
+            path: 'application/:appId',
+            component: () => import('pages/store/ApplicationPage.vue'),
           },
         ],
       },
-      { path: "Error404", component: () => import("pages/Error404.vue") },
+      { path: 'Error404', component: () => import('pages/ErrorPage.vue') },
     ],
   },
 
   // Always leave this as last one,
   // but you can also remove it
-  { path: "/:catchAll(.*)*", redirect: "Error404" },
+  { path: '/:catchAll(.*)*', redirect: 'Error404' },
 ];
 
 export default routes;
