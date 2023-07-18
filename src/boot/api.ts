@@ -10,7 +10,20 @@ import { getStorage } from '@sifrr/storage';
 // for each client)
 // Options with default values
 // noinspection JSCheckFunctionSignatures
-let api = {
+
+interface updateItem {
+  version: string | undefined;
+  time: string | undefined;
+  details: string[];
+}
+
+interface updateData {
+  status: number;
+  isEnded: boolean;
+  data: updateItem[];
+}
+
+const api = {
   axios: axios.create({ baseURL: 'https://store.deepinos.org/api/' }),
   server: axios.create({ baseURL: 'https://server.jwyihao.top' }), //测试后端，搭建在 Railway 上
   storage: getStorage({
@@ -22,8 +35,13 @@ let api = {
   }),
   getLatest: async function () {
     try {
-      let latest = await this.storage.get('latest');
-      if (latest['latest']) {
+      const isLatest = (item: {
+        latest?: updateItem;
+      }): item is { latest: updateItem } => {
+        return (item as { latest: updateItem }).latest !== undefined;
+      };
+      const latest = await this.storage.get('latest');
+      if (isLatest(latest)) {
         return latest['latest'];
       }
     } catch (e) {
@@ -31,7 +49,7 @@ let api = {
       throw e;
     }
     try {
-      let res = await this.server.get('/latest');
+      const res = await this.server.get('/latest');
       await this.storage.set('latest', {
         value: res.data,
         ttl: 24 * 60 * 60 * 1000, //保留一天
@@ -42,10 +60,27 @@ let api = {
       throw e;
     }
   },
-  getHistory: async function (page) {
+  getHistory: async function (page: number) {
     try {
-      let history = await this.storage.get(`history_${page}`);
-      if (history[`history_${page}`]) {
+      const isHistory = (
+        item:
+          | {
+              [x: string]: updateData;
+            }
+          | object,
+      ): item is {
+        [x: string]: updateData;
+      } => {
+        return (
+          (
+            item as {
+              [x: string]: updateData;
+            }
+          )[`history_${page}`] !== undefined
+        );
+      };
+      const history = await this.storage.get(`history_${page}`);
+      if (isHistory(history)) {
         return history[`history_${page}`];
       }
     } catch (e) {
@@ -53,7 +88,7 @@ let api = {
       throw e;
     }
     try {
-      let res = await this.server.get(`/history?page=${page}`);
+      const res = await this.server.get(`/history?page=${page}`);
       await this.storage.set(`history_${page}`, {
         value: res.data,
         ttl: 24 * 60 * 60 * 1000, //保留一天
@@ -64,9 +99,10 @@ let api = {
       throw e;
     }
   },
+  /*
   getTypeList: async function () {
     try {
-      let typeList = await this.storage.get('typeList');
+      const typeList = await this.storage.get('typeList');
       if (typeList['typeList']) {
         return typeList['typeList'];
       }
@@ -75,7 +111,7 @@ let api = {
       throw e;
     }
     try {
-      let res = await this.axios.post('/type/get_type_list');
+      const res = await this.axios.post('/type/get_type_list');
       await this.storage.set('typeList', {
         value: res.data.data,
         ttl: 24 * 60 * 60 * 1000, //保留一天
@@ -88,7 +124,9 @@ let api = {
   },
   getApplicationList: async function (typeId) {
     try {
-      let applicationList = await this.storage.get(`applicationList_${typeId}`);
+      const applicationList = await this.storage.get(
+        `applicationList_${typeId}`,
+      );
       if (applicationList[`applicationList_${typeId}`]) {
         return applicationList[`applicationList_${typeId}`];
       }
@@ -97,7 +135,7 @@ let api = {
       throw e;
     }
     try {
-      let res = await this.server.post('/application/get_application_list', {
+      const res = await this.server.post('/application/get_application_list', {
         size: 10000,
         type_id: typeId,
       });
@@ -113,7 +151,7 @@ let api = {
   },
   getApplicationDetail: async function (appId) {
     try {
-      let applicationDetail = await this.storage.get(
+      const applicationDetail = await this.storage.get(
         `applicationDetail_${appId}`,
       );
       if (applicationDetail[`applicationDetail_${appId}`]) {
@@ -124,7 +162,7 @@ let api = {
       throw e;
     }
     try {
-      let res = await this.axios.post('/application/get_application_detail', {
+      const res = await this.axios.post('/application/get_application_detail', {
         application_id: appId,
       });
       await this.storage.set(`applicationDetail_${appId}`, {
@@ -137,6 +175,7 @@ let api = {
       throw e;
     }
   },
+   */
 };
 
 export { api };

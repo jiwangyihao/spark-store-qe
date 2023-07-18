@@ -37,7 +37,7 @@
 - `public` 公开访问目录，仅用于存放网站图标；
 - `src` 源文件夹；
   - `assets` 资源文件夹；
-  - `boot` 插件，其中 `api.js` 是网络请求相关的 API；
+  - `boot` 插件，其中 `api.ts` 是网络请求相关的 API；
   - `components` 组件；
   - `css` 通用样式表，使用 SCSS 编写；
   - `i18n` 多语言配置（未实装）；

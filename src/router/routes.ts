@@ -1,4 +1,6 @@
-const routes = [
+import { RouteRecordRaw } from 'vue-router';
+
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
@@ -8,6 +10,7 @@ const routes = [
       //下载地址（软件本体）
       {
         path: 'download_latest',
+        redirect: 'download',
         beforeEnter() {
           window.open(
             'https://gitee.com/deepin-community-store/spark-store/releases/latest',
@@ -17,6 +20,7 @@ const routes = [
       //下载地址（依赖包）
       {
         path: 'download_dependencies_latest',
+        redirect: 'download',
         beforeEnter() {
           window.open(
             'https://zunyun01.store.deepinos.org.cn/spark-store-dependencies-kylin.zip',
@@ -25,18 +29,21 @@ const routes = [
       },
       {
         path: 'forum',
+        redirect: 'about',
         beforeEnter() {
           location.href = 'https://www.deepinos.org/';
         },
       },
       {
         path: 'feedback',
+        redirect: 'about',
         beforeEnter() {
           location.href = 'https://www.deepinos.org/';
         },
       },
       {
         path: 'blog',
+        redirect: 'about',
         beforeEnter() {
           location.href = 'https://www.deepinos.org/';
         },
