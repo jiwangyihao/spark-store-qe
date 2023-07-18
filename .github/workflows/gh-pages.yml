@@ -9,21 +9,20 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout
         uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
         with:
           persist-credentials: false
 
       - name: Build Vue
         run: |
-          yarn global add @quasar/cli
-          yarn
+          yarn install
           cp ghpage_quasar.config.js quasar.config.js
-          quasar build
+          yarn build
           cp dist/spa/index.html dist/spa/404.html
         shell: bash
 
-      - name: Deploy 🚀
+      - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}

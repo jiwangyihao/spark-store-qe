@@ -16,9 +16,8 @@ jobs:
 
       - name: Build Vue
         run: |
-          yarn global add @quasar/cli
-          yarn
-          quasar build
+          yarn install
+          yarn build
         shell: bash
 
       - name: Upload SPA zip
