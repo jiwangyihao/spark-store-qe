@@ -1,6 +1,5 @@
-<!--suppress NpmUsedModulesInstalled -->
-<script setup>
-import { onMounted, ref, watch } from 'vue';
+<script setup lang="ts">
+import { onMounted, Ref, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -15,7 +14,17 @@ const state = ref({
   active: true,
 });
 
-const topTabGroup = ref([
+interface tab {
+  id: number;
+  name: string;
+  path: string;
+  label: string;
+  icon?: string;
+  active: boolean;
+  el: HTMLAnchorElement | HTMLDivElement | null;
+}
+
+const topTabGroup: Ref<tab[]> = ref([
   {
     id: 1,
     name: 'home',
@@ -58,7 +67,7 @@ const topTabGroup = ref([
   },
 ]);
 
-const tabGroup = ref([
+const tabGroup: Ref<tab[]> = ref([
   {
     id: 1,
     name: 'recommend',
@@ -88,7 +97,7 @@ const tabGroup = ref([
   },
 ]);
 
-const secondTabGroup = ref([
+const secondTabGroup: Ref<tab[]> = ref([
   {
     id: 1,
     name: 'games',
@@ -199,27 +208,27 @@ const secondTabGroup = ref([
   },
 ]);
 
-const topTabGroupByName = ref({});
+const topTabGroupByName: Ref<{ [x: string]: tab }> = ref({});
 
-const topTabGroupByPath = ref({});
+const topTabGroupByPath: Ref<{ [x: string]: tab }> = ref({});
 
 for (const tab of topTabGroup.value) {
   topTabGroupByName.value[tab.name] = tab;
   topTabGroupByPath.value[tab.path] = tab;
 }
 
-const tabGroupByName = ref({});
+const tabGroupByName: Ref<{ [x: string]: tab }> = ref({});
 
-const tabGroupByPath = ref({});
+const tabGroupByPath: Ref<{ [x: string]: tab }> = ref({});
 
 for (const tab of tabGroup.value) {
   tabGroupByName.value[tab.name] = tab;
   tabGroupByPath.value[tab.path] = tab;
 }
 
-const secondTabGroupByName = ref({});
+const secondTabGroupByName: Ref<{ [x: string]: tab }> = ref({});
 
-const secondTabGroupByPath = ref({});
+const secondTabGroupByPath: Ref<{ [x: string]: tab }> = ref({});
 
 for (const tab of secondTabGroup.value) {
   secondTabGroupByName.value[tab.name] = tab;
@@ -232,7 +241,7 @@ const activeTab = ref(tabGroup.value[0]);
 
 const secondActiveTab = ref(tabGroup.value[0]);
 
-function toTab(path) {
+function toTab(path: string) {
   if (path.match('store')) {
     if (path.match('sort')) {
       if (secondTabGroupByPath.value.hasOwnProperty(path)) {
@@ -302,19 +311,22 @@ watch(
     state.value.primary = !activeTab.value.name.match('sort');
     state.value.secondary = activeTab.value.name.match('sort');
     for (const topTab of topTabGroup.value) {
-      // noinspection JSUnresolvedVariable
-      topTab.el.$el.style = `--j-offset:${
-        (topActiveTab.value.id - topTab.id) * 78
-      }px`;
+      if (topTab.el)
+        topTab.el.style.cssText = `--j-offset:${
+          (topActiveTab.value.id - topTab.id) * 78
+        }px`;
     }
     for (const tab of tabGroup.value) {
-      tab.el.style = `--j-offset:${(activeTab.value.id - tab.id) * 52}px`;
+      if (tab.el)
+        tab.el.style.cssText = `--j-offset:${
+          (activeTab.value.id - tab.id) * 52
+        }px`;
     }
     for (const secondTab of secondTabGroup.value) {
-      // noinspection JSUnresolvedVariable
-      secondTab.el.$el.style = `--j-offset:${
-        (secondActiveTab.value.id - secondTab.id) * 52
-      }px`;
+      if (secondTab.el)
+        secondTab.el.style.cssText = `--j-offset:${
+          (secondActiveTab.value.id - secondTab.id) * 52
+        }px`;
     }
   },
 );
@@ -332,19 +344,22 @@ onMounted(() => {
   secondActiveTab.value.active = true;
   state.value.home = !route.path.match('store');
   for (const topTab of topTabGroup.value) {
-    // noinspection JSUnresolvedVariable
-    topTab.el.$el.style = `--j-offset:${
-      (topActiveTab.value.id - topTab.id) * 78
-    }px`;
+    if (topTab.el)
+      topTab.el.style.cssText = `--j-offset:${
+        (topActiveTab.value.id - topTab.id) * 78
+      }px`;
   }
   for (const tab of tabGroup.value) {
-    tab.el.style = `--j-offset:${(activeTab.value.id - tab.id) * 52}px`;
+    if (tab.el)
+      tab.el.style.cssText = `--j-offset:${
+        (activeTab.value.id - tab.id) * 52
+      }px`;
   }
   for (const secondTab of secondTabGroup.value) {
-    // noinspection JSUnresolvedVariable
-    secondTab.el.$el.style = `--j-offset:${
-      (secondActiveTab.value.id - secondTab.id) * 52
-    }px`;
+    if (secondTab.el)
+      secondTab.el.style.cssText = `--j-offset:${
+        (secondActiveTab.value.id - secondTab.id) * 52
+      }px`;
   }
 });
 </script>
@@ -363,7 +378,7 @@ onMounted(() => {
           :class="['navBtn', { active: topTab.active }]"
           :ref="
             (el) => {
-              topTab.el = el;
+              topTab.el = el.$el;
             }
           "
           :key="topTab.name"
@@ -417,7 +432,7 @@ onMounted(() => {
           :class="['navBtn', { active: secondTab.active }]"
           :ref="
             (el) => {
-              secondTab.el = el;
+              secondTab.el = el.$el;
             }
           "
           :key="secondTab.name"

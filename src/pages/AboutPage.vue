@@ -1,5 +1,5 @@
 <!--suppress NpmUsedModulesInstalled -->
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useMeta } from 'quasar';
 import FooterView from '../components/FooterView.vue';

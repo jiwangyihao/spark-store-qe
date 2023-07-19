@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useMeta } from 'quasar';
 
 useMeta({
@@ -38,7 +38,7 @@ useMeta({
     <!--suppress JSValidateTypes -->
     <q-scroll-area
       style="width: 100%"
-      :thumb-style="{ 'z-index': 2, 'border-radius': '100px' }"
+      :thumb-style="{ zIndex: '2', borderRadius: '100px' }"
       :visible="false"
     >
       <router-view></router-view>

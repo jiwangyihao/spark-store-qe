@@ -1,11 +1,10 @@
-<script setup>
+<script setup lang="ts">
 //下载地址在/src/router/routes.js中设置
 
-// noinspection NpmUsedModulesInstalled
-import { nextTick, ref } from 'vue';
+import { nextTick, Ref, ref } from 'vue';
 import { useMeta } from 'quasar';
 import FooterView from '../components/FooterView.vue';
-import { api } from 'boot/api';
+import { api, updateItem, updateData } from 'boot/api';
 
 useMeta({
   title: '下载',
@@ -31,10 +30,15 @@ useMeta({
 //控制安装说明（Q&A）弹窗的显示
 const showTips = ref(false);
 
+interface qaMessage {
+  //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
+  question: string[];
+  answer: string[];
+}
+
 //Q&A中的消息内容
-const qaMessages = [
+const qaMessages: qaMessage[] = [
   {
-    //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ['在哪进交流群？'],
     answer: [
       "星火商店交流平台 <a href='https://www.deepinos.org/d/1207/'>点击这里进入</a>",
@@ -44,21 +48,21 @@ const qaMessages = [
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
     question: ['上面这个链接挂了，显示进不去'],
     answer: [
-      "我们还有QQ群作为备份，群号是 872690351 群2 865927727。<a href='https://www.deepinos.org/'>这里还有论坛</a>",
+      "我们还有 QQ 群作为备份，群号是 872690351 群2 865927727。这里还有<a href='https://www.deepinos.org/'>论坛</a>",
     ],
   },
   {
     question: ['我是国产架构，怎么获取应用？'],
     answer: [
-      '目前星火商店支持arm架构的国产芯片，请下载arm64架构的deb包。请注意：支持是实验性的，请积极在星火交流平台，QQ群或论坛向我们反馈！',
-      '目前支持的发行版有 UOS 专业版，Ubuntu 22.04以及有限的支持了银河麒麟V10（仅保证客户端可运行，上架应用未经过测试）',
+      '目前星火商店支持arm架构的国产芯片，请下载 arm64 架构的 deb 包。请注意：支持是实验性的，请积极在星火交流平台，QQ 群或论坛向我们反馈！',
+      '目前支持的发行版有 UOS 专业版，Ubuntu 22.04 以及有限的支持了银河麒麟 V10（仅保证客户端可运行，上架应用未经过测试）',
       '银河麒麟用户请下载依赖包',
     ],
   },
   {
     question: ['安装依赖包出现错误'],
     answer: [
-      'UOS或者deepin不需要安装，请不要安装；Kali Linux/Kdeneon请自行编译安装，暂不支持；依赖包支持的发行版却报无法安装错误：尝试sudo apt update后再运行。如果仍然无法排查出问题，请参考第一条进入交流平台寻求帮助。',
+      'UOS 或者 deepin 不需要安装，请不要安装；Kali Linux/Kdeneon 请自行编译安装，暂不支持；依赖包支持的发行版却报无法安装错误：尝试 sudo apt update 后再运行。如果仍然无法排查出问题，请参考第一条进入交流平台寻求帮助。',
     ],
   },
   {
@@ -68,26 +72,26 @@ const qaMessages = [
     ],
   },
   {
-    question: ['我不是deepin/UOS用户，可以使用星火应用商店吗？'],
+    question: ['我不是 deepin/UOS 用户，可以使用星火应用商店吗？'],
     answer: [
-      '可以。对于Ubunutu 22.04：直接安装；对于Ubuntu 20.04/Debian10/Debian11，先安装依赖包',
-      'Ubuntu 22.04 原版可能会出现SSL错误，暂无解决方案，可尝试其他衍生版本',
+      '可以。对于 Ubuntu 22.04，请直接安装；对于Ubuntu 20.04/Debian 10/Debian 11，先安装依赖包',
+      'Ubuntu 22.04 原版可能会出现 SSL 错误，暂无解决方案，可尝试其他衍生版本',
     ],
   },
   {
-    question: ['我可以用dpkg -i安装吗？'],
+    question: ['我可以用 dpkg -i 安装吗？'],
     answer: [
-      '不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！',
-      'sudo apt install gdebi 来安装gdebi',
-      '不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！',
-      '已经有不下20个人被这个坑了。CSDN害人不浅',
+      '不可以！不可以！不可以！直接调用 dpkg 是不处理依赖的！使用 sudo apt install ./xxxx.deb 来安装，或者直接使用gdebi等图形化的安装器！！！',
+      'sudo apt install gdebi 来安装 gdebi',
+      '不可以！不可以！不可以！直接调用 dpkg 是不处理依赖的！使用 sudo apt install ./xxxx.deb 来安装，或者直接使用gdebi等图形化的安装器！！！',
+      '已经有不下 20 个人被这个坑了。CSDN 害人不浅',
     ],
   },
   {
     question: ['星火商店会影响系统正常更新吗？'],
     answer: [
       '星火商店现已将源与系统分开，不再影响系统更新。相应的，星火商店中的应用也不会随着系统更新。请在右上角的应用更新和安装设置来操作更新',
-      '如果希望在命令行中安装星火源的应用，请使用aptss. aptss类似apt,但是加入了星火源和多线程下载支持',
+      '如果希望在命令行中安装星火源的应用，请使用 aptss。aptss 类似 apt，但是加入了星火源和多线程下载支持',
     ],
   },
   {
@@ -99,7 +103,7 @@ const qaMessages = [
 ];
 
 //获取最新版本
-const latest = ref({
+const latest: Ref<updateItem> = ref({
   version: '',
   time: '',
   details: [],
@@ -109,25 +113,28 @@ api.getLatest().then((res) => {
 });
 
 //时间线中的更新日志
-const updateHistory = ref([]);
+const updateHistory: Ref<updateItem[]> = ref([]);
 
+//是否禁用滚动加载
 const disableLoad = ref(false);
 
+//获取滚动加载元素
 const historyView = ref();
 
 nextTick(() => {
+  //主动触发第一次加载
   historyView.value.trigger();
 });
 
-const loadHistory = (index, done) => {
-  api.getHistory(index).then((res) => {
+const loadHistory = (index: number, done: () => void) => {
+  api.getHistory(index).then((res: updateData) => {
     updateHistory.value = updateHistory.value.concat(res.data);
-    if (res['isEnded']) {
+    if (res.isEnded) {
+      //当加载到最后一页时禁用滚动加载
       disableLoad.value = true;
     }
     done();
   });
-  console.log(index);
 };
 </script>
 

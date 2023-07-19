@@ -1,3 +1,5 @@
+<!--suppress JSUnresolvedReference -->
+<!-- API 相关的为解析错误，暂时忽略，等新后端处理完再做 -->
 <script setup>
 //综合
 import { computed, onMounted, ref, watch } from 'vue';

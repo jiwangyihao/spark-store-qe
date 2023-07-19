@@ -1,15 +1,14 @@
-<!--suppress JSUnresolvedVariable, NpmUsedModulesInstalled, CssInvalidFunction, HtmlUnknownTag -->
-<script setup>
+<script setup lang="ts">
 import Navigation from 'components/NavigateBar.vue';
 
 function min() {
-  electron.min();
+  //electron.min();
 }
 function max() {
-  electron.max();
+  //electron.max();
 }
 function close() {
-  electron.close();
+  //electron.close();
 }
 </script>
 

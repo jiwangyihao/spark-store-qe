@@ -179,3 +179,4 @@ const api = {
 };
 
 export { api };
+export type { updateItem, updateData };
