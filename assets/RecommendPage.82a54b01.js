@@ -1,1 +1,0 @@
-import{_ as a}from"./plugin-vue_export-helper.21dcd24c.js";import{y as o,z as c,H as _,I as t,A as s}from"./index.9b6a48da.js";const d={},n=e=>(_("data-v-a0adc298"),e=e(),t(),e),r={class:"container"},p=n(()=>s("h5",null,"\u65BD\u5DE5ing...",-1)),i=[p];function m(e,l){return o(),c("div",r,i)}var h=a(d,[["render",m],["__scopeId","data-v-a0adc298"]]);export{h as default};
