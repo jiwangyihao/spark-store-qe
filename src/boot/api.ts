@@ -23,6 +23,27 @@ interface updateData {
   data: updateItem[];
 }
 
+interface appListItem {
+  Package: string;
+  Name: string;
+  More: string;
+  Sort: string[];
+  score?: number;
+}
+
+interface appDetail {
+  _id: string;
+  Package: string;
+  Name: string;
+  Version: string;
+  More: string;
+  Sort: string[];
+  Author: string;
+  Tags: string[];
+  Filename: string;
+  [s: string]: string | string[];
+}
+
 const api = {
   axios: axios.create({ baseURL: 'https://store.deepinos.org/api/' }),
   server: axios.create({ baseURL: 'https://server.jwyihao.top' }), //测试后端，搭建在 Railway 上
@@ -122,61 +143,92 @@ const api = {
       throw e;
     }
   },
-  getApplicationList: async function (typeId) {
-    try {
-      const applicationList = await this.storage.get(
-        `applicationList_${typeId}`,
-      );
-      if (applicationList[`applicationList_${typeId}`]) {
-        return applicationList[`applicationList_${typeId}`];
-      }
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-    try {
-      const res = await this.server.post('/application/get_application_list', {
-        size: 10000,
-        type_id: typeId,
-      });
-      await this.storage.set(`applicationList_${typeId}`, {
-        value: res.data.data.data,
-        ttl: 10 * 60 * 1000, //保留10分钟
-      });
-      return res.data.data.data;
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  },
-  getApplicationDetail: async function (appId) {
-    try {
-      const applicationDetail = await this.storage.get(
-        `applicationDetail_${appId}`,
-      );
-      if (applicationDetail[`applicationDetail_${appId}`]) {
-        return applicationDetail[`applicationDetail_${appId}`];
-      }
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-    try {
-      const res = await this.axios.post('/application/get_application_detail', {
-        application_id: appId,
-      });
-      await this.storage.set(`applicationDetail_${appId}`, {
-        value: res.data.data,
-        ttl: 10 * 60 * 1000, //保留10分钟
-      });
-      return res.data.data;
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  },
    */
+  getApplicationList: async function (sort: string) {
+    try {
+      const isAppList = (
+        item:
+          | {
+              [x: string]: appListItem[];
+            }
+          | object,
+      ): item is {
+        [x: string]: appListItem[];
+      } => {
+        return (
+          (
+            item as {
+              [x: string]: appListItem[];
+            }
+          )[`applicationList_${sort}`] !== undefined
+        );
+      };
+      const appList = await this.storage.get(`applicationList_${sort}`);
+      if (isAppList(appList)) {
+        return appList[`applicationList_${sort}`];
+      }
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+    try {
+      const res: appListItem[] = (
+        await this.server.get(`/getAppList?sort=${sort}`)
+      ).data;
+      await this.storage.set(`applicationList_${sort}`, {
+        value: res,
+        ttl: 24 * 60 * 60 * 1000, //保留一天
+      });
+      return res;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
+  getApplicationDetail: async function (packageName: string) {
+    try {
+      const isAppDetail = (
+        item:
+          | {
+              [x: string]: appDetail;
+            }
+          | object,
+      ): item is {
+        [x: string]: appDetail;
+      } => {
+        return (
+          (
+            item as {
+              [x: string]: appDetail;
+            }
+          )[`applicationDetail_${packageName}`] !== undefined
+        );
+      };
+      const appDetail = await this.storage.get(
+        `applicationDetail_${packageName}`,
+      );
+      if (isAppDetail(appDetail)) {
+        return appDetail[`applicationDetail_${packageName}`];
+      }
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+    try {
+      const res: appDetail = (
+        await this.server.get(`/getAppDetail?package=${packageName}`)
+      ).data;
+      await this.storage.set(`applicationDetail_${packageName}`, {
+        value: res,
+        ttl: 24 * 60 * 60 * 1000, //保留一天
+      });
+      return res;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
 };
 
 export { api };
-export type { updateItem, updateData };
+export type { updateItem, updateData, appListItem, appDetail };

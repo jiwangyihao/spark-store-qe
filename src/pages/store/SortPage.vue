@@ -1,20 +1,19 @@
-<!--suppress JSUnresolvedReference -->
-<!-- API 相关的为解析错误，暂时忽略，等新后端处理完再做 -->
-<script setup>
+<script setup lang="ts">
 //综合
-import { computed, onMounted, ref, watch } from 'vue';
+import { ComputedRef, Ref, computed, onMounted, ref, watch } from 'vue';
 import defaultIcon from '../../assets/img/store/application.svg';
 import { debounce, useQuasar } from 'quasar';
 
 // noinspection JSUnusedGlobalSymbols
 const $q = useQuasar();
 
-const container = ref(null);
-const cover = ref({});
+const container = ref();
+const cover: Ref<{ style?: ComputedRef<string> }> = ref({});
 
 const containerState = ref({
   active: false,
   animation: false,
+  cover: false,
 });
 const coverState = ref({
   active: false,
@@ -23,16 +22,10 @@ const coverState = ref({
   open: false,
 });
 
-const activeCard = ref({
-  position: {
-    left: 0,
-    top: 0,
-  },
-  class: {},
-});
+const activeCard: Ref<appListLayoutItem | undefined> = ref();
 
 //数据请求
-import { api } from 'boot/api';
+import { api, appListItem, appDetail } from 'boot/api';
 
 import { useRoute, useRouter } from 'vue-router';
 
@@ -43,7 +36,7 @@ import { useStore } from 'stores/store';
 
 const store = useStore();
 
-const appList = ref([]);
+const appList: Ref<appListLayoutItem[]> = ref([]);
 const source = ref(store['source']);
 const debSource = ref(store['debSource']);
 const sort = ref(route.params.sort.toString());
@@ -56,22 +49,22 @@ onMounted(() => {
       if (route.params.sort) {
         //单独定义 async 的原因：下面要调用两次以及 await 很好用
         async function fetchData() {
-          const typeList = await api.getTypeList();
-          let typeId;
-          typeList.forEach((e) => {
-            typeId =
-              e['orig_name'] === route.params.sort ? e['type_id'] : typeId;
-          });
-          if (typeId) {
-            appList.value = layoutAppCard(await api.getApplicationList(typeId)); //通知卡片排布
+          const res = await api.getApplicationList(
+            route.params.sort.toString(),
+          );
+          if (res.length > 0) {
+            appList.value = layoutAppCard(res); //通知卡片排布
             sort.value = route.params.sort.toString(); //单独赋值是为了确保类别与卡片信息同时更新
-
             //重置滚动高度
             cancelAnimationFrame(scroll.value.animationId);
-            scrollAnimation(
-              container.value.parentElement.parentElement.scrollTop,
-              0,
-            );
+            container.value.parentElement.parentElement.scrollTo({
+              top: container.value.parentElement.parentElement.scrollTop,
+              behavior: 'smooth',
+            });
+            //scrollAnimation(
+            //  container.value.parentElement.parentElement.scrollTop,
+            //  0,
+            //);
           } else {
             await router.push('/Error404');
           }
@@ -138,7 +131,23 @@ const horizonGap = computed(
     (column.value + 1),
 );
 
-function layoutAppCard(appList) {
+interface appListLayoutItem extends appListItem {
+  position?: {
+    left: ComputedRef<number>;
+    top: ComputedRef<number>;
+  };
+  style?: ComputedRef<string>;
+  class?: {
+    active: boolean;
+    animation: boolean;
+    appCard: boolean;
+    cover: boolean;
+  };
+  imgError?: Ref<boolean>;
+  imgSrc?: ComputedRef<string>;
+}
+
+function layoutAppCard(appList: appListLayoutItem[]) {
   appList.forEach((item, index) => {
     item.position = {
       left: computed(() => {
@@ -157,7 +166,7 @@ function layoutAppCard(appList) {
     };
     item.style = computed(
       () =>
-        `transform:translate(${item.position.left.value}px,${item.position.top.value}px)`,
+        `transform:translate(${item.position?.left.value}px,${item.position?.top.value}px)`,
     );
     if (!item.hasOwnProperty('class')) {
       item.class = {
@@ -169,22 +178,22 @@ function layoutAppCard(appList) {
     }
     item.imgError = ref(false);
     item.imgSrc = computed(() =>
-      item.imgError.value
+      item.imgError?.value
         ? defaultIcon
-        : `${source.value}/store/${sort.value}/${item['package'].replace(
+        : `${source.value}/store/${sort.value}/${item.Package.replaceAll(
             '+',
             '%2B',
           )}/icon.png`,
     );
   });
 
-  const scrollTop = ref(container.value.parentElement.parentElement.scrollTop);
+  const scrollTop = ref(container.value?.parentElement.parentElement.scrollTop);
 
   cover.value.style = computed(() => {
     return `--j-left:${
-      activeCard.value.position.left - clientWidth.value / 2
+      <number>activeCard.value?.position?.left - clientWidth.value / 2
     }px;--j-top:${
-      activeCard.value.position.top -
+      <number>activeCard.value?.position?.top -
       container.value.parentElement.parentElement.clientHeight / 2 -
       scrollTop.value
     }px;`;
@@ -194,7 +203,8 @@ function layoutAppCard(appList) {
     'scroll',
     debounce(() => {
       if (!scroll.value.animationId)
-        scrollTop.value = container.value.parentElement.parentElement.scrollTop;
+        scrollTop.value =
+          container.value?.parentElement.parentElement.scrollTop;
     }, 250),
   );
   return appList;
@@ -202,19 +212,19 @@ function layoutAppCard(appList) {
 
 onMounted(() => {
   //初始化 clientWidth 的值
-  clientWidth.value = container.value.clientWidth;
+  clientWidth.value = container.value?.clientWidth;
 
   //在窗口尺寸变化时自动调整 clientWidth
   window.addEventListener(
     'resize',
     debounce(() => {
-      clientWidth.value = container.value.clientWidth;
+      clientWidth.value = container.value?.clientWidth;
     }, 250),
   );
 });
 
 //滚动动画
-import BezierEasing from 'bezier-easing'; //贝塞尔曲线
+//import BezierEasing from 'bezier-easing'; //贝塞尔曲线
 
 const scroll = ref({
   //滚动状态
@@ -223,13 +233,14 @@ const scroll = ref({
   animationId: 0, //动画ID
 });
 
-function scrollAnimation(scrollStart, scrollEnd) {
+/*
+function scrollAnimation(scrollStart: number, scrollEnd: number) {
   //动画函数，实话实说是 MDN 示例改的
-  let start;
+  let start: number | undefined;
   const scrollDistance = scrollEnd - scrollStart;
   const easing = BezierEasing(0.25, 0.1, 0.25, 1.0);
 
-  function scrollStep(timestamp) {
+  function scrollStep(timestamp: number) {
     if (start === undefined) {
       start = timestamp;
     }
@@ -238,10 +249,12 @@ function scrollAnimation(scrollStart, scrollEnd) {
     const process = elapsed / 600;
 
     //这里使用`Math.min()`确保元素刚好停在目标位置。
-    container.value.parentElement.parentElement.scrollTo(
-      0,
-      scrollStart + scrollDistance * easing(Math.min(process, 1)),
-    );
+    container.value.parentElement.parentElement.scrollTo({
+      top: scrollStart + scrollDistance * easing(Math.min(process, 1)),
+      behavior: 'instant',
+    });
+
+    console.log(scrollStart + scrollDistance * easing(Math.min(process, 1)));
 
     if (process < 1) {
       // 完成后停止动画
@@ -253,6 +266,7 @@ function scrollAnimation(scrollStart, scrollEnd) {
   }
   scroll.value.animationId = requestAnimationFrame(scrollStep);
 }
+*/
 
 onMounted(() => {
   watch(column, (newColumn, oldColumn) => {
@@ -272,63 +286,75 @@ onMounted(() => {
       container.value.parentElement.parentElement.clientHeight / 2 +
       config.verticalPadding;
     //调用动画函数
-    scrollAnimation(
-      container.value.parentElement.parentElement.scrollTop, //动画的实际起点为实际滚动高度
-      scroll.value.targetTop,
-    );
+    container.value.parentElement.parentElement.scrollTo({
+      top: scroll.value.targetTop,
+      behavior: 'smooth',
+    });
+    //scrollAnimation(
+    //  container.value.parentElement.parentElement.scrollTop, //动画的实际起点为实际滚动高度
+    //  scroll.value.targetTop,
+    //);
   });
 });
 
 //卡片事件处理
-function appCardDown(app) {
+function appCardDown(app: appListLayoutItem) {
   containerState.value.active = true;
   containerState.value.animation = true;
-  activeCard.value.class.cover = false;
-  app.class.active = true;
-  app.class.animation = true;
+  if (activeCard.value?.class) {
+    activeCard.value.class.cover = false;
+  }
+  if (app.class) {
+    app.class.active = true;
+    app.class.animation = true;
+  }
   activeCard.value = app;
-  fetchAppInfo(app.application_id); //通知请求应用详情
+  fetchAppInfo(app.Package); //通知请求应用详情
 }
 
-function appCardUp(app) {
+function appCardUp(app: appListLayoutItem) {
   containerState.value.active = false;
-  app.class.active = false;
-  app.class.cover = true;
+  if (app.class) {
+    app.class.active = false;
+    app.class.cover = true;
+  }
   coverState.value.active = true;
   containerState.value.cover = true;
 }
 
-function appCardAnimated(app, event) {
+function appCardAnimated(app: appListLayoutItem, event: TransitionEvent) {
   if (event.propertyName === 'transform') {
     containerState.value.animation = false;
-    app.class.animation = false;
+    if (app.class) {
+      app.class.animation = false;
+    }
   }
 }
 
-function coverAnimationEnd(e) {
+function coverAnimationEnd(e: TransitionEvent) {
   if (e.propertyName === 'transform') {
     coverState.value.animation = false;
-    activeCard.value.class.cover = coverState.value.active;
+    if (activeCard.value?.class) {
+      activeCard.value.class.cover = coverState.value.active;
+    }
     coverState.value.open = coverState.value.active;
   }
 }
 
 //应用详情
-const appDetail = ref({});
+const appDetail: Ref<appDetail | undefined> = ref();
 
 const appDebHref = computed(
-  () =>
-    `${debSource.value}/store/${appDetail.value['orig_name']}/${appDetail.value['package']}/${appDetail.value['package']}_${appDetail.value['version']}_${appDetail.value['arch']}.deb`,
+  () => `${debSource.value}/${appDetail.value?.Filename}`,
 );
 
 const appTorrentHref = computed(
-  () =>
-    `${source.value}/store/${appDetail.value['orig_name']}/${appDetail.value['package']}/${appDetail.value['package']}_${appDetail.value['version']}_${appDetail.value['arch']}.deb.torrent`,
+  () => `${source.value}/${appDetail.value?.Filename}.torrent`,
 );
 
-function fetchAppInfo(appId) {
+function fetchAppInfo(packageName: string) {
   api
-    .getApplicationDetail(appId)
+    .getApplicationDetail(packageName)
     .then((detail) => {
       appDetail.value = detail;
       coverState.value.loaded = true;
@@ -364,21 +390,21 @@ function fetchAppInfo(appId) {
       <div class="card" @transitionend="coverAnimationEnd" @click.stop>
         <div class="cardView" @transitionend.stop>
           <img
-            :src="activeCard['imgSrc']"
+            :src="activeCard?.imgSrc"
             alt=""
             @error="activeCard.imgError = true"
           />
           <div class="description">
-            <h6>{{ activeCard['application_name_zh'] }}</h6>
-            <p>{{ activeCard['more'] }}</p>
+            <h6>{{ activeCard?.Name }}</h6>
+            <p>{{ activeCard?.More }}</p>
           </div>
           <div class="detail">
-            <h1 class="name">{{ appDetail['application_name_zh'] }}</h1>
-            <span class="version">{{ appDetail['version'] }}</span>
+            <h1 class="name">{{ appDetail?.Name }}</h1>
+            <span class="version">{{ appDetail?.Version }}</span>
             <div class="tags">
-              <span v-for="tag in appDetail['tags']" :key="tag">{{ tag }}</span>
+              <span v-for="tag in appDetail?.Tags" :key="tag">{{ tag }}</span>
             </div>
-            <p class="description">{{ appDetail['more'] }}</p>
+            <p class="description">{{ appDetail?.More }}</p>
             <q-btn-dropdown
               split
               :ripple="false"
@@ -409,14 +435,14 @@ function fetchAppInfo(appId) {
       class="card"
       :class="app.class"
       :key="index"
-      @mousedown="(e) => appCardDown(app, e)"
-      @mouseup="(e) => appCardUp(app, e)"
+      @mousedown="() => appCardDown(app)"
+      @mouseup="() => appCardUp(app)"
     >
       <div class="cardView" @transitionend="(e) => appCardAnimated(app, e)">
-        <img :src="app['imgSrc']" alt="" @error="app.imgError = true" />
+        <img :src="app.imgSrc" alt="" @error="app.imgError = true" />
         <div class="description">
-          <h6>{{ app['application_name_zh'] }}</h6>
-          <p>{{ app['more'] }}</p>
+          <h6>{{ app.Name }}</h6>
+          <p>{{ app.More }}</p>
         </div>
       </div>
     </div>
