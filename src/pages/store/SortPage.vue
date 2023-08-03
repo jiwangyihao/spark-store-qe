@@ -191,9 +191,10 @@ function layoutAppCard(appList: appListLayoutItem[]) {
 
   cover.value.style = computed(() => {
     return `--j-left:${
-      <number>activeCard.value?.position?.left - clientWidth.value / 2
+      <number>(<unknown>activeCard.value?.position?.left) -
+      clientWidth.value / 2
     }px;--j-top:${
-      <number>activeCard.value?.position?.top -
+      <number>(<unknown>activeCard.value?.position?.top) -
       container.value.parentElement.parentElement.clientHeight / 2 -
       scrollTop.value
     }px;`;
@@ -385,14 +386,18 @@ function fetchAppInfo(packageName: string) {
         containerState.cover = false;
         coverState.animation = true;
       "
-      :style="cover.style"
+      :style="<string>(<unknown>cover.style)"
     >
       <div class="card" @transitionend="coverAnimationEnd" @click.stop>
         <div class="cardView" @transitionend.stop>
           <img
-            :src="activeCard?.imgSrc"
+            :src="<string>(<unknown>activeCard?.imgSrc)"
             alt=""
-            @error="activeCard.imgError = true"
+            @error="
+              if (activeCard?.imgError) {
+                (<boolean>(<unknown>activeCard.imgError)) = true;
+              }
+            "
           />
           <div class="description">
             <h6>{{ activeCard?.Name }}</h6>
@@ -431,7 +436,7 @@ function fetchAppInfo(packageName: string) {
     </div>
     <div
       v-for="(app, index) in appList"
-      :style="app.style"
+      :style="<string>(<unknown>app.style)"
       class="card"
       :class="app.class"
       :key="index"
@@ -439,7 +444,11 @@ function fetchAppInfo(packageName: string) {
       @mouseup="() => appCardUp(app)"
     >
       <div class="cardView" @transitionend="(e) => appCardAnimated(app, e)">
-        <img :src="app.imgSrc" alt="" @error="app.imgError = true" />
+        <img
+          :src="<string>(<unknown>app.imgSrc)"
+          alt=""
+          @error="(<boolean>(<unknown>app.imgError)) = true"
+        />
         <div class="description">
           <h6>{{ app.Name }}</h6>
           <p>{{ app.More }}</p>
@@ -641,7 +650,7 @@ function fetchAppInfo(packageName: string) {
     }
 
     .toolBox {
-      width: 300px;
+      width: 360px;
       height: 60px;
       line-height: 60px;
       text-align: center;
@@ -703,7 +712,7 @@ function fetchAppInfo(packageName: string) {
       pointer-events: unset;
 
       .card {
-        width: 300px;
+        width: 360px;
         height: calc(100% - 72px - 80px);
         transform: translate(-50%, calc(-50% - 40px - 12px));
 

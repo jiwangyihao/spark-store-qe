@@ -201,14 +201,17 @@ const api = {
             item as {
               [x: string]: appDetail;
             }
-          )[`applicationDetail_${packageName}`] !== undefined
+          )[`applicationDetail_${encodeURIComponent(packageName)}`] !==
+          undefined
         );
       };
       const appDetail = await this.storage.get(
-        `applicationDetail_${packageName}`,
+        `applicationDetail_${encodeURIComponent(packageName)}`,
       );
       if (isAppDetail(appDetail)) {
-        return appDetail[`applicationDetail_${packageName}`];
+        return appDetail[
+          `applicationDetail_${encodeURIComponent(packageName)}`
+        ];
       }
     } catch (e) {
       console.error(e);
@@ -216,12 +219,17 @@ const api = {
     }
     try {
       const res: appDetail = (
-        await this.server.get(`/getAppDetail?package=${packageName}`)
+        await this.server.get(
+          `/getAppDetail?package=${encodeURIComponent(packageName)}`,
+        )
       ).data;
-      await this.storage.set(`applicationDetail_${packageName}`, {
-        value: res,
-        ttl: 24 * 60 * 60 * 1000, //保留一天
-      });
+      await this.storage.set(
+        `applicationDetail_${encodeURIComponent(packageName)}`,
+        {
+          value: res,
+          ttl: 24 * 60 * 60 * 1000, //保留一天
+        },
+      );
       return res;
     } catch (e) {
       console.error(e);
