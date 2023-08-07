@@ -1,31 +1,30 @@
 <script setup lang="ts">
 //综合
-import { ComputedRef, Ref, computed, onMounted, ref, watch } from 'vue';
+import { ComputedRef, Ref, computed, inject, onMounted, ref, watch } from 'vue';
 import defaultIcon from '../../assets/img/store/application.svg';
 import { debounce, useQuasar } from 'quasar';
+import {
+  CoverState,
+  AppListLayoutItem,
+  ContainerState,
+} from '../StorePage.vue';
 
 // noinspection JSUnusedGlobalSymbols
 const $q = useQuasar();
 
 const container = ref();
-const cover: Ref<{ style?: ComputedRef<string> }> = ref({});
+const cover: Ref<{ style?: ComputedRef<string> }> | undefined = inject('cover');
 
-const containerState = ref({
-  active: false,
-  animation: false,
-  cover: false,
-});
-const coverState = ref({
-  active: false,
-  animation: false,
-  loaded: false,
-  open: false,
-});
+const containerState: Ref<ContainerState> | undefined =
+  inject('containerState');
 
-const activeCard: Ref<appListLayoutItem | undefined> = ref();
+const coverState: Ref<CoverState> | undefined = inject('coverState');
+
+const activeCard: Ref<AppListLayoutItem | undefined> | undefined =
+  inject('activeCard');
 
 //数据请求
-import { api, appListItem, appDetail } from 'boot/api';
+import { api, AppDetail } from 'boot/api';
 
 import { useRoute, useRouter } from 'vue-router';
 
@@ -36,9 +35,8 @@ import { useStore } from 'stores/store';
 
 const store = useStore();
 
-const appList: Ref<appListLayoutItem[]> = ref([]);
+const appList: Ref<AppListLayoutItem[]> = ref([]);
 const source = ref(store['source']);
-const debSource = ref(store['debSource']);
 const sort = ref(route.params.sort.toString());
 
 onMounted(() => {
@@ -70,12 +68,12 @@ onMounted(() => {
           }
         }
 
-        if (coverState.value.active) {
+        if (coverState?.value.active) {
           //关闭已经打开的卡片
           coverState.value.active = false;
           coverState.value.open = false;
           coverState.value.loaded = false;
-          containerState.value.cover = false;
+          if (containerState?.value) containerState.value.cover = false;
           coverState.value.animation = true;
           setTimeout(fetchData, 2000); //为卡片关闭动画留出时间
         } else {
@@ -131,23 +129,7 @@ const horizonGap = computed(
     (column.value + 1),
 );
 
-interface appListLayoutItem extends appListItem {
-  position?: {
-    left: ComputedRef<number>;
-    top: ComputedRef<number>;
-  };
-  style?: ComputedRef<string>;
-  class?: {
-    active: boolean;
-    animation: boolean;
-    appCard: boolean;
-    cover: boolean;
-  };
-  imgError?: Ref<boolean>;
-  imgSrc?: ComputedRef<string>;
-}
-
-function layoutAppCard(appList: appListLayoutItem[]) {
+function layoutAppCard(appList: AppListLayoutItem[]) {
   appList.forEach((item, index) => {
     item.position = {
       left: computed(() => {
@@ -189,16 +171,20 @@ function layoutAppCard(appList: appListLayoutItem[]) {
 
   const scrollTop = ref(container.value?.parentElement.parentElement.scrollTop);
 
-  cover.value.style = computed(() => {
-    return `--j-left:${
-      <number>(<unknown>activeCard.value?.position?.left) -
-      clientWidth.value / 2
-    }px;--j-top:${
-      <number>(<unknown>activeCard.value?.position?.top) -
-      container.value.parentElement.parentElement.clientHeight / 2 -
-      scrollTop.value
-    }px;`;
-  });
+  if (cover?.value) {
+    cover.value.style = computed(() => {
+      return `--j-left:${
+        <number>(<unknown>activeCard?.value?.position?.left) -
+        clientWidth.value / 2 -
+        30
+      }px;--j-top:${
+        <number>(<unknown>activeCard?.value?.position?.top) -
+        container.value.parentElement.parentElement.clientHeight / 2 -
+        scrollTop.value -
+        15
+      }px;`;
+    });
+  }
 
   container.value.parentElement.parentElement.addEventListener(
     'scroll',
@@ -299,66 +285,60 @@ onMounted(() => {
 });
 
 //卡片事件处理
-function appCardDown(app: appListLayoutItem) {
-  containerState.value.active = true;
-  containerState.value.animation = true;
-  if (activeCard.value?.class) {
+function appCardDown(app: AppListLayoutItem) {
+  if (containerState) {
+    containerState.value.active = true;
+    containerState.value.animation = true;
+  }
+  if (activeCard?.value?.class) {
     activeCard.value.class.cover = false;
   }
   if (app.class) {
     app.class.active = true;
     app.class.animation = true;
   }
-  activeCard.value = app;
+  if (activeCard) {
+    activeCard.value = app;
+  }
   fetchAppInfo(app.Package); //通知请求应用详情
 }
 
-function appCardUp(app: appListLayoutItem) {
-  containerState.value.active = false;
+function appCardUp(app: AppListLayoutItem) {
+  if (containerState) {
+    containerState.value.active = false;
+    containerState.value.cover = true;
+  }
   if (app.class) {
     app.class.active = false;
     app.class.cover = true;
   }
-  coverState.value.active = true;
-  containerState.value.cover = true;
+  if (coverState?.value) {
+    coverState.value.active = true;
+  }
 }
 
-function appCardAnimated(app: appListLayoutItem, event: TransitionEvent) {
+function appCardAnimated(app: AppListLayoutItem, event: TransitionEvent) {
   if (event.propertyName === 'transform') {
-    containerState.value.animation = false;
+    if (containerState) containerState.value.animation = false;
     if (app.class) {
       app.class.animation = false;
     }
   }
 }
 
-function coverAnimationEnd(e: TransitionEvent) {
-  if (e.propertyName === 'transform') {
-    coverState.value.animation = false;
-    if (activeCard.value?.class) {
-      activeCard.value.class.cover = coverState.value.active;
-    }
-    coverState.value.open = coverState.value.active;
-  }
-}
-
 //应用详情
-const appDetail: Ref<appDetail | undefined> = ref();
-
-const appDebHref = computed(
-  () => `${debSource.value}/${appDetail.value?.Filename}`,
-);
-
-const appTorrentHref = computed(
-  () => `${source.value}/${appDetail.value?.Filename}.torrent`,
-);
+const appDetail: Ref<AppDetail | undefined> | undefined = inject('appDetail');
 
 function fetchAppInfo(packageName: string) {
   api
     .getApplicationDetail(packageName)
     .then((detail) => {
-      appDetail.value = detail;
-      coverState.value.loaded = true;
+      if (appDetail) {
+        appDetail.value = detail;
+      }
+      if (coverState?.value) {
+        coverState.value.loaded = true;
+      }
     })
     .catch((reason) => {
       $q.notify({
@@ -376,64 +356,6 @@ function fetchAppInfo(packageName: string) {
     :style="{ height: containerHeight }"
     ref="container"
   >
-    <div
-      class="coverView"
-      :class="coverState"
-      @click="
-        coverState.active = false;
-        coverState.open = false;
-        coverState.loaded = false;
-        containerState.cover = false;
-        coverState.animation = true;
-      "
-      :style="<string>(<unknown>cover.style)"
-    >
-      <div class="card" @transitionend="coverAnimationEnd" @click.stop>
-        <div class="cardView" @transitionend.stop>
-          <img
-            :src="<string>(<unknown>activeCard?.imgSrc)"
-            alt=""
-            @error="
-              if (activeCard?.imgError) {
-                (<boolean>(<unknown>activeCard.imgError)) = true;
-              }
-            "
-          />
-          <div class="description">
-            <h6>{{ activeCard?.Name }}</h6>
-            <p>{{ activeCard?.More }}</p>
-          </div>
-          <div class="detail">
-            <h1 class="name">{{ appDetail?.Name }}</h1>
-            <span class="version">{{ appDetail?.Version }}</span>
-            <div class="tags">
-              <span v-for="tag in appDetail?.Tags" :key="tag">{{ tag }}</span>
-            </div>
-            <p class="description">{{ appDetail?.More }}</p>
-            <q-btn-dropdown
-              split
-              :ripple="false"
-              :href="appDebHref"
-              color="primary"
-              label="下载（DEB）"
-              menu-anchor="bottom middle"
-              menu-self="top middle"
-              padding="sm xl"
-              @click.stop
-            >
-              <q-list>
-                <q-item clickable v-close-popup :href="appTorrentHref">
-                  <q-item-section>
-                    <q-item-label>BT（多源下载更快）</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
-          </div>
-        </div>
-        <div class="toolBox" @transitionend.stop>查看详情</div>
-      </div>
-    </div>
     <div
       v-for="(app, index) in appList"
       :style="<string>(<unknown>app.style)"
@@ -479,192 +401,6 @@ function fetchAppInfo(packageName: string) {
     will-change: opacity;
   }
 
-  //卡片样式
-  .card {
-    width: 264px;
-    height: 92px;
-    position: absolute;
-    will-change: transform;
-
-    .cardView {
-      background-color: white;
-      border-radius: 2vmin;
-
-      img {
-        width: 64px;
-        height: 64px;
-        object-fit: contain;
-        padding: 2px;
-        border-radius: 2vmin;
-      }
-
-      .description {
-        width: 170px;
-        height: 68px;
-        padding-left: 10px;
-
-        h6 {
-          font-size: 14px;
-          font-weight: 700;
-          line-height: 20px;
-          margin: 0;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          overflow: hidden;
-        }
-
-        p {
-          color: gray;
-          font-size: 13px;
-          line-height: 16px;
-          margin: 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-        }
-      }
-    }
-  }
-
-  .coverView {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    z-index: 1;
-    pointer-events: none;
-    visibility: hidden;
-    cursor: default;
-    user-select: none;
-
-    &::before {
-      content: '';
-      width: 100%;
-      height: 100%;
-      background-color: rgba(255, 255, 255, 0.2);
-      position: absolute;
-      top: 0;
-      left: 0;
-      backdrop-filter: blur(2px);
-      opacity: 0;
-      transition: {
-        property: opacity;
-        duration: 1s;
-      }
-      will-change: opacity;
-    }
-
-    .card {
-      top: 50%;
-      left: 50%;
-      z-index: 1;
-      transform: translate(var(--j-left), var(--j-top));
-
-      .cardView {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-
-        img {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-118px, -32px);
-          z-index: 1;
-          transition: {
-            property: transform, filter;
-            duration: 1s;
-          }
-          will-change: transform, filter;
-        }
-
-        > .description {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-52px, -34px);
-          opacity: 1;
-          transition: {
-            property: transform, opacity;
-            duration: 1s;
-          }
-          will-change: transform, opacity;
-        }
-
-        .detail {
-          display: flex;
-          height: calc(100% - 64px - 60px * 1.8);
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: center;
-          transform: translateY(calc(64px + 48px * 1.8));
-
-          > * {
-            opacity: 0;
-            transform: translateY(60px) scale(0.9);
-            transition: {
-              property: transform, opacity;
-              duration: 0.5s;
-            }
-            will-change: transform, opacity;
-          }
-
-          h1 {
-            margin: 0;
-            font-size: 1.2rem;
-            line-height: 2rem;
-            font-weight: bold;
-          }
-
-          .tags {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-
-            span {
-              display: inline-block;
-              padding: 2px 0.5em;
-              margin: 2px;
-              background-color: #ddd;
-              border-radius: 0.3em;
-            }
-          }
-
-          .description {
-            width: 80%;
-            height: auto;
-            min-height: 84px;
-            max-height: 105px;
-            margin: 0;
-            padding: 0;
-            overflow-y: auto;
-            overflow-x: hidden;
-          }
-
-          .description::-webkit-scrollbar {
-            width: 0;
-          }
-        }
-      }
-    }
-
-    .toolBox {
-      width: 360px;
-      height: 60px;
-      line-height: 60px;
-      text-align: center;
-      background-color: white;
-      border-radius: 2vmin;
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      z-index: 1;
-      transform: translate(-50%, -50%) scale(0.1);
-      opacity: 0;
-    }
-  }
-
   .appCard {
     cursor: pointer;
     top: 0;
@@ -697,126 +433,6 @@ function fetchAppInfo(packageName: string) {
     opacity: 1;
     transition-timing-function: cubic-bezier(0, 0, 0.14, 0.86);
   }
-
-  .coverView {
-    &.active,
-    &.animation {
-      visibility: visible;
-    }
-
-    &.active::before {
-      opacity: 1;
-    }
-
-    &.active {
-      pointer-events: unset;
-
-      .card {
-        width: 360px;
-        height: calc(100% - 72px - 80px);
-        transform: translate(-50%, calc(-50% - 40px - 12px));
-
-        .cardView {
-          img {
-            transform: translate(-50%, -50%) scale(1.8);
-            filter: drop-shadow(0 1px 5px #0004);
-          }
-
-          > .description {
-            transform: translate(-50%, -50%) scale(0.1);
-            opacity: 0;
-
-            h6 {
-              font-size: 14px;
-              font-weight: 700;
-              line-height: 20px;
-              margin: 0;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-              overflow: hidden;
-            }
-
-            p {
-              color: gray;
-              font-size: 13px;
-              line-height: 16px;
-              margin: 0;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              display: -webkit-box;
-              -webkit-line-clamp: 3;
-              -webkit-box-orient: vertical;
-            }
-          }
-        }
-      }
-      .toolBox {
-        transform: translate(-50%, calc(100% + 24px));
-        opacity: 1;
-        transition-delay: 0.4s, 0.4s, 0s;
-      }
-    }
-
-    &.animation .card,
-    &.active .card {
-      transition: {
-        property: transform, width, height;
-        duration: 1s;
-      }
-      will-change: transform, width, height;
-    }
-
-    &.open.loaded {
-      .card {
-        .cardView {
-          img {
-            transform: translate(
-                -50%,
-                calc(30px * 1.8 - 50vh + 15px + 36px + 40px)
-              )
-              scale(1.8);
-          }
-
-          .detail {
-            > * {
-              opacity: 1;
-              transform: unset;
-            }
-
-            & > *:nth-child(1) {
-              transition-delay: 0.5s;
-            }
-
-            & > *:nth-child(2) {
-              transition-delay: 0.6s;
-            }
-
-            & > *:nth-child(3) {
-              transition-delay: 0.7s;
-            }
-
-            & > *:nth-child(4) {
-              transition-delay: 0.8s;
-            }
-
-            & > *:nth-child(5) {
-              transition-delay: 0.9s;
-            }
-          }
-        }
-      }
-    }
-
-    &.animation {
-      .card {
-        .detail {
-          > * {
-            transform: translateY(-60px) scale(0.9);
-          }
-        }
-      }
-    }
-  }
   .appCard {
     &.cover {
       visibility: hidden;
@@ -831,76 +447,6 @@ function fetchAppInfo(packageName: string) {
       .cardView {
         transform: scale(0.96);
       }
-    }
-  }
-}
-
-//MD2 样式
-.md2 {
-  .cardView {
-    box-shadow:
-      0 1px 10px #0000004d,
-      0 2px 4px #00000036,
-      0 3px 1px -4px #0000002e;
-    transition: {
-      property: box-shadow, transform;
-      duration: 0.5s, 0.25s;
-    }
-
-    &:hover {
-      box-shadow:
-        0 1px 5px #0003,
-        0 2px 2px #00000024,
-        0 3px 1px -2px #0000001f;
-    }
-  }
-
-  .toolBox {
-    box-shadow:
-      0 1px 10px #0000004d,
-      0 2px 4px #00000036,
-      0 3px 1px -4px #0000002e;
-    transition: {
-      property: transform, opacity, box-shadow;
-      duration: 0.6s, 0.6s, 0.5s;
-      delay: 0s;
-    }
-
-    &:hover {
-      box-shadow:
-        0 1px 5px #0003,
-        0 2px 2px #00000024,
-        0 3px 1px -2px #0000001f;
-    }
-  }
-}
-
-//MD3 样式
-.md3 {
-  .cardView {
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    transition: {
-      property: border, transform;
-      duration: 0.5s, 0.25s;
-    }
-
-    //noinspection SassScssResolvedByNameOnly
-    &:hover {
-      border-color: rgba($primary, 0.5);
-    }
-  }
-
-  .toolBox {
-    border: 2px solid rgba(0, 0, 0, 0.2);
-    transition: {
-      property: transform, opacity, border;
-      duration: 0.6s, 0.6s, 0.5s;
-      delay: 0s;
-    }
-
-    //noinspection SassScssResolvedByNameOnly
-    &:hover {
-      border-color: rgba($primary, 0.5);
     }
   }
 }

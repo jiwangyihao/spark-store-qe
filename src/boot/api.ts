@@ -11,19 +11,19 @@ import { getStorage } from '@sifrr/storage';
 // Options with default values
 // noinspection JSCheckFunctionSignatures
 
-interface updateItem {
+interface UpdateItem {
   version: string | undefined;
   time: string | undefined;
   details: string[];
 }
 
-interface updateData {
+interface UpdateData {
   status: number;
   isEnded: boolean;
-  data: updateItem[];
+  data: UpdateItem[];
 }
 
-interface appListItem {
+interface AppListItem {
   Package: string;
   Name: string;
   More: string;
@@ -31,7 +31,7 @@ interface appListItem {
   score?: number;
 }
 
-interface appDetail {
+interface AppDetail {
   _id: string;
   Package: string;
   Name: string;
@@ -57,9 +57,9 @@ const api = {
   getLatest: async function () {
     try {
       const isLatest = (item: {
-        latest?: updateItem;
-      }): item is { latest: updateItem } => {
-        return (item as { latest: updateItem }).latest !== undefined;
+        latest?: UpdateItem;
+      }): item is { latest: UpdateItem } => {
+        return (item as { latest: UpdateItem }).latest !== undefined;
       };
       const latest = await this.storage.get('latest');
       if (isLatest(latest)) {
@@ -86,16 +86,16 @@ const api = {
       const isHistory = (
         item:
           | {
-              [x: string]: updateData;
+              [x: string]: UpdateData;
             }
           | object,
       ): item is {
-        [x: string]: updateData;
+        [x: string]: UpdateData;
       } => {
         return (
           (
             item as {
-              [x: string]: updateData;
+              [x: string]: UpdateData;
             }
           )[`history_${page}`] !== undefined
         );
@@ -149,16 +149,16 @@ const api = {
       const isAppList = (
         item:
           | {
-              [x: string]: appListItem[];
+              [x: string]: AppListItem[];
             }
           | object,
       ): item is {
-        [x: string]: appListItem[];
+        [x: string]: AppListItem[];
       } => {
         return (
           (
             item as {
-              [x: string]: appListItem[];
+              [x: string]: AppListItem[];
             }
           )[`applicationList_${sort}`] !== undefined
         );
@@ -172,7 +172,7 @@ const api = {
       throw e;
     }
     try {
-      const res: appListItem[] = (
+      const res: AppListItem[] = (
         await this.server.get(`/getAppList?sort=${sort}`)
       ).data;
       await this.storage.set(`applicationList_${sort}`, {
@@ -190,16 +190,16 @@ const api = {
       const isAppDetail = (
         item:
           | {
-              [x: string]: appDetail;
+              [x: string]: AppDetail;
             }
           | object,
       ): item is {
-        [x: string]: appDetail;
+        [x: string]: AppDetail;
       } => {
         return (
           (
             item as {
-              [x: string]: appDetail;
+              [x: string]: AppDetail;
             }
           )[`applicationDetail_${encodeURIComponent(packageName)}`] !==
           undefined
@@ -218,7 +218,7 @@ const api = {
       throw e;
     }
     try {
-      const res: appDetail = (
+      const res: AppDetail = (
         await this.server.get(
           `/getAppDetail?package=${encodeURIComponent(packageName)}`,
         )
@@ -239,4 +239,4 @@ const api = {
 };
 
 export { api };
-export type { updateItem, updateData, appListItem, appDetail };
+export type { UpdateItem, UpdateData, AppListItem, AppDetail };
