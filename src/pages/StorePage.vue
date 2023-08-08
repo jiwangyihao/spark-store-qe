@@ -111,6 +111,30 @@ function coverAnimationEnd(e: TransitionEvent) {
     }
   }
 }
+
+const cardState = ref({
+  active: false,
+});
+
+function cardDown() {
+  cardState.value.active = true;
+}
+
+function cardUp() {
+  cardState.value.active = false;
+}
+
+const toolState = ref({
+  active: false,
+});
+
+function toolDown() {
+  toolState.value.active = true;
+}
+
+function toolUp() {
+  toolState.value.active = false;
+}
 </script>
 
 <template>
@@ -141,7 +165,13 @@ function coverAnimationEnd(e: TransitionEvent) {
       :style="<string>(<unknown>cover?.style)"
     >
       <div class="card" @transitionend="coverAnimationEnd" @click.stop>
-        <div class="cardView" @transitionend.stop>
+        <div
+          class="cardView"
+          :class="cardState"
+          @transitionend.stop
+          @mousedown="cardDown"
+          @mouseup="cardUp"
+        >
           <img
             :src="<string>(<unknown>activeCard?.imgSrc)"
             alt=""
@@ -183,7 +213,15 @@ function coverAnimationEnd(e: TransitionEvent) {
             </q-btn-dropdown>
           </div>
         </div>
-        <div class="toolBox" @transitionend.stop>查看详情</div>
+        <div
+          class="toolBox"
+          :class="toolState"
+          @transitionend.stop
+          @mousedown="toolDown"
+          @mouseup="toolUp"
+        >
+          查看详情
+        </div>
       </div>
     </div>
     <q-scroll-area
@@ -390,12 +428,20 @@ function coverAnimationEnd(e: TransitionEvent) {
             -webkit-box-orient: vertical;
           }
         }
+
+        &.active {
+          transform: scale(0.96);
+        }
       }
     }
     .toolBox {
       transform: translate(-50%, calc(100% + 24px));
       opacity: 1;
       transition-delay: 0.4s, 0.4s, 0s;
+
+      &.active {
+        transform: translate(-50%, calc(100% + 24px)) scale(0.96);
+      }
     }
   }
 
@@ -446,6 +492,13 @@ function coverAnimationEnd(e: TransitionEvent) {
           }
         }
       }
+    }
+  }
+
+  &.open {
+    .toolBox {
+      transition-delay: 0s;
+      transition-duration: 0.25s;
     }
   }
 
