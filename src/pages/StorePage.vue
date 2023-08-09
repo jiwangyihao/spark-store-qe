@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { useMeta } from 'quasar';
-import { AppListItem, AppDetail } from 'src/boot/api';
-import { ComputedRef, Ref, computed, provide, ref } from 'vue';
+import { AppDetail } from 'src/boot/api';
+import {
+  computed,
+  ComputedRef,
+  provide,
+  Ref,
+  ref,
+  onMounted,
+  watch,
+} from 'vue';
+import { CoverState, AppListLayoutItem, ContainerState } from './StorePage';
 
 useMeta({
   title: 'WEB商店',
@@ -25,17 +34,14 @@ useMeta({
 });
 
 import { useStore } from 'stores/store';
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
 
 const store = useStore();
 
 const debSource = ref(store['debSource']);
 const source = ref(store['source']);
-
-interface ContainerState {
-  active: boolean;
-  animation: boolean;
-  cover: boolean;
-}
 
 const containerState: Ref<ContainerState> = ref({
   active: false,
@@ -45,18 +51,11 @@ const containerState: Ref<ContainerState> = ref({
 
 provide('containerState', containerState);
 
-interface CoverState {
-  active: boolean;
-  animation: boolean;
-  cover: boolean;
-  open?: boolean;
-  loaded?: boolean;
-}
-
 const coverState: Ref<CoverState> = ref({
   active: false,
   animation: false,
   cover: false,
+  application: false,
 });
 
 provide('coverState', coverState);
@@ -64,22 +63,6 @@ provide('coverState', coverState);
 const cover: Ref<{ style?: ComputedRef<string> }> = ref({});
 
 provide('cover', cover);
-
-interface AppListLayoutItem extends AppListItem {
-  position?: {
-    left: ComputedRef<number>;
-    top: ComputedRef<number>;
-  };
-  style?: ComputedRef<string>;
-  class?: {
-    active: boolean;
-    animation: boolean;
-    appCard: boolean;
-    cover: boolean;
-  };
-  imgError?: Ref<boolean>;
-  imgSrc?: ComputedRef<string>;
-}
 
 const activeCard: Ref<AppListLayoutItem | undefined> = ref();
 
@@ -96,8 +79,6 @@ const appDebHref = computed(
 const appTorrentHref = computed(
   () => `${source.value}/${appDetail?.value?.Filename}.torrent`,
 );
-
-export type { CoverState, AppListLayoutItem, ContainerState };
 
 //卡片事件处理
 function coverAnimationEnd(e: TransitionEvent) {
@@ -134,7 +115,23 @@ function toolDown() {
 
 function toolUp() {
   toolState.value.active = false;
+  if (activeCard.value?.Package)
+    router.push(
+      `/store/application/${encodeURIComponent(
+        activeCard.value?.Package.replaceAll('.', '_dot_'),
+      )}`,
+    );
 }
+
+onMounted(() => {
+  watch(
+    () => route.name, //当页面被切换时
+    () => {
+      coverState.value.application = route.name === 'application';
+    },
+    { immediate: true }, //立即执行一次
+  );
+});
 </script>
 
 <template>
@@ -154,13 +151,15 @@ function toolUp() {
       class="coverView"
       :class="coverState"
       @click="
-        if (coverState) {
-          coverState.active = false;
-          coverState.open = false;
-          coverState.loaded = false;
-          coverState.animation = true;
+        () => {
+          if (coverState) {
+            coverState.active = false;
+            coverState.open = false;
+            coverState.loaded = false;
+            coverState.animation = true;
+          }
+          containerState.cover = false;
         }
-        containerState.cover = false;
       "
       :style="<string>(<unknown>cover?.style)"
     >
@@ -173,11 +172,13 @@ function toolUp() {
           @mouseup="cardUp"
         >
           <img
-            :src="<string>(<unknown>activeCard?.imgSrc)"
+            :src="activeCard?.imgSrc"
             alt=""
             @error="
-              if (activeCard?.imgError) {
-                (<boolean>(<unknown>activeCard.imgError)) = true;
+              () => {
+                if (activeCard?.imgError) {
+                  (<boolean>(<unknown>activeCard.imgError)) = true;
+                }
               }
             "
           />
@@ -202,6 +203,7 @@ function toolUp() {
               menu-self="top middle"
               padding="sm xl"
               @click.stop
+              @mousedown.stop
             >
               <q-list>
                 <q-item clickable v-close-popup :href="appTorrentHref">
@@ -229,7 +231,11 @@ function toolUp() {
       :thumb-style="{ zIndex: '2', borderRadius: '100px' }"
       :visible="false"
     >
-      <router-view></router-view>
+      <router-view v-slot="{ Component }">
+        <transition>
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </q-scroll-area>
   </q-page>
 </template>
@@ -307,11 +313,11 @@ function toolUp() {
 
       .detail {
         display: flex;
-        height: calc(100% - 64px - 60px * 1.8);
+        height: calc(100% - 84px - 60px * 1.8);
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        transform: translateY(calc(64px + 48px * 1.8));
+        transform: translateY(calc(84px + 48px * 1.8));
 
         > * {
           opacity: 0;
@@ -393,7 +399,7 @@ function toolUp() {
 
     .card {
       width: 360px;
-      height: calc(100% - 72px - 80px);
+      height: calc(100% - 72px - 80px - 40px);
       transform: translate(-50%, calc(-50% - 40px - 12px));
 
       .cardView {
@@ -460,7 +466,7 @@ function toolUp() {
         img {
           transform: translate(
               -50%,
-              calc(30px * 1.8 - 50vh + 15px + 36px + 40px)
+              calc(30px * 1.8 - 50vh + 15px + 36px + 50px)
             )
             scale(1.8);
         }
@@ -509,6 +515,12 @@ function toolUp() {
           transform: translateY(-60px) scale(0.9);
         }
       }
+    }
+  }
+
+  &.application {
+    .card {
+      transform: translate(calc(-50vw + 20px), calc(-50% - 30px - 12px));
     }
   }
 }

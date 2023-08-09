@@ -3,11 +3,7 @@
 import { ComputedRef, Ref, computed, inject, onMounted, ref, watch } from 'vue';
 import defaultIcon from '../../assets/img/store/application.svg';
 import { debounce, useQuasar } from 'quasar';
-import {
-  CoverState,
-  AppListLayoutItem,
-  ContainerState,
-} from '../StorePage.vue';
+import { CoverState, AppListLayoutItem, ContainerState } from '../StorePage';
 
 // noinspection JSUnusedGlobalSymbols
 const $q = useQuasar();
@@ -448,6 +444,18 @@ function fetchAppInfo(packageName: string) {
         transform: scale(0.96);
       }
     }
+  }
+
+  &.v-enter-active,
+  &.v-leave-active {
+    transition:
+      opacity 2s ease,
+      transform 2s ease;
+  }
+
+  &.v-enter-from,
+  &.v-leave-to {
+    opacity: 0;
   }
 }
 </style>

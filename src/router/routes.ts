@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
       //下载地址（软件本体）
       {
         path: 'download_latest',
-        redirect: 'download',
+        component: () => import('pages/DownloadPage.vue'),
         beforeEnter() {
           window.open(
             'https://gitee.com/deepin-community-store/spark-store/releases/latest',
@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
       //下载地址（依赖包）
       {
         path: 'download_dependencies_latest',
-        redirect: 'download',
+        component: () => import('pages/DownloadPage.vue'),
         beforeEnter() {
           window.open(
             'https://zunyun01.store.deepinos.org.cn/spark-store-dependencies-kylin.zip',
@@ -29,21 +29,21 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'forum',
-        redirect: 'about',
+        component: () => import('pages/AboutPage.vue'),
         beforeEnter() {
           location.href = 'https://www.deepinos.org/';
         },
       },
       {
         path: 'feedback',
-        redirect: 'about',
+        component: () => import('pages/AboutPage.vue'),
         beforeEnter() {
           location.href = 'https://www.deepinos.org/';
         },
       },
       {
         path: 'blog',
-        redirect: 'about',
+        component: () => import('pages/AboutPage.vue'),
         beforeEnter() {
           location.href = 'https://www.deepinos.org/';
         },
@@ -60,10 +60,12 @@ const routes: RouteRecordRaw[] = [
           { path: 'rank', component: () => import('pages/store/RankPage.vue') },
           {
             path: 'sort/:sort',
+            name: 'sort',
             component: () => import('pages/store/SortPage.vue'),
           },
           {
             path: 'application/:appId',
+            name: 'application',
             component: () => import('pages/store/ApplicationPage.vue'),
           },
         ],
