@@ -28,27 +28,32 @@ const route = useRoute();
 const router = useRouter();
 
 import { useStore } from 'stores/store';
+import { storeToRefs } from 'pinia';
 
-const store = useStore();
+const { source, sortCache } = storeToRefs(useStore());
 
-const appList: Ref<AppListLayoutItem[]> = ref([]);
-const source = ref(store['source']);
-const sort = ref(route.params.sort.toString());
+//const appList: Ref<AppListLayoutItem[]> = ref([]);
+//const source = ref(store.source);
 
 onMounted(() => {
   watch(
     () => route.params.sort, //当分类被切换时
     () => {
       //解决离开应用列表就 404 的 BUG
-      if (route.params.sort) {
+      if (
+        route.params.sort &&
+        sortCache.value.sort !== route.params.sort.toString()
+      ) {
+        sortCache.value.sort = route.params.sort.toString();
+
         //单独定义 async 的原因：下面要调用两次以及 await 很好用
         async function fetchData() {
           const res = await api.getApplicationList(
             route.params.sort.toString(),
           );
           if (res.length > 0) {
-            appList.value = layoutAppCard(res); //通知卡片排布
-            sort.value = route.params.sort.toString(); //单独赋值是为了确保类别与卡片信息同时更新
+            (<AppListLayoutItem[]>sortCache.value.appList) = layoutAppCard(res); //通知卡片排布
+            sortCache.value.sort = route.params.sort.toString(); //单独赋值是为了确保类别与卡片信息同时更新
             //重置滚动高度
             cancelAnimationFrame(scroll.value.animationId);
             container.value.parentElement.parentElement.scrollTo({
@@ -102,7 +107,7 @@ const clientWidth = ref(0);
 const containerHeight = computed(
   () =>
     `${
-      Math.ceil(appList.value.length / column.value) *
+      Math.ceil(sortCache.value.appList.length / column.value) *
         (config.cardHeight + config.gap) +
       config.gap +
       config.verticalPadding * 1.5
@@ -155,14 +160,10 @@ function layoutAppCard(appList: AppListLayoutItem[]) {
       };
     }
     item.imgError = ref(false);
-    item.imgSrc = computed(() =>
-      item.imgError?.value
-        ? defaultIcon
-        : `${source.value}/store/${sort.value}/${item.Package.replaceAll(
-            '+',
-            '%2B',
-          )}/icon.png`,
-    );
+    const imgSrc = `${source.value}/store/${
+      sortCache.value.sort
+    }/${item.Package.replaceAll('+', '%2B')}/icon.png`;
+    item.imgSrc = computed(() => (item.imgError?.value ? defaultIcon : imgSrc));
   });
 
   const scrollTop = ref(container.value?.parentElement.parentElement.scrollTop);
@@ -175,7 +176,7 @@ function layoutAppCard(appList: AppListLayoutItem[]) {
         30
       }px;--j-top:${
         <number>(<unknown>activeCard?.value?.position?.top) -
-        container.value.parentElement.parentElement.clientHeight / 2 -
+        container.value?.parentElement.parentElement.clientHeight / 2 -
         scrollTop.value -
         15
       }px;`;
@@ -347,26 +348,25 @@ function fetchAppInfo(packageName: string) {
 
 <template>
   <div
-    class="container"
+    class="sort-container"
     :class="containerState"
     :style="{ height: containerHeight }"
     ref="container"
   >
     <div
-      v-for="(app, index) in appList"
-      :style="<string>(<unknown>app.style)"
+      v-for="(app, index) in sortCache.appList"
+      :style="app.style"
       class="card"
       :class="app.class"
       :key="index"
-      @mousedown="() => appCardDown(app)"
-      @mouseup="() => appCardUp(app)"
+      @mousedown="() => appCardDown(<AppListLayoutItem>app)"
+      @mouseup="() => appCardUp(<AppListLayoutItem>app)"
     >
-      <div class="cardView" @transitionend="(e) => appCardAnimated(app, e)">
-        <img
-          :src="<string>(<unknown>app.imgSrc)"
-          alt=""
-          @error="(<boolean>(<unknown>app.imgError)) = true"
-        />
+      <div
+        class="cardView"
+        @transitionend="(e) => appCardAnimated(<AppListLayoutItem>app, e)"
+      >
+        <img :src="app.imgSrc" alt="" @error="app.imgError = true" />
         <div class="description">
           <h6>{{ app.Name }}</h6>
           <p>{{ app.More }}</p>
@@ -378,7 +378,7 @@ function fetchAppInfo(packageName: string) {
 
 <style scoped lang="scss">
 //静态样式
-.container {
+.sort-container {
   //顶部遮罩
   &::before,
   &::after {
@@ -417,7 +417,7 @@ function fetchAppInfo(packageName: string) {
   }
 }
 
-.container {
+.sort-container {
   &::before,
   &.cover::after {
     opacity: 0;
@@ -446,15 +446,15 @@ function fetchAppInfo(packageName: string) {
     }
   }
 
-  &.v-enter-active,
-  &.v-leave-active {
+  &.store-enter-active,
+  &.store-leave-active {
     transition:
       opacity 2s ease,
       transform 2s ease;
   }
 
-  &.v-enter-from,
-  &.v-leave-to {
+  &.store-enter-from,
+  &.store-leave-to {
     opacity: 0;
   }
 }

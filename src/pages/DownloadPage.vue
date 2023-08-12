@@ -4,7 +4,7 @@
 import { nextTick, Ref, ref } from 'vue';
 import { useMeta } from 'quasar';
 import FooterView from '../components/FooterView.vue';
-import { api, updateItem, updateData } from 'boot/api';
+import { api, UpdateItem, UpdateData } from 'boot/api';
 
 useMeta({
   title: '下载',
@@ -103,7 +103,7 @@ const qaMessages: qaMessage[] = [
 ];
 
 //获取最新版本
-const latest: Ref<updateItem> = ref({
+const latest: Ref<UpdateItem> = ref({
   version: '',
   time: '',
   details: [],
@@ -113,7 +113,7 @@ api.getLatest().then((res) => {
 });
 
 //时间线中的更新日志
-const updateHistory: Ref<updateItem[]> = ref([]);
+const updateHistory: Ref<UpdateItem[]> = ref([]);
 
 //是否禁用滚动加载
 const disableLoad = ref(false);
@@ -127,7 +127,7 @@ nextTick(() => {
 });
 
 const loadHistory = (index: number, done: () => void) => {
-  api.getHistory(index).then((res: updateData) => {
+  api.getHistory(index).then((res: UpdateData) => {
     updateHistory.value = updateHistory.value.concat(res.data);
     if (res.isEnded) {
       //当加载到最后一页时禁用滚动加载

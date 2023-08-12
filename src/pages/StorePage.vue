@@ -232,7 +232,7 @@ onMounted(() => {
       :visible="false"
     >
       <router-view v-slot="{ Component }">
-        <transition>
+        <transition name="store">
           <component :is="Component" />
         </transition>
       </router-view>
