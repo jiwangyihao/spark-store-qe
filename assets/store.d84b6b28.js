@@ -1,0 +1,1 @@
+import{aF as t}from"./index.a6c2a884.js";const r=t("counter",{state:()=>({sortCache:{sort:null,appList:[]},source:"https://d.store.deepinos.org.cn",debSource:"https://mirrors.sdu.edu.cn/spark-store-repository/"}),getters:{},actions:{}});export{r as u};

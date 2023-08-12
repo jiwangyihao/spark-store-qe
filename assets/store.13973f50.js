@@ -1,1 +1,0 @@
-import{aF as e}from"./index.50d2f0c2.js";const r=e("counter",{state:()=>({appList:{},source:"https://d.store.deepinos.org.cn",debSource:"https://mirrors.sdu.edu.cn/spark-store-repository/"}),getters:{},actions:{}});export{r as u};
