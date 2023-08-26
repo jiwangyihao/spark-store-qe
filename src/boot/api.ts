@@ -70,7 +70,7 @@ const api = {
       throw e;
     }
     try {
-      const res = await this.server.get('/latest');
+      const res = await this.server.get('/info/latest');
       await this.storage.set('latest', {
         value: res.data,
         ttl: 24 * 60 * 60 * 1000, //保留一天
@@ -109,7 +109,7 @@ const api = {
       throw e;
     }
     try {
-      const res = await this.server.get(`/history?page=${page}`);
+      const res = await this.server.get(`/info/history?page=${page}`);
       await this.storage.set(`history_${page}`, {
         value: res.data,
         ttl: 24 * 60 * 60 * 1000, //保留一天
@@ -173,7 +173,7 @@ const api = {
     }
     try {
       const res: AppListItem[] = (
-        await this.server.get(`/getAppList?sort=${sort}`)
+        await this.server.get(`/repo/getAppList?sort=${sort}`)
       ).data;
       await this.storage.set(`applicationList_${sort}`, {
         value: res,
@@ -220,9 +220,9 @@ const api = {
     try {
       const res: AppDetail = (
         await this.server.get(
-          `/getAppDetail?package=${encodeURIComponent(packageName)}`,
+          `/repo/getAppDetail?package=${encodeURIComponent(packageName)}`,
         )
-      ).data;
+      ).data[0];
       await this.storage.set(
         `applicationDetail_${encodeURIComponent(packageName)}`,
         {
