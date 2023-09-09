@@ -1,16 +1,7 @@
 <script setup lang="ts">
 import { useMeta } from 'quasar';
 import { AppDetail } from 'src/boot/api';
-import {
-  computed,
-  ComputedRef,
-  provide,
-  Ref,
-  ref,
-  onMounted,
-  watch,
-} from 'vue';
-import { CoverState, AppListLayoutItem, ContainerState } from './StorePage';
+import { computed, provide, Ref, ref, onMounted, watch } from 'vue';
 
 useMeta({
   title: 'WEB商店',
@@ -35,6 +26,7 @@ useMeta({
 
 import { useStore } from 'stores/store';
 import { useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 const route = useRoute();
 const router = useRouter();
 
@@ -43,30 +35,7 @@ const store = useStore();
 const debSource = ref(store['debSource']);
 const source = ref(store['source']);
 
-const containerState: Ref<ContainerState> = ref({
-  active: false,
-  animation: false,
-  cover: false,
-});
-
-provide('containerState', containerState);
-
-const coverState: Ref<CoverState> = ref({
-  active: false,
-  animation: false,
-  cover: false,
-  application: false,
-});
-
-provide('coverState', coverState);
-
-const cover: Ref<{ style?: ComputedRef<string> }> = ref({});
-
-provide('cover', cover);
-
-const activeCard: Ref<AppListLayoutItem | undefined> = ref();
-
-provide('activeCard', activeCard);
+const { sortCache } = storeToRefs(useStore());
 
 const appDetail: Ref<AppDetail | undefined> = ref();
 
@@ -83,13 +52,12 @@ const appTorrentHref = computed(
 //卡片事件处理
 function coverAnimationEnd(e: TransitionEvent) {
   if (e.propertyName === 'transform') {
-    if (coverState?.value) {
-      if (activeCard?.value?.class) {
-        activeCard.value.class.cover = coverState.value.active;
-      }
-      coverState.value.animation = false;
-      coverState.value.open = coverState.value.active;
+    if (sortCache.value.activeCard?.class) {
+      sortCache.value.activeCard.class.cover =
+        sortCache.value.coverState.active;
     }
+    sortCache.value.coverState.animation = false;
+    sortCache.value.coverState.open = sortCache.value.coverState.active;
   }
 }
 
@@ -115,10 +83,10 @@ function toolDown() {
 
 function toolUp() {
   toolState.value.active = false;
-  if (activeCard.value?.Package)
+  if (sortCache.value.activeCard?.Package)
     router.push(
       `/store/application/${encodeURIComponent(
-        activeCard.value?.Package.replaceAll('.', '_dot_'),
+        sortCache.value.activeCard?.Package.replaceAll('.', '_dot_'),
       )}`,
     );
 }
@@ -127,7 +95,7 @@ onMounted(() => {
   watch(
     () => route.name, //当页面被切换时
     () => {
-      coverState.value.application = route.name === 'application';
+      sortCache.value.coverState.application = route.name === 'application';
     },
     { immediate: true }, //立即执行一次
   );
@@ -149,19 +117,17 @@ onMounted(() => {
     <!--suppress JSValidateTypes -->
     <div
       class="coverView"
-      :class="coverState"
+      :class="sortCache.coverState"
       @click="
         () => {
-          if (coverState) {
-            coverState.active = false;
-            coverState.open = false;
-            coverState.loaded = false;
-            coverState.animation = true;
-          }
-          containerState.cover = false;
+          sortCache.coverState.active = false;
+          sortCache.coverState.open = false;
+          sortCache.coverState.loaded = false;
+          sortCache.coverState.animation = true;
+          sortCache.containerState.cover = false;
         }
       "
-      :style="<string>(<unknown>cover?.style)"
+      :style="sortCache.cover.style"
     >
       <div class="card" @transitionend="coverAnimationEnd" @click.stop>
         <div
@@ -172,19 +138,19 @@ onMounted(() => {
           @mouseup="cardUp"
         >
           <img
-            :src="activeCard?.imgSrc"
+            :src="sortCache.activeCard?.imgSrc"
             alt=""
             @error="
               () => {
-                if (activeCard?.imgError) {
-                  (<boolean>(<unknown>activeCard.imgError)) = true;
+                if (sortCache.activeCard) {
+                  sortCache.activeCard.imgError = true;
                 }
               }
             "
           />
           <div class="description">
-            <h6>{{ activeCard?.Name }}</h6>
-            <p>{{ activeCard?.More }}</p>
+            <h6>{{ sortCache.activeCard?.Name }}</h6>
+            <p>{{ sortCache.activeCard?.More }}</p>
           </div>
           <div class="detail">
             <h1 class="name">{{ appDetail?.Name }}</h1>

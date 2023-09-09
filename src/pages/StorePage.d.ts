@@ -1,35 +1,19 @@
 import { AppListItem } from 'boot/api';
-import { ComputedRef, Ref } from 'vue/dist/vue';
-
-interface CoverState {
-  active: boolean;
-  animation: boolean;
-  cover: boolean;
-  application: boolean;
-  open?: boolean;
-  loaded?: boolean;
-}
 
 interface AppListLayoutItem extends AppListItem {
   position?: {
-    left: ComputedRef<number>;
-    top: ComputedRef<number>;
+    left: number;
+    top: number;
   };
-  style?: ComputedRef<string>;
+  style?: string;
   class?: {
     active: boolean;
     animation: boolean;
     appCard: boolean;
     cover: boolean;
   };
-  imgError?: Ref<boolean>;
-  imgSrc?: ComputedRef<string>;
-}
-
-interface ContainerState {
-  active: boolean;
-  animation: boolean;
-  cover: boolean;
+  imgError?: boolean;
+  imgSrc?: string;
 }
 
 export { CoverState, AppListLayoutItem, ContainerState };

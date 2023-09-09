@@ -1,23 +1,13 @@
 <script setup lang="ts">
 //综合
-import { ComputedRef, Ref, computed, inject, onMounted, ref, watch } from 'vue';
-import defaultIcon from '../../assets/img/store/application.svg';
+import { Ref, inject, onMounted, ref, watch } from 'vue';
 import { debounce, useQuasar } from 'quasar';
-import { CoverState, AppListLayoutItem, ContainerState } from '../StorePage';
+import { AppListLayoutItem } from '../StorePage';
 
 // noinspection JSUnusedGlobalSymbols
 const $q = useQuasar();
 
 const container = ref();
-const cover: Ref<{ style?: ComputedRef<string> }> | undefined = inject('cover');
-
-const containerState: Ref<ContainerState> | undefined =
-  inject('containerState');
-
-const coverState: Ref<CoverState> | undefined = inject('coverState');
-
-const activeCard: Ref<AppListLayoutItem | undefined> | undefined =
-  inject('activeCard');
 
 //数据请求
 import { api, AppDetail } from 'boot/api';
@@ -30,7 +20,10 @@ const router = useRouter();
 import { useStore } from 'stores/store';
 import { storeToRefs } from 'pinia';
 
-const { source, sortCache } = storeToRefs(useStore());
+const store = useStore();
+
+const { sortCache } = storeToRefs(useStore());
+console.log(sortCache.value);
 
 //const appList: Ref<AppListLayoutItem[]> = ref([]);
 //const source = ref(store.source);
@@ -69,13 +62,13 @@ onMounted(() => {
           }
         }
 
-        if (coverState?.value.active) {
+        if (sortCache.value.coverState.active) {
           //关闭已经打开的卡片
-          coverState.value.active = false;
-          coverState.value.open = false;
-          coverState.value.loaded = false;
-          if (containerState?.value) containerState.value.cover = false;
-          coverState.value.animation = true;
+          sortCache.value.coverState.active = false;
+          sortCache.value.coverState.open = false;
+          sortCache.value.coverState.loaded = false;
+          sortCache.value.containerState.cover = false;
+          sortCache.value.coverState.animation = true;
           setTimeout(fetchData, 2000); //为卡片关闭动画留出时间
         } else {
           fetchData().catch((reason) => {
@@ -91,66 +84,27 @@ onMounted(() => {
   );
 });
 
-//卡片排布
-const config = {
-  cardWidth: 264, //卡片宽度
-  cardHeight: 92, //卡片高度
-  verticalPadding: 50, //垂直边距（下边距只有1/2）
-  horizonPadding: 16, //水平边距
-  gap: 32, //卡片间距
-};
-
 const clientWidth = ref(0);
 
 //别问我下面的式子怎么来的，问就是数学的力量
 //反正我不想再算一遍了，布局效果应该基本和display:grid一致
-const containerHeight = computed(
-  () =>
-    `${
-      Math.ceil(sortCache.value.appList.length / column.value) *
-        (config.cardHeight + config.gap) +
-      config.gap +
-      config.verticalPadding * 1.5
-    }px`,
-);
-
-const column = computed(() =>
-  Math.floor(
-    (clientWidth.value + config.gap - config.horizonPadding * 2) /
-      (config.cardWidth + config.gap),
-  ),
-);
-
-const horizonGap = computed(
-  () =>
-    (clientWidth.value -
-      (config.cardWidth + config.gap) * column.value +
-      config.gap -
-      config.horizonPadding * 2) /
-    (column.value + 1),
-);
 
 function layoutAppCard(appList: AppListLayoutItem[]) {
   appList.forEach((item, index) => {
     item.position = {
-      left: computed(() => {
-        return (
-          (index % column.value) *
-            (horizonGap.value + config.gap + config.cardWidth) +
-          config.horizonPadding +
-          horizonGap.value
-        );
-      }),
-      top: computed(
-        () =>
-          Math.floor(index / column.value) * (config.cardHeight + config.gap) +
-          config.verticalPadding,
-      ),
+      left:
+        (index % sortCache.value.column) *
+          (sortCache.value.horizonGap +
+            sortCache.value.config.gap +
+            sortCache.value.config.cardWidth) +
+        sortCache.value.config.horizonPadding +
+        sortCache.value.horizonGap,
+      top:
+        Math.floor(index / sortCache.value.column) *
+          (sortCache.value.config.cardHeight + sortCache.value.config.gap) +
+        sortCache.value.config.verticalPadding,
     };
-    item.style = computed(
-      () =>
-        `transform:translate(${item.position?.left.value}px,${item.position?.top.value}px)`,
-    );
+    item.style = `transform:translate(${item.position?.left}px,${item.position?.top}px)`;
     if (!item.hasOwnProperty('class')) {
       item.class = {
         active: false,
@@ -159,50 +113,41 @@ function layoutAppCard(appList: AppListLayoutItem[]) {
         cover: false,
       };
     }
-    item.imgError = ref(false);
-    const imgSrc = `${source.value}/store/${
-      sortCache.value.sort
-    }/${item.Package.replaceAll('+', '%2B')}/icon.png`;
-    item.imgSrc = computed(() => (item.imgError?.value ? defaultIcon : imgSrc));
+    store.setImgError(item, false);
   });
-
-  const scrollTop = ref(container.value?.parentElement.parentElement.scrollTop);
-
-  if (cover?.value) {
-    cover.value.style = computed(() => {
-      return `--j-left:${
-        <number>(<unknown>activeCard?.value?.position?.left) -
-        clientWidth.value / 2 -
-        30
-      }px;--j-top:${
-        <number>(<unknown>activeCard?.value?.position?.top) -
-        container.value?.parentElement.parentElement.clientHeight / 2 -
-        scrollTop.value -
-        15
-      }px;`;
-    });
-  }
-
-  container.value.parentElement.parentElement.addEventListener(
-    'scroll',
-    debounce(() => {
-      if (!scroll.value.animationId)
-        scrollTop.value =
-          container.value?.parentElement.parentElement.scrollTop;
-    }, 250),
-  );
   return appList;
 }
 
 onMounted(() => {
   //初始化 clientWidth 的值
   clientWidth.value = container.value?.clientWidth;
+  store.onContainerWidthChange(clientWidth.value); //通知 store 容器宽度变化
 
   //在窗口尺寸变化时自动调整 clientWidth
   window.addEventListener(
     'resize',
     debounce(() => {
       clientWidth.value = container.value?.clientWidth;
+      store.onContainerWidthChange(clientWidth.value); //通知 store 容器宽度变化
+    }, 250),
+  );
+
+  container.value.parentElement.parentElement.addEventListener(
+    'scroll',
+    debounce(() => {
+      store.onScroll(container.value.parentElement.parentElement.scrollTop);
+    }, 250),
+  );
+
+  store.onContainerHeightChange(
+    container.value.parentElement.parentElement.clientHeight,
+  );
+  container.value.parentElement.parentElement.addEventListener(
+    'resize',
+    debounce(() => {
+      store.onContainerHeightChange(
+        container.value.parentElement.parentElement.clientHeight,
+      );
     }, 250),
   );
 });
@@ -253,70 +198,64 @@ function scrollAnimation(scrollStart: number, scrollEnd: number) {
 */
 
 onMounted(() => {
-  watch(column, (newColumn, oldColumn) => {
-    //监听列数变化
-    cancelAnimationFrame(scroll.value.animationId);
-    //如果现在有目标高度（上一个动画尚未完成），就取该高度作为（计算时）初始高度，否则重新获取
-    const scrollTop = scroll.value.targetTop
-      ? scroll.value.targetTop
-      : container.value.parentElement.parentElement.scrollTop;
-    //更新目标高度
-    scroll.value.targetTop =
-      ((scrollTop -
-        config.verticalPadding +
-        container.value.parentElement.parentElement.clientHeight / 2) *
-        oldColumn) /
-        newColumn -
-      container.value.parentElement.parentElement.clientHeight / 2 +
-      config.verticalPadding;
-    //调用动画函数
-    container.value.parentElement.parentElement.scrollTo({
-      top: scroll.value.targetTop,
-      behavior: 'smooth',
-    });
-    //scrollAnimation(
-    //  container.value.parentElement.parentElement.scrollTop, //动画的实际起点为实际滚动高度
-    //  scroll.value.targetTop,
-    //);
+  watch(sortCache.value, ({ column: newColumn }, { column: oldColumn }) => {
+    if (newColumn !== oldColumn) {
+      //监听列数变化
+      cancelAnimationFrame(scroll.value.animationId);
+      //如果现在有目标高度（上一个动画尚未完成），就取该高度作为（计算时）初始高度，否则重新获取
+      const scrollTop = scroll.value.targetTop
+        ? scroll.value.targetTop
+        : container.value.parentElement.parentElement.scrollTop;
+      //更新目标高度
+      scroll.value.targetTop =
+        ((scrollTop -
+          sortCache.value.config.verticalPadding +
+          container.value.parentElement.parentElement.clientHeight / 2) *
+          oldColumn) /
+          newColumn -
+        container.value.parentElement.parentElement.clientHeight / 2 +
+        sortCache.value.config.verticalPadding;
+      //调用动画函数
+      container.value.parentElement.parentElement.scrollTo({
+        top: scroll.value.targetTop,
+        behavior: 'smooth',
+      });
+      //scrollAnimation(
+      //  container.value.parentElement.parentElement.scrollTop, //动画的实际起点为实际滚动高度
+      //  scroll.value.targetTop,
+      //);
+    }
   });
 });
 
 //卡片事件处理
 function appCardDown(app: AppListLayoutItem) {
-  if (containerState) {
-    containerState.value.active = true;
-    containerState.value.animation = true;
-  }
-  if (activeCard?.value?.class) {
-    activeCard.value.class.cover = false;
+  sortCache.value.containerState.active = true;
+  sortCache.value.containerState.animation = true;
+  if (sortCache.value.activeCard?.class) {
+    sortCache.value.activeCard.class.cover = false;
   }
   if (app.class) {
     app.class.active = true;
     app.class.animation = true;
   }
-  if (activeCard) {
-    activeCard.value = app;
-  }
+  store.setActiveCard(app); //设置卡片被激活
   fetchAppInfo(app.Package); //通知请求应用详情
 }
 
 function appCardUp(app: AppListLayoutItem) {
-  if (containerState) {
-    containerState.value.active = false;
-    containerState.value.cover = true;
-  }
+  sortCache.value.containerState.active = false;
+  sortCache.value.containerState.cover = true;
   if (app.class) {
     app.class.active = false;
     app.class.cover = true;
   }
-  if (coverState?.value) {
-    coverState.value.active = true;
-  }
+  sortCache.value.coverState.active = true;
 }
 
 function appCardAnimated(app: AppListLayoutItem, event: TransitionEvent) {
   if (event.propertyName === 'transform') {
-    if (containerState) containerState.value.animation = false;
+    sortCache.value.containerState.animation = false;
     if (app.class) {
       app.class.animation = false;
     }
@@ -333,9 +272,7 @@ function fetchAppInfo(packageName: string) {
       if (appDetail) {
         appDetail.value = detail;
       }
-      if (coverState?.value) {
-        coverState.value.loaded = true;
-      }
+      sortCache.value.coverState.loaded = true;
     })
     .catch((reason) => {
       $q.notify({
@@ -349,8 +286,8 @@ function fetchAppInfo(packageName: string) {
 <template>
   <div
     class="sort-container"
-    :class="containerState"
-    :style="{ height: containerHeight }"
+    :class="sortCache.containerState"
+    :style="{ height: sortCache.containerHeight }"
     ref="container"
   >
     <div
@@ -366,7 +303,7 @@ function fetchAppInfo(packageName: string) {
         class="cardView"
         @transitionend="(e) => appCardAnimated(<AppListLayoutItem>app, e)"
       >
-        <img :src="app.imgSrc" alt="" @error="app.imgError = true" />
+        <img :src="app.imgSrc" alt="" @error="store.setImgError(app, true)" />
         <div class="description">
           <h6>{{ app.Name }}</h6>
           <p>{{ app.More }}</p>
