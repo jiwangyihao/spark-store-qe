@@ -83,12 +83,13 @@ function toolDown() {
 
 function toolUp() {
   toolState.value.active = false;
-  if (sortCache.value.activeCard?.Package)
+  if (sortCache.value.activeCard?.Package) {
     router.push(
       `/store/application/${encodeURIComponent(
         sortCache.value.activeCard?.Package.replaceAll('.', '_dot_'),
       )}`,
     );
+  }
 }
 
 onMounted(() => {
@@ -118,15 +119,7 @@ onMounted(() => {
     <div
       class="coverView"
       :class="sortCache.coverState"
-      @click="
-        () => {
-          sortCache.coverState.active = false;
-          sortCache.coverState.open = false;
-          sortCache.coverState.loaded = false;
-          sortCache.coverState.animation = true;
-          sortCache.containerState.cover = false;
-        }
-      "
+      @click="store.cancelActiveCard"
       :style="sortCache.cover.style"
     >
       <div class="card" @transitionend="coverAnimationEnd" @click.stop>

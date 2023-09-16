@@ -134,8 +134,8 @@ onMounted(() => {
 
   container.value.parentElement.parentElement.addEventListener(
     'scroll',
-    debounce(() => {
-      store.onScroll(container.value.parentElement.parentElement.scrollTop);
+    debounce((e) => {
+      store.onScroll(e.target.scrollTop);
     }, 250),
   );
 
@@ -198,34 +198,42 @@ function scrollAnimation(scrollStart: number, scrollEnd: number) {
 */
 
 onMounted(() => {
-  watch(sortCache.value, ({ column: newColumn }, { column: oldColumn }) => {
-    if (newColumn !== oldColumn) {
-      //监听列数变化
-      cancelAnimationFrame(scroll.value.animationId);
-      //如果现在有目标高度（上一个动画尚未完成），就取该高度作为（计算时）初始高度，否则重新获取
-      const scrollTop = scroll.value.targetTop
-        ? scroll.value.targetTop
-        : container.value.parentElement.parentElement.scrollTop;
-      //更新目标高度
-      scroll.value.targetTop =
-        ((scrollTop -
-          sortCache.value.config.verticalPadding +
-          container.value.parentElement.parentElement.clientHeight / 2) *
-          oldColumn) /
-          newColumn -
-        container.value.parentElement.parentElement.clientHeight / 2 +
-        sortCache.value.config.verticalPadding;
-      //调用动画函数
-      container.value.parentElement.parentElement.scrollTo({
-        top: scroll.value.targetTop,
-        behavior: 'smooth',
-      });
-      //scrollAnimation(
-      //  container.value.parentElement.parentElement.scrollTop, //动画的实际起点为实际滚动高度
-      //  scroll.value.targetTop,
-      //);
-    }
-  });
+  watch(
+    store.sortCache,
+    (sortCache) => {
+      if (sortCache.columnAnimation.change) {
+        const newColumn = sortCache.columnAnimation.newColumn;
+        const oldColumn = sortCache.columnAnimation.oldColumn;
+        console.log(newColumn, oldColumn);
+        sortCache.columnAnimation.change = false;
+        //监听列数变化
+        //cancelAnimationFrame(scroll.value.animationId);
+        //如果现在有目标高度（上一个动画尚未完成），就取该高度作为（计算时）初始高度，否则重新获取
+        const scrollTop = scroll.value.targetTop
+          ? scroll.value.targetTop
+          : sortCache.scrollTop;
+        //更新目标高度
+        scroll.value.targetTop =
+          ((scrollTop -
+            sortCache.config.verticalPadding +
+            container.value.parentElement.parentElement.clientHeight / 2) *
+            oldColumn) /
+            newColumn -
+          container.value.parentElement.parentElement.clientHeight / 2 +
+          sortCache.config.verticalPadding;
+        //调用动画函数
+        container.value.parentElement.parentElement.scrollTo({
+          top: scroll.value.targetTop,
+          behavior: 'smooth',
+        });
+        //scrollAnimation(
+        //  container.value.parentElement.parentElement.scrollTop, //动画的实际起点为实际滚动高度
+        //  scroll.value.targetTop,
+        //);
+      }
+    },
+    { deep: true },
+  );
 });
 
 //卡片事件处理

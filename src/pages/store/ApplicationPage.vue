@@ -1,4 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onUnmounted } from 'vue';
+import { useStore } from 'stores/store';
+
+const store = useStore();
+
+onUnmounted(() => {
+  if (store.sortCache.activeCard) {
+    store.cancelActiveCard();
+  }
+});
+</script>
 
 <template>
   <div class="application-container"></div>

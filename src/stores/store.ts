@@ -31,6 +31,11 @@ export const useStore = defineStore('counter', {
       activeCard: <AppListLayoutItem | null>null,
       containerHeight: '',
       column: 0,
+      columnAnimation: {
+        change: false,
+        oldColumn: 0,
+        newColumn: 0,
+      },
       horizonGap: 0,
       cover: {
         style: '',
@@ -51,6 +56,13 @@ export const useStore = defineStore('counter', {
 
       this.refreshStyle();
     },
+    cancelActiveCard() {
+      this.sortCache.coverState.active = false;
+      this.sortCache.coverState.open = false;
+      this.sortCache.coverState.loaded = false;
+      this.sortCache.coverState.animation = true;
+      this.sortCache.containerState.cover = false;
+    },
     setImgError(item: AppListLayoutItem, state: boolean) {
       item.imgError = state;
       const imgSrc = `${this.source}/store/${
@@ -60,6 +72,8 @@ export const useStore = defineStore('counter', {
     },
     onContainerWidthChange(width: number) {
       this.sortCache.clientWidth = width;
+
+      this.sortCache.columnAnimation.oldColumn = this.sortCache.column;
 
       this.sortCache.column = Math.floor(
         (width +
@@ -99,6 +113,15 @@ export const useStore = defineStore('counter', {
         };
         item.style = `transform:translate(${item.position.left}px,${item.position.top}px)`;
       });
+
+      //处理列数变化
+      if (
+        this.sortCache.columnAnimation.oldColumn != this.sortCache.column &&
+        this.sortCache.columnAnimation.oldColumn != 0
+      ) {
+        this.sortCache.columnAnimation.change = true;
+        this.sortCache.columnAnimation.newColumn = this.sortCache.column;
+      }
 
       this.refreshStyle();
     },
