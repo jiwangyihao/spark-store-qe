@@ -4,10 +4,10 @@ import { Ref, inject, onMounted, ref, watch } from 'vue';
 import { debounce, useQuasar } from 'quasar';
 import { AppListLayoutItem } from '../StorePage';
 
-// noinspection JSUnusedGlobalSymbols
 const $q = useQuasar();
 
 const container = ref();
+const scrollArea = ref();
 
 //数据请求
 import { api, AppDetail } from 'boot/api';
@@ -23,7 +23,7 @@ import { storeToRefs } from 'pinia';
 const store = useStore();
 
 const { sortCache } = storeToRefs(useStore());
-console.log(sortCache.value);
+//console.log(sortCache.value);
 
 //const appList: Ref<AppListLayoutItem[]> = ref([]);
 //const source = ref(store.source);
@@ -132,24 +132,27 @@ onMounted(() => {
     }, 250),
   );
 
-  container.value.parentElement.parentElement.addEventListener(
-    'scroll',
-    debounce((e) => {
-      store.onScroll(e.target.scrollTop);
-    }, 250),
-  );
+  scrollArea.value
+    .getScrollTarget()
+    .addEventListener('scroll', (e: Event) =>
+      store.onScroll((<Element>e?.target)?.scrollTop),
+    );
 
-  store.onContainerHeightChange(
-    container.value.parentElement.parentElement.clientHeight,
+  store.onClientHeightChange(
+    scrollArea.value.getScrollTarget().parentElement.parentElement
+      .clientHeight - 30,
   );
-  container.value.parentElement.parentElement.addEventListener(
-    'resize',
-    debounce(() => {
-      store.onContainerHeightChange(
-        container.value.parentElement.parentElement.clientHeight,
-      );
-    }, 250),
-  );
+  scrollArea.value
+    .getScrollTarget()
+    .parentElement.parentElement.addEventListener(
+      'resize',
+      debounce(() => {
+        store.onClientHeightChange(
+          scrollArea.value.getScrollTarget().parentElement.parentElement
+            .clientHeight - 30,
+        );
+      }, 250),
+    );
 });
 
 //滚动动画
@@ -209,9 +212,12 @@ onMounted(() => {
         //监听列数变化
         //cancelAnimationFrame(scroll.value.animationId);
         //如果现在有目标高度（上一个动画尚未完成），就取该高度作为（计算时）初始高度，否则重新获取
-        const scrollTop = scroll.value.targetTop
-          ? scroll.value.targetTop
-          : sortCache.scrollTop;
+        //const scrollTop = scroll.value.targetTop
+        //? scroll.value.targetTop
+        //: sortCache.scrollTop;
+
+        //现在使用原生动画，所以不需要这个了
+        const scrollTop = sortCache.scrollTop;
         //更新目标高度
         scroll.value.targetTop =
           ((scrollTop -
@@ -292,33 +298,41 @@ function fetchAppInfo(packageName: string) {
 </script>
 
 <template>
-  <div
-    class="sort-container"
-    :class="sortCache.containerState"
-    :style="{ height: sortCache.containerHeight }"
-    ref="container"
+  <q-scroll-area
+    style="width: calc(100% - 60px)"
+    :thumb-style="{ zIndex: '2', borderRadius: '100px' }"
+    :visible="false"
+    ref="scrollArea"
+    class="scroll-container"
   >
     <div
-      v-for="(app, index) in sortCache.appList"
-      :style="app.style"
-      class="card"
-      :class="app.class"
-      :key="index"
-      @mousedown="() => appCardDown(<AppListLayoutItem>app)"
-      @mouseup="() => appCardUp(<AppListLayoutItem>app)"
+      class="sort-container"
+      :class="sortCache.containerState"
+      :style="{ height: sortCache.containerHeight }"
+      ref="container"
     >
       <div
-        class="cardView"
-        @transitionend="(e) => appCardAnimated(<AppListLayoutItem>app, e)"
+        v-for="(app, index) in sortCache.appList"
+        :style="app.style"
+        class="card"
+        :class="app.class"
+        :key="index"
+        @mousedown="() => appCardDown(<AppListLayoutItem>app)"
+        @mouseup="() => appCardUp(<AppListLayoutItem>app)"
       >
-        <img :src="app.imgSrc" alt="" @error="store.setImgError(app, true)" />
-        <div class="description">
-          <h6>{{ app.Name }}</h6>
-          <p>{{ app.More }}</p>
+        <div
+          class="cardView"
+          @transitionend="(e) => appCardAnimated(<AppListLayoutItem>app, e)"
+        >
+          <img :src="app.imgSrc" alt="" @error="store.setImgError(app, true)" />
+          <div class="description">
+            <h6>{{ app.Name }}</h6>
+            <p>{{ app.More }}</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </q-scroll-area>
 </template>
 
 <style scoped lang="scss">
@@ -390,17 +404,23 @@ function fetchAppInfo(packageName: string) {
       }
     }
   }
+}
 
-  &.store-enter-active,
-  &.store-leave-active {
-    transition:
-      opacity 2s ease,
-      transform 2s ease;
-  }
+.scroll-container {
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 2s ease,
+    transform 2s ease;
+  position: absolute;
+  top: 30px;
+  left: 60px;
+  width: calc(100% - 60px);
+  height: calc(100% - 30px);
 
-  &.store-enter-from,
-  &.store-leave-to {
-    opacity: 0;
+  &.show {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 </style>

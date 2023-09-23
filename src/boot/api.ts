@@ -41,7 +41,9 @@ interface AppDetail {
   Author: string;
   Tags: string[];
   Filename: string;
-  [s: string]: string | string[];
+  imgSrc?: string;
+  imgError?: boolean;
+  [s: string]: string | string[] | undefined | boolean;
 }
 
 const api = {

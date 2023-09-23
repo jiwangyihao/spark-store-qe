@@ -27,6 +27,8 @@ useMeta({
 import { useStore } from 'stores/store';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
+import SortPage from 'pages/store/SortPage.vue';
+import ApplicationPage from 'pages/store/ApplicationPage.vue';
 const route = useRoute();
 const router = useRouter();
 
@@ -58,6 +60,10 @@ function coverAnimationEnd(e: TransitionEvent) {
     }
     sortCache.value.coverState.animation = false;
     sortCache.value.coverState.open = sortCache.value.coverState.active;
+
+    if (route.name === 'application') {
+      sortCache.value.coverState.applicationEnd = true;
+    }
   }
 }
 
@@ -95,8 +101,14 @@ function toolUp() {
 onMounted(() => {
   watch(
     () => route.name, //当页面被切换时
-    () => {
-      sortCache.value.coverState.application = route.name === 'application';
+    (name, oldName) => {
+      sortCache.value.coverState.application = name === 'application';
+
+      if (name !== 'application' && oldName === 'application') {
+        if (store.sortCache.activeCard) {
+          store.cancelActiveCard();
+        }
+      }
     },
     { immediate: true }, //立即执行一次
   );
@@ -185,17 +197,10 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <q-scroll-area
-      style="width: 100%"
-      :thumb-style="{ zIndex: '2', borderRadius: '100px' }"
-      :visible="false"
-    >
-      <router-view v-slot="{ Component }">
-        <transition name="store">
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </q-scroll-area>
+    <router-view v-slot="{}">
+      <sort-page :class="{ show: route.name === 'sort' }" />
+      <application-page :class="{ show: route.name === 'application' }" />
+    </router-view>
   </q-page>
 </template>
 
@@ -204,6 +209,7 @@ onMounted(() => {
   padding-top: 30px;
   padding-left: 60px;
   overflow-y: unset;
+  position: relative;
 }
 
 .coverView {
@@ -253,6 +259,7 @@ onMounted(() => {
         transition: {
           property: transform, filter;
           duration: 1s;
+          timing-function: cubic-bezier(0.3, 0.2, 0.2, 1.15);
         }
         will-change: transform, filter;
       }
@@ -266,6 +273,7 @@ onMounted(() => {
         transition: {
           property: transform, opacity;
           duration: 1s;
+          timing-function: cubic-bezier(0.3, 0.2, 0.2, 1.15);
         }
         will-change: transform, opacity;
       }
@@ -284,6 +292,7 @@ onMounted(() => {
           transition: {
             property: transform, opacity;
             duration: 0.5s;
+            timing-function: cubic-bezier(0.3, 0.2, 0.2, 1.15);
           }
           will-change: transform, opacity;
         }
@@ -328,9 +337,9 @@ onMounted(() => {
   }
 
   .toolBox {
-    width: 360px;
-    height: 60px;
-    line-height: 60px;
+    width: 340px;
+    height: 75px;
+    line-height: 75px;
     text-align: center;
     background-color: white;
     border-radius: 2vmin;
@@ -349,6 +358,11 @@ onMounted(() => {
     visibility: visible;
   }
 
+  &.applicationEnd {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   &.active::before {
     opacity: 1;
   }
@@ -357,8 +371,8 @@ onMounted(() => {
     pointer-events: unset;
 
     .card {
-      width: 360px;
-      height: calc(100% - 72px - 80px - 40px);
+      width: 340px;
+      height: calc(100% - 182px);
       transform: translate(-50%, calc(-50% - 40px - 12px));
 
       .cardView {
@@ -400,7 +414,7 @@ onMounted(() => {
       }
     }
     .toolBox {
-      transform: translate(-50%, calc(100% + 24px));
+      transform: translate(-50%, calc(100% + 16px));
       opacity: 1;
       transition-delay: 0.4s, 0.4s, 0s;
 
@@ -415,6 +429,7 @@ onMounted(() => {
     transition: {
       property: transform, width, height;
       duration: 1s;
+      timing-function: cubic-bezier(0.3, 0.2, 0.2, 1.15);
     }
     will-change: transform, width, height;
   }
@@ -479,7 +494,11 @@ onMounted(() => {
 
   &.application {
     .card {
-      transform: translate(calc(-50vw + 20px), calc(-50% - 30px - 12px));
+      transform: translate(calc(-50vw + 20px), calc(-50% - 40px - 12px));
+    }
+
+    &::before {
+      opacity: 0;
     }
   }
 }
@@ -546,6 +565,11 @@ onMounted(() => {
 
 <style lang="scss">
 //卡片样式
+.cardView {
+  background-color: white;
+  border-radius: 2vmin;
+}
+
 .card {
   width: 264px;
   height: 92px;
@@ -553,9 +577,6 @@ onMounted(() => {
   will-change: transform;
 
   .cardView {
-    background-color: white;
-    border-radius: 2vmin;
-
     img {
       width: 64px;
       height: 64px;

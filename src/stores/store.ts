@@ -27,6 +27,7 @@ export const useStore = defineStore('counter', {
         application: false,
         open: false,
         loaded: false,
+        applicationEnd: false,
       },
       activeCard: <AppListLayoutItem | null>null,
       containerHeight: '',
@@ -45,7 +46,7 @@ export const useStore = defineStore('counter', {
       clientHeight: 0,
     },
     source: 'https://d.store.deepinos.org.cn',
-    debSource: 'https://mirrors.sdu.edu.cn/spark-store-repository/',
+    debSource: 'https://mirrors.sdu.edu.cn/spark-store-repository/store/',
   }),
   getters: {
     //doubleCount: (state) => state.counter * 2,
@@ -61,6 +62,7 @@ export const useStore = defineStore('counter', {
       this.sortCache.coverState.open = false;
       this.sortCache.coverState.loaded = false;
       this.sortCache.coverState.animation = true;
+      this.sortCache.coverState.applicationEnd = false;
       this.sortCache.containerState.cover = false;
     },
     setImgError(item: AppListLayoutItem, state: boolean) {
@@ -130,7 +132,7 @@ export const useStore = defineStore('counter', {
 
       this.refreshStyle();
     },
-    onContainerHeightChange(height: number) {
+    onClientHeightChange(height: number) {
       this.sortCache.clientHeight = height;
 
       this.refreshStyle();
