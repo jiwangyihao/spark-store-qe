@@ -85,6 +85,7 @@ const qaMessages: qaMessage[] = [
       'sudo apt install gdebi 来安装 gdebi',
       '不可以！不可以！不可以！直接调用 dpkg 是不处理依赖的！使用 sudo apt install ./xxxx.deb 来安装，或者直接使用gdebi等图形化的安装器！！！',
       '已经有不下 20 个人被这个坑了。CSDN 害人不浅',
+      '报无法安装错误：可以尝试 sudo apt update 后再运行',
     ],
   },
   {
@@ -99,6 +100,10 @@ const qaMessages: qaMessage[] = [
     answer: [
       "前往<a href='https://gitee.com/deepin-community-store/software_-issue'>https://gitee.com/deepin-community-store/software_-issue</a>",
     ],
+  },
+  {
+    question: ['使用 apt 安装却报无法安装错误？'],
+    answer: ['请尝试 sudo apt update 后再运行'],
   },
 ];
 

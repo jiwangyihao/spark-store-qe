@@ -59,7 +59,11 @@ function coverAnimationEnd(e: TransitionEvent) {
         sortCache.value.coverState.active;
     }
     sortCache.value.coverState.animation = false;
-    sortCache.value.coverState.open = sortCache.value.coverState.active;
+    if (sortCache.value.coverState.active) {
+      store.onOpened();
+    } else {
+      sortCache.value.coverState.open = false;
+    }
 
     if (route.name === 'application') {
       sortCache.value.coverState.applicationEnd = true;
@@ -152,12 +156,23 @@ onMounted(() => {
                 }
               }
             "
+            :ref="(e) => (sortCache.cover.imgMain = e)"
           />
           <div class="description">
             <h6>{{ sortCache.activeCard?.Name }}</h6>
             <p>{{ sortCache.activeCard?.More }}</p>
           </div>
           <div class="detail">
+            <img
+              :src="sortCache.activeCard?.imgSrc"
+              alt=""
+              @error="
+                () => {
+                  if (appDetail) appDetail.imgError = true;
+                }
+              "
+              :ref="(e) => (sortCache.cover.imgDetail = e)"
+            />
             <h1 class="name">{{ appDetail?.Name }}</h1>
             <span class="version">{{ appDetail?.Version }}</span>
             <div class="tags">
@@ -280,11 +295,10 @@ onMounted(() => {
 
       .detail {
         display: flex;
-        height: calc(100% - 84px - 60px * 1.8);
+        height: 100%;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: space-around;
         align-items: center;
-        transform: translateY(calc(84px + 48px * 1.8));
 
         > * {
           opacity: 0;
@@ -295,6 +309,18 @@ onMounted(() => {
             timing-function: cubic-bezier(0.3, 0.2, 0.2, 1.15);
           }
           will-change: transform, opacity;
+        }
+
+        img {
+          position: static;
+          width: 115px;
+          height: 115px;
+          object-fit: contain;
+          padding: 2px;
+          border-radius: 2vmin;
+          margin-top: 20px;
+          transform: unset !important;
+          filter: drop-shadow(0 1px 9px #0004);
         }
 
         h1 {
@@ -438,11 +464,7 @@ onMounted(() => {
     .card {
       .cardView {
         img {
-          transform: translate(
-              -50%,
-              calc(30px * 1.8 - 50vh + 15px + 36px + 50px)
-            )
-            scale(1.8);
+          transform: translate(-50%, calc(-50% - var(--j-offset))) scale(1.8);
         }
 
         .detail {
@@ -451,23 +473,27 @@ onMounted(() => {
             transform: unset;
           }
 
-          & > *:nth-child(1) {
-            transition-delay: 0.5s;
+          img {
+            opacity: 0;
           }
 
           & > *:nth-child(2) {
-            transition-delay: 0.6s;
+            transition-delay: 0.5s;
           }
 
           & > *:nth-child(3) {
-            transition-delay: 0.7s;
+            transition-delay: 0.6s;
           }
 
           & > *:nth-child(4) {
-            transition-delay: 0.8s;
+            transition-delay: 0.7s;
           }
 
           & > *:nth-child(5) {
+            transition-delay: 0.8s;
+          }
+
+          & > *:nth-child(6) {
             transition-delay: 0.9s;
           }
         }

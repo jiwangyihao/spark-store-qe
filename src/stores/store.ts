@@ -40,6 +40,9 @@ export const useStore = defineStore('counter', {
       horizonGap: 0,
       cover: {
         style: '',
+        offset: 0,
+        imgMain: <HTMLImageElement | null>null,
+        imgDetail: <HTMLImageElement | null>null,
       },
       scrollTop: 0,
       clientWidth: 0,
@@ -137,6 +140,14 @@ export const useStore = defineStore('counter', {
 
       this.refreshStyle();
     },
+    onOpened() {
+      if (this.sortCache.cover.imgMain && this.sortCache.cover.imgDetail)
+        this.sortCache.cover.offset =
+          this.sortCache.cover.imgMain.getBoundingClientRect().y -
+          this.sortCache.cover.imgDetail.getBoundingClientRect().y;
+      this.sortCache.coverState.open = true;
+      this.refreshStyle();
+    },
     refreshStyle() {
       this.sortCache.cover.style = `--j-left:${
         <number>this.sortCache.activeCard?.position?.left -
@@ -147,7 +158,7 @@ export const useStore = defineStore('counter', {
         this.sortCache.clientHeight / 2 -
         this.sortCache.scrollTop -
         15
-      }px;`;
+      }px;--j-offset:${this.sortCache.cover.offset}px`;
     },
   },
 });
