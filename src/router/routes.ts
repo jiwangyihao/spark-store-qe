@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/DownloadPage.vue'),
         beforeEnter() {
           window.open(
-            'https://gitee.com/deepin-community-store/spark-store/releases/latest',
+            'https://gitee.com/spark-store-project/spark-store/releases/latest',
           );
         },
       },
