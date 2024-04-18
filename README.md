@@ -10,7 +10,7 @@
 
 - [实时构建（Github Pages）](https://jiwangyihao.github.io/spark-store-qe/)
 
-- [实时构建（Gitee Pages）](https://deepin-community-store.gitee.io/spark-store-qe/)
+- [实时构建（Gitee Pages）](https://spark-store-project.gitee.io/spark-store-qe/)
 
 ## 项目历程
 
