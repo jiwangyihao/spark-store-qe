@@ -1,0 +1,1 @@
+import{_ as o,A as c,B as s,J as t,K as a,C as _}from"./index-C7NnRKns.js";const n={},d=e=>(t("data-v-70512798"),e=e(),a(),e),r={class:"container"},i=d(()=>_("h5",null,"施工ing...",-1)),p=[i];function l(e,m){return c(),s("div",r,p)}const h=o(n,[["render",l],["__scopeId","data-v-70512798"],["__file","RecommendPage.vue"]]);export{h as default};
