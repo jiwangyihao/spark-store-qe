@@ -8,6 +8,11 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x, 20.x, 22.x, 24.x ]
+
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
@@ -16,6 +21,7 @@ jobs:
 
       - name: Build Vue
         run: |
+          corepack enable
           yarn install
           yarn build
         shell: bash
