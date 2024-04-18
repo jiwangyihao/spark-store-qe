@@ -1,9 +1,10 @@
 {
   "name": "spark-store",
   "version": "0.0.1",
-  "description": "The official website of Spark Store. ",
+  "description": "The official website of Spark Store.",
   "productName": "Spark Store",
   "author": "Spark Store Team (jiwangyihao <jwyh@jwyihao.top>, etc.)",
+  "type": "module",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
@@ -13,33 +14,34 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@quasar/extras": "^1.16.5",
+    "@quasar/extras": "^1.16.4",
     "@sifrr/storage": "^0.0.9",
-    "axios": "^1.4.0",
-    "bezier-easing": "^2.1.0",
-    "pinia": "^2.1.4",
-    "quasar": "^2.12.3",
-    "vue": "^3.3.4",
+    "axios": "^1.2.1",
+    "pinia": "^2.0.11",
+    "quasar": "^2.6.0",
+    "vue": "^3.4.18",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.2.4"
+    "vue-router": "^4.0.12"
   },
   "devDependencies": {
-    "@intlify/vite-plugin-vue-i18n": "^3.3.1",
-    "@quasar/app-vite": "^1.4.3",
-    "@types/node": "^12.20.21",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
-    "autoprefixer": "^10.4.14",
-    "electron": "25.3.0",
-    "eslint": "^8.45.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-vue": "^9.15.1",
-    "prettier": "^3.0.0",
-    "typescript": "^4.5.4"
+    "@intlify/unplugin-vue-i18n": "^2.0.0",
+    "@quasar/app-vite": "^2.0.0-beta.5",
+    "@types/node": "^20.5.9",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "autoprefixer": "^10.4.2",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "prettier": "^3.0.3",
+    "typescript": "~5.3.0",
+    "vite-plugin-checker": "^0.6.4",
+    "vue-tsc": "^1.8.22"
   },
   "engines": {
-    "node": "^18 || ^16 || ^14.19",
+    "node": "^24 || ^22 || ^20 || ^18",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
-  }
+  },
+  "packageManager": "yarn@4.1.1"
 }

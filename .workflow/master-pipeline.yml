@@ -16,7 +16,7 @@ stages:
       - step: build@nodejs
         name: build_nodejs
         displayName: Nodejs 构建
-        nodeVersion: 16.14.2
+        nodeVersion: 20.12.1
         commands:
           - yarn config set registry https://registry.npm.taobao.org --global
           - yarn install

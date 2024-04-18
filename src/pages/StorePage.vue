@@ -156,7 +156,7 @@ onMounted(() => {
                 }
               }
             "
-            :ref="(e) => (sortCache.cover.imgMain = e)"
+            :ref="(e) => (sortCache.cover.imgMain = <HTMLImageElement | null>e)"
           />
           <div class="description">
             <h6>{{ sortCache.activeCard?.Name }}</h6>
@@ -171,7 +171,9 @@ onMounted(() => {
                   if (appDetail) appDetail.imgError = true;
                 }
               "
-              :ref="(e) => (sortCache.cover.imgDetail = e)"
+              :ref="
+                (e) => (sortCache.cover.imgDetail = <HTMLImageElement | null>e)
+              "
             />
             <h1 class="name">{{ appDetail?.Name }}</h1>
             <span class="version">{{ appDetail?.Version }}</span>

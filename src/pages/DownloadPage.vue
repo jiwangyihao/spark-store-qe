@@ -36,70 +36,73 @@ interface qaMessage {
   answer: string[];
 }
 
-const qaMessages = [
+const qaMessages: qaMessage[] = [
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
-    question: ["星火用户的社群在哪里？有论坛或者群聊吗"],
-    answer: ["<a href='https://blog.shenmo.tech/post/%E6%95%85%E9%9A%9C%E5%85%AC%E5%91%8A/'>点击这里</a>查看我们的社群平台"],
+    question: ['星火用户的社群在哪里？有论坛或者群聊吗'],
+    answer: [
+      "<a href='https://blog.shenmo.tech/post/%E6%95%85%E9%9A%9C%E5%85%AC%E5%91%8A/'>点击这里</a>查看我们的社群平台",
+    ],
   },
   {
-    question:["只有Debian系可以使用星火应用商店吗"],
-    answer:[
+    question: ['只有Debian系可以使用星火应用商店吗'],
+    answer: [
       "现在您有更多选择。您可使用<a href='https://gitee.com/amber-ce/amber-ce-bookworm'>ACE兼容环境</a>来在Arch,Fedora上安装商店",
-      "尽管如此，部分应用还是无法使用的。请参考：<a href='https://bbs.spark-app.store/d/1668-xing-huo-ying-yong-shang-dian-on-ace'>此连接</a>"
-      ],
-  },
-  {
-    question: ["我是国产架构，怎么获取应用？"],
-    answer: ["我们现在支持海光，兆芯的x86;飞腾，鲲鹏，麒麟的arm64;龙芯新世界的deepin 23(loong64)，具体安装教程请查看下载界面"],
-  },
-  {
-    question: ["应用无法使用去哪反馈？"],
-    answer: ["应用详情页面有按钮，在下载安装下方"],
-  },
-  {
-    question: ["在哪里投稿我喜欢或者我常用的应用？"],
-    answer: [
-      "右上角菜单--->投递应用。若是已上架应用则推荐使用投稿器投稿，可以选择架构后一键填写信息，不需要手动写了",
-      "arm/龙芯应用投递暂仅支持投稿器的打包功能投递，请在填写信息后按右键空白地区，然后点击打包一下，选择架构后把获得的deb包发送给用户社群的shenmo即可手动上架"    
+      "尽管如此，部分应用还是无法使用的。请参考：<a href='https://bbs.spark-app.store/d/1668-xing-huo-ying-yong-shang-dian-on-ace'>此连接</a>",
     ],
   },
   {
-    question: ["我装不上商店怎么办？"],
+    question: ['我是国产架构，怎么获取应用？'],
     answer: [
-      "UOS 1060+/deepin 20.9/deepin 23/Debian 12/Ubuntu 22.04+可直接安装应用商店",
-      "对于Ubuntu 20.04/Debian10/Debian 11，安装依赖包后才能安装商店",
-      "对于龙芯用户请遵循下载界面的安装教程",
-      "银河麒麟V10的某些版本商店频繁闪退无法正常使用，因为银河麒麟的系统qt有问题，这不是星火的bug,若实在无法使用请安装终端版或者使用ACE安装",
-      "还是搞不明白，请回到第一条进入社群寻求小伙伴的帮助",
-      "如果你还是搞不明白怎么装，请使用星火终端版，同样在下载界面可以获取到。"
+      '我们现在支持海光，兆芯的x86;飞腾，鲲鹏，麒麟的arm64;龙芯新世界的deepin 23(loong64)，具体安装教程请查看下载界面',
     ],
   },
   {
-    question: ["我可以用dpkg -i安装吗？"],
+    question: ['应用无法使用去哪反馈？'],
+    answer: ['应用详情页面有按钮，在下载安装下方'],
+  },
+  {
+    question: ['在哪里投稿我喜欢或者我常用的应用？'],
     answer: [
-      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！",
-      "已经有不下20个人被这个坑了。CSDN害人不浅",
+      '右上角菜单--->投递应用。若是已上架应用则推荐使用投稿器投稿，可以选择架构后一键填写信息，不需要手动写了',
+      'arm/龙芯应用投递暂仅支持投稿器的打包功能投递，请在填写信息后按右键空白地区，然后点击打包一下，选择架构后把获得的deb包发送给用户社群的shenmo即可手动上架',
     ],
   },
   {
-    question: ["我想转载星火商店上的应用包，下载完了为什么找不到？"],
-    answer: ["星火应用商店上的应用未经投递者或管理员许可不可转载，每款应用均为社区成员花费了时间和精力打包或编写的，请勿爬取仓库"],
+    question: ['我装不上商店怎么办？'],
+    answer: [
+      'UOS 1060+/deepin 20.9/deepin 23/Debian 12/Ubuntu 22.04+可直接安装应用商店',
+      '对于Ubuntu 20.04/Debian10/Debian 11，安装依赖包后才能安装商店',
+      '对于龙芯用户请遵循下载界面的安装教程',
+      '银河麒麟V10的某些版本商店频繁闪退无法正常使用，因为银河麒麟的系统qt有问题，这不是星火的bug,若实在无法使用请安装终端版或者使用ACE安装',
+      '还是搞不明白，请回到第一条进入社群寻求小伙伴的帮助',
+      '如果你还是搞不明白怎么装，请使用星火终端版，同样在下载界面可以获取到。',
+    ],
   },
   {
-    question: ["有些应用已经过时或者失效了，我想让他下架"],
+    question: ['我可以用dpkg -i安装吗？'],
+    answer: [
+      '不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！',
+      '已经有不下20个人被这个坑了。CSDN害人不浅',
+    ],
+  },
+  {
+    question: ['我想转载星火商店上的应用包，下载完了为什么找不到？'],
+    answer: [
+      '星火应用商店上的应用未经投递者或管理员许可不可转载，每款应用均为社区成员花费了时间和精力打包或编写的，请勿爬取仓库',
+    ],
+  },
+  {
+    question: ['有些应用已经过时或者失效了，我想让他下架'],
     answer: [
       "前往<a href='https://gitee.com/spark-store-project/software_-issue'>https://gitee.com/spark-store-project/software_-issue</a>",
     ],
   },
   {
-    question: ["网页商店怎么在维护"],
-    answer: [
-      "网页商店已废弃，请使用客户端",
-    ],
+    question: ['网页商店怎么在维护'],
+    answer: ['网页商店已废弃，请使用客户端'],
   },
 ];
-
 
 //获取最新版本
 const latest: Ref<UpdateItem> = ref({

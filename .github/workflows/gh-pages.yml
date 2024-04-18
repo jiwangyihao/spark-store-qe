@@ -17,7 +17,7 @@ jobs:
       - name: Build Vue
         run: |
           yarn install
-          cp ghpage_quasar.config.js quasar.config.js
+          cp ghpage_quasar.config.ts quasar.config.ts
           yarn build
           cp dist/spa/index.html dist/spa/404.html
         shell: bash

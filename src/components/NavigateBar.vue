@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref, watch } from 'vue';
+import { ComponentPublicInstance, onMounted, Ref, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -378,7 +378,7 @@ onMounted(() => {
           :class="['navBtn', { active: topTab.active }]"
           :ref="
             (el) => {
-              topTab.el = el.$el;
+              topTab.el = (<ComponentPublicInstance>el).$el;
             }
           "
           :key="topTab.name"
@@ -401,7 +401,7 @@ onMounted(() => {
           :class="['navBtn', { active: tab.active }]"
           :ref="
             (el) => {
-              tab.el = el;
+              tab.el = <HTMLAnchorElement | HTMLDivElement | null>el;
             }
           "
         >
@@ -432,7 +432,7 @@ onMounted(() => {
           :class="['navBtn', { active: secondTab.active }]"
           :ref="
             (el) => {
-              secondTab.el = el.$el;
+              secondTab.el = (<ComponentPublicInstance>el).$el;
             }
           "
           :key="secondTab.name"
