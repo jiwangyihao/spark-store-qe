@@ -1,146 +1,301 @@
-<script setup lang="ts">
+<script setup>
 //下载地址在/src/router/routes.js中设置
 
-import { nextTick, Ref, ref } from 'vue';
-import { useMeta } from 'quasar';
-import FooterView from '../components/FooterView.vue';
-import { api, UpdateItem, UpdateData } from 'boot/api';
+// noinspection NpmUsedModulesInstalled
+import { ref } from "vue";
+import { useMeta } from "quasar";
+import FooterView from "../components/FooterView.vue";
 
 useMeta({
-  title: '下载',
+  title: "下载",
   // 可选的; 将最终标题设置为“Index Page - My Website”，对于多级meta有用
   titleTemplate: (title) => `${title} - 星火应用商店`,
-  meta: {
-    description: {
-      name: 'description',
-      content: '星火应用商店spark store官方下载',
-    },
-    keywords: {
-      name: 'keywords',
-      content:
-        'spark store,星火应用商店,星火商店,星火应用商店下载,星火商店下载,deepin应用商店,uos,ubuntu,deepin',
-    },
-    equiv: {
-      'http-equiv': 'Content-Type',
-      content: 'text/html; charset=UTF-8',
-    },
-  },
 });
 
 //控制安装说明（Q&A）弹窗的显示
 const showTips = ref(false);
 
-interface qaMessage {
-  //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
-  question: string[];
-  answer: string[];
-}
-
 //Q&A中的消息内容
-const qaMessages: qaMessage[] = [
-  {
-    question: ['在哪进交流群？'],
-    answer: [
-      "星火商店交流平台 <a href='https://www.deepinos.org/d/1207/'>点击这里进入</a>",
-    ],
-  },
+const qaMessages = [
   {
     //值为数组，数组中可以是一到多个字符串，支持HTML，多个字符串表示多条消息（多段话）
-    question: ['上面这个链接挂了，显示进不去'],
+    question: ["星火用户的社群在哪里？有论坛或者群聊吗"],
+    answer: ["<a href='https://blog.shenmo.tech/post/%E6%95%85%E9%9A%9C%E5%85%AC%E5%91%8A/'>点击这里</a>查看我们的社群平台"],
+  },
+  {
+    question:["只有Debian系可以使用星火应用商店吗"],
+    answer:[
+      "现在您有更多选择。您可使用<a href='https://gitee.com/amber-ce/amber-ce-bookworm'>ACE兼容环境</a>来在Arch,Fedora上安装商店",
+      "尽管如此，部分应用还是无法使用的。请参考：<a href='https://bbs.spark-app.store/d/1668-xing-huo-ying-yong-shang-dian-on-ace'>此连接</a>"
+      ],
+  },
+  {
+    question: ["我是国产架构，怎么获取应用？"],
+    answer: ["我们现在支持海光，兆芯的x86;飞腾，鲲鹏，麒麟的arm64;龙芯新世界的deepin 23(loong64)，具体安装教程请查看下载界面"],
+  },
+  {
+    question: ["应用无法使用去哪反馈？"],
+    answer: ["应用详情页面有按钮，在下载安装下方"],
+  },
+  {
+    question: ["在哪里投稿我喜欢或者我常用的应用？"],
     answer: [
-      "我们还有 QQ 群作为备份，群号是 872690351 群2 865927727。这里还有<a href='https://www.deepinos.org/'>论坛</a>",
+      "右上角菜单--->投递应用。若是已上架应用则推荐使用投稿器投稿，可以选择架构后一键填写信息，不需要手动写了",
+      "arm/龙芯应用投递暂仅支持投稿器的打包功能投递，请在填写信息后按右键空白地区，然后点击打包一下，选择架构后把获得的deb包发送给用户社群的shenmo即可手动上架"    
     ],
   },
   {
-    question: ['我是国产架构，怎么获取应用？'],
+    question: ["我装不上商店怎么办？"],
     answer: [
-      '目前星火商店支持arm架构的国产芯片，请下载 arm64 架构的 deb 包。请注意：支持是实验性的，请积极在星火交流平台，QQ 群或论坛向我们反馈！',
-      '目前支持的发行版有 UOS 专业版，Ubuntu 22.04 以及有限的支持了银河麒麟 V10（仅保证客户端可运行，上架应用未经过测试）',
-      '银河麒麟用户请下载依赖包',
+      "UOS 1060+/deepin 20.9/deepin 23/Debian 12/Ubuntu 22.04+可直接安装应用商店",
+      "对于Ubuntu 20.04/Debian10/Debian 11，安装依赖包后才能安装商店",
+      "对于龙芯用户请遵循下载界面的安装教程",
+      "银河麒麟V10的某些版本商店频繁闪退无法正常使用，因为银河麒麟的系统qt有问题，这不是星火的bug,若实在无法使用请安装终端版或者使用ACE安装",
+      "还是搞不明白，请回到第一条进入社群寻求小伙伴的帮助",
+      "如果你还是搞不明白怎么装，请使用星火终端版，同样在下载界面可以获取到。"
     ],
   },
   {
-    question: ['安装依赖包出现错误'],
+    question: ["我可以用dpkg -i安装吗？"],
     answer: [
-      'UOS 或者 deepin 不需要安装，请不要安装；Kali Linux/Kdeneon 请自行编译安装，暂不支持；依赖包支持的发行版却报无法安装错误：尝试 sudo apt update 后再运行。如果仍然无法排查出问题，请参考第一条进入交流平台寻求帮助。',
+      "不可以！不可以！不可以！直接调用dpkg是不处理依赖的！使用sudo apt install ./xxxx.deb来安装，或者直接使用gdebi等图形化的安装器！！！",
+      "已经有不下20个人被这个坑了。CSDN害人不浅",
     ],
   },
   {
-    question: ['在哪里投稿？'],
+    question: ["我想转载星火商店上的应用包，下载完了为什么找不到？"],
+    answer: ["星火应用商店上的应用未经投递者或管理员许可不可转载，每款应用均为社区成员花费了时间和精力打包或编写的，请勿爬取仓库"],
+  },
+  {
+    question: ["有些应用已经过时或者失效了，我想让他下架"],
     answer: [
-      '右上角菜单--->投递应用。对于已经上架的应用的更新，建议使用投稿器一键填写投稿信息',
+      "前往<a href='https://gitee.com/spark-store-project/software_-issue'>https://gitee.com/spark-store-project/software_-issue</a>",
     ],
   },
   {
-    question: ['我不是 deepin/UOS 用户，可以使用星火应用商店吗？'],
+    question: ["网页商店怎么在维护"],
     answer: [
-      '可以。对于 Ubuntu 22.04，请直接安装；对于Ubuntu 20.04/Debian 10/Debian 11，先安装依赖包',
-      'Ubuntu 22.04 原版可能会出现 SSL 错误，暂无解决方案，可尝试其他衍生版本',
+      "网页商店已废弃，请使用客户端",
     ],
-  },
-  {
-    question: ['我可以用 dpkg -i 安装吗？'],
-    answer: [
-      '不可以！不可以！不可以！直接调用 dpkg 是不处理依赖的！使用 sudo apt install ./xxxx.deb 来安装，或者直接使用gdebi等图形化的安装器！！！',
-      'sudo apt install gdebi 来安装 gdebi',
-      '不可以！不可以！不可以！直接调用 dpkg 是不处理依赖的！使用 sudo apt install ./xxxx.deb 来安装，或者直接使用gdebi等图形化的安装器！！！',
-      '已经有不下 20 个人被这个坑了。CSDN 害人不浅',
-      '报无法安装错误：可以尝试 sudo apt update 后再运行',
-    ],
-  },
-  {
-    question: ['星火商店会影响系统正常更新吗？'],
-    answer: [
-      '星火商店现已将源与系统分开，不再影响系统更新。相应的，星火商店中的应用也不会随着系统更新。请在右上角的应用更新和安装设置来操作更新',
-      '如果希望在命令行中安装星火源的应用，请使用 aptss。aptss 类似 apt，但是加入了星火源和多线程下载支持',
-    ],
-  },
-  {
-    question: ['有些应用已经过时或者失效了，我想让他下架'],
-    answer: [
-      "前往<a href='https://gitee.com/deepin-community-store/software_-issue'>https://gitee.com/deepin-community-store/software_-issue</a>",
-    ],
-  },
-  {
-    question: ['使用 apt 安装却报无法安装错误？'],
-    answer: ['请尝试 sudo apt update 后再运行'],
   },
 ];
 
-//获取最新版本
-const latest: Ref<UpdateItem> = ref({
-  version: '',
-  time: '',
-  details: [],
-});
-api.getLatest().then((res) => {
-  latest.value = res;
-});
-
 //时间线中的更新日志
-const updateHistory: Ref<UpdateItem[]> = ref([]);
+const updateHistory = [
+     {
+    version: "3.1.6",
+    time: "2022-08-15 23:03      ",
+    details: [
+      "修复：修复部分情况下无法选中正确的镜像源的问题 ",
+      "调整：合入3.1.5以来的各项修改  ",
+    ],
+  }, 
+    {
+    version: "3.1.5",
+    time: "2022-08-15 23:03      ",
+    details: [
+      "修复：改变更新策略，现在支持应用在更新时引入新依赖 ",
+      "调整：ss-apt-fast现在默认允许降级，以与apt使用体验一致  ",
+    ],
+  }, 
 
-//是否禁用滚动加载
-const disableLoad = ref(false);
-
-//获取滚动加载元素
-const historyView = ref();
-
-nextTick(() => {
-  //主动触发第一次加载
-  historyView.value.trigger();
-});
-
-const loadHistory = (index: number, done: () => void) => {
-  api.getHistory(index).then((res: UpdateData) => {
-    updateHistory.value = updateHistory.value.concat(res.data);
-    if (res.isEnded) {
-      //当加载到最后一页时禁用滚动加载
-      disableLoad.value = true;
-    }
-    done();
-  });
-};
+    {
+    version: "3.1.4-1",
+    time: "2022-08-08 12:44     ",
+    details: [
+      "修复：ssinstall在没有安装apt-fast的情况下首次安装需要依赖的软件时安装失败 ",
+      "调整：安装脚本和检测更新脚本检查网络时间超时时间延长至5s  ",
+    ],
+  }, 
+   {
+    version: "3.1.4",
+    time: "2022-08-06 11:43    ",
+    details: [
+      "修复：安装时使用wget的问题",
+      "调整：屏蔽了ssinstall之外的安装方式",
+      "调整：修复pkexec下ssinstall不处理依赖的bug",
+      "调整：现在与系统更新分开，不再导致系统更新失败",
+      "调整：支持直接更新软件源文件，不再让d.吃全部更新流量",
+      "ss-apt-fast不再强制root权限",
+      "修改ss-apt-fast的策略，现在除了安装，下载和更新都改用apt",
+      "ssinstall 现在也会在不适用ss-apt-fast的时候模拟源了（针对UOS）",
+      "修复 下载提前退出",
+    ],
+  }, 
+  {
+    version: "3.1.2",
+    time: "2022-06-21 22:59   ",
+    details: [
+      "新增： ss-apt-fast 从多个指定的镜像源下载文件",
+      "调整：现在应用更新和依赖处理已切换到ss-apt-fast",
+      "调整： 使用 dtk5.4编译",
+    ],
+  },
+  {
+    version: "3.1.0",
+    time: "2022-05-09 18:41 ",
+    details: ["Debian 11系统需要先安依赖包", "添加免密码安装功能"],
+  },
+  {
+    version: "3.0.3-13",
+    time: "2022-04-24 16:20 ",
+    details: [
+      "更新ssinstall脚本. 现在支持使用apt-fast来加速下载",
+      "ssinstall（星火内置安装器安装）现在会在安装前临时提升星火源的优先级以正确安装依赖",
+      "改变关于窗口的风格",
+      "更改了依赖以防止不支持处理Provides的deb安装器错误地认为依赖不满足",
+      "更新了文案：现在Ubuntu的tag注释改为适配22.04",
+    ],
+  },
+  {
+    version: "3.0.3-12",
+    time: "2022-04-22 17:07",
+    details: [
+      "重新使用 DApplication::loadDXcbPlugin(); 在ubuntu下正常显示标题栏",
+      "现在可以在debian 11上免依赖运行",
+      "现在可以在ubuntu 22.04上免依赖运行",
+    ],
+  },
+  {
+    version: "3.0.3-11",
+    time: "2022-04-11 11:43",
+    details: ["提供了自动更新服务。"],
+  },
+  {
+    version: "3.0.3-10",
+    time: "2022-04-07 15:30",
+    details: [
+      "这东西还要手写过来的？就不能直接让用户跳转到gitee去看发行日志吗",
+      "太反人类了",
+      "图呢？我想放个图啊！咋放图嘞？",
+      "支持html标签吗？",
+      "我在这写一个标签直接指向30310版本的发行日志应该没人发现吧",
+      "<a href='https://gitee.com/deepin-community-store/spark-store/releases/3.0.3-10'>https://gitee.com/deepin-community-store/spark-store/releases/3.0.3-10</a>",
+      "(｡･∀･)ﾉﾞ多省事！啥？jwyh说这样不美观？哼，又不是不能用！以后我还要辶",
+      "",
+      "搞事情的shenmo已经被拖走了",
+      "",
+      "正式的更新日志 by jwyh：",
+      "大幅度优化了非deepin/UOS系统下的显示效果；",
+      "修改了control文件，防止在编译时误使用了dtk2的kit；",
+      "spark-dstore-patch现在会在编译时一并编译，跨平台已可以实现；",
+      "spark-dstore-patch现在有一个独立的仓库 https://gitee.com/deepin-community-store/spark-dstore-patch。",
+    ],
+  },
+  {
+    version: "3.0.3-9",
+    time: "2022-02-26 19:43",
+    details: [
+      "更改包构建方式，现在支持dpkg-build-package；",
+      "更改key的安装方法；",
+      "表明我们还活着。",
+    ],
+  },
+  {
+    version: "3.0.3-8",
+    time: "2022-01-14 00:39",
+    details: [
+      "不再与最新版本的spark-dstore-patch冲突；",
+      "现在默认不会显示已集成dstore patch的信息了，仅在同时安装了patch后显示；",
+      "安装时会同时加入新的密钥，旧的将会在不久后废除，所以请尽快更新到3.0.3-8+版本；",
+      "这回记住修改关于界面的版本号了。",
+    ],
+  },
+  {
+    version: "3.0.3-7",
+    time: "2021-12-13 20:15",
+    details: ["更改版本号&催更地址。"],
+  },
+  {
+    version: "3.0.3-6",
+    time: "2021-12-11 17:54",
+    details: ["现在在非UOS/deepin上安装星火应用商店就可以正确处理UOS包啦！"],
+  },
+  {
+    version: "3.0.3-5",
+    time: "2021-10-26 20:43",
+    details: ["在UOS上重编译以适配。"],
+  },
+  {
+    version: "3.0.3-4",
+    time: "2021-10-24 23:48",
+    details: ["添加了临时催更功能，减轻维护者负担，放弃维护无人使用的应用。"],
+  },
+  {
+    version: "3.0.3—LTS",
+    time: "2021-07-06 10:20",
+    details: [
+      "支持应用详情页显示升级/重新安装；",
+      "修复应用详情页经常加载失败的问题；",
+      "修复应用详情页写在失败的问题；",
+      "修复下载列表和通知栏不显示应用缩略图的问题；",
+      "支持动态获取下载镜像源列表；",
+      "尝试开启 Hidpi 支持；",
+      "DTK 界面版本后续随缘维护更新。",
+    ],
+  },
+  {
+    version: "3.0.2",
+    time: "2021-06-13 14:41",
+    details: [
+      "修正 3.0.1 版本中非 DDE 环境下标题栏显示异常的问题；",
+      "安装时发送邮件统计安装数量。",
+    ],
+  },
+  {
+    version: "3.0.1",
+    time: "2021-04-17 15:54",
+    details: [
+      "合并 multiple 分支，支持多线程下载软件包（由 @枯叶蚊 大佬实现）；",
+      "修改返回图标按钮以及返回按钮逻辑；",
+      "修改默认源服务器列表；",
+      "修复启动时首页颜色主题不跟随系统主题颜色的问题；",
+      "修正设置界面源服务器选择下拉框中“开发者模式”提示文字可被选中的问题。",
+      "该版本由 UOS 个人版 + Qt 5.11.3 编译，如果存在运行问题请及时反馈......",
+    ],
+  },
+  {
+    version: "3.0",
+    time: "2020-12-17 00:24",
+    details: [
+      "支持应用搜索功能，限制前一次搜索完成后才能进行第二次搜索（打开分享链接不受影响）；",
+      "修复多屏幕下截图预览偏移的问题，固定在主屏幕下显示；",
+      "修复返回列表之后不能记住上次浏览位置的问题；",
+      "更新源服务器优先级；",
+      "调整安装应用方式的顺序为： 星火内置安装器 ， 深度软件包安装器 ， gdebi ；",
+      "修改打包方式，支持从启动器右键卸载商店。",
+      "由于打包方式修改，安装过3.0~alpha版本的用户需要先卸载商店再重新安装，或者重复安装两次才能正确覆盖文件位置。",
+    ],
+  },
+  {
+    version: "3.0~alpha2",
+    time: "2020-12-15 00:36",
+    details: [
+      "修复了搜索功能经常请求错误的问题；",
+      "修复了搜索之后点击返回列表按钮页面显示逻辑错误的问题；",
+      "修复了返回列表之后不能记住上次浏览位置的问题；",
+      "更新了源服务器优先级；",
+      "调整了安装选项的顺序；",
+      "重新打包，修复上个版本中无法使用 dpkg 安装的问题。",
+    ],
+  },
+  {
+    version: "3.0~alpha1",
+    time: "2020-12-06 12:33",
+    details: [
+      "尝试修复多屏幕下截图预览偏移的问题，固定在主屏幕下显示。（待测试）",
+    ],
+  },
+  {
+    version: "3.0~alpha0",
+    time: "2021-04-17 15:54",
+    details: [
+      "由大佬 AdamSmith 完成了搜索功能，支持多线程下载搜索结果列表的软件图标；",
+      "由于多线程下载的问题，所以在 前一次搜索完成之前 无法进行下一次搜索，请耐心等待；",
+      "打开 spk分享链接 不受影响。",
+    ],
+  },
+];
 </script>
 
 <template>
@@ -174,7 +329,7 @@ const loadHistory = (index: number, done: () => void) => {
               >
                 点击下载
               </q-btn>
-              <span>最新版本 {{ latest.version }}</span>
+              <span>最新版本 3.1.6</span>
             </div>
           </div>
         </div>
@@ -210,41 +365,20 @@ const loadHistory = (index: number, done: () => void) => {
           </div>
         </div>
       </div>
-
-      <!--suppress CssInvalidPropertyValue -->
-      <q-infinite-scroll
-        @load="loadHistory"
-        :initial-index="0"
-        scroll-target=".downPage"
-        :disable="disableLoad"
-        style="width: -webkit-fill-available; min-height: 60vh"
-        ref="historyView"
-      >
-        <q-timeline color="primary" layout="comfortable">
-          <q-timeline-entry
-            v-for="(v, k) in updateHistory"
-            :key="k"
-            :title="v.version"
-            :subtitle="v.time"
-          >
-            <div style="max-width: 600px">
-              <ul style="padding-inline-start: 0; word-break: break-word">
-                <li v-for="(t, key) in v.details" :key="key">{{ t }}</li>
-              </ul>
-            </div>
-          </q-timeline-entry>
-        </q-timeline>
-
-        <p v-if="disableLoad" class="text-center text-grey">
-          ~ 已经到底了哦 (●'◡'●) ~
-        </p>
-
-        <template v-slot:loading>
-          <div class="row justify-center q-my-md">
-            <q-spinner-dots color="primary" size="40px" />
+      <q-timeline color="primary" layout="comfortable">
+        <q-timeline-entry
+          v-for="(v, k) in updateHistory"
+          :key="k"
+          :title="v.version"
+          :subtitle="v.time"
+        >
+          <div>
+            <ul style="padding-inline-start: 0">
+              <li v-for="(t, key) in v.details" :key="key">{{ t }}</li>
+            </ul>
           </div>
-        </template>
-      </q-infinite-scroll>
+        </q-timeline-entry>
+      </q-timeline>
     </div>
 
     <!-- 安装说明（Q&A）弹窗 -->
@@ -291,8 +425,8 @@ const loadHistory = (index: number, done: () => void) => {
 </template>
 
 <style scoped lang="scss">
-@use '../css/var-image-bg';
-@import '../css/quasar.variables';
+@use "../css/var-image-bg";
+@import "../css/quasar.variables";
 
 .downPage {
   position: relative;
@@ -304,8 +438,8 @@ const loadHistory = (index: number, done: () => void) => {
   flex-wrap: nowrap;
 
   &.varImageBg.downBackground::before {
-    @include var-image-bg.image('download', 'background');
-    content: '';
+    @include var-image-bg.image("download", "background");
+    content: "";
     width: 100%;
     height: 56vh;
     max-height: calc(68vmin + 48px);
@@ -323,7 +457,7 @@ const loadHistory = (index: number, done: () => void) => {
     position: relative;
 
     &::after {
-      content: '';
+      content: "";
       width: 1.2em;
       height: 0.16em;
       background-color: white;
@@ -404,13 +538,9 @@ const loadHistory = (index: number, done: () => void) => {
       background-color: white;
       border-radius: 1vmin;
       overflow: hidden;
-      box-shadow:
-        0 0 0 rgba(0, 0, 0, 0.056),
-        0 0 0.1vmin rgba(0, 0, 0, 0.081),
-        0 0 0.1vmin rgba(0, 0, 0, 0.1),
-        0 0 0.2vmin rgba(0, 0, 0, 0.119),
-        0 0 0.4vmin rgba(0, 0, 0, 0.144),
-        0 0 1vmin rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0.056), 0 0 0.1vmin rgba(0, 0, 0, 0.081),
+        0 0 0.1vmin rgba(0, 0, 0, 0.1), 0 0 0.2vmin rgba(0, 0, 0, 0.119),
+        0 0 0.4vmin rgba(0, 0, 0, 0.144), 0 0 1vmin rgba(0, 0, 0, 0.2);
 
       .logoPanel {
         display: flex;
@@ -423,24 +553,21 @@ const loadHistory = (index: number, done: () => void) => {
         padding-top: 1.5vmin;
 
         &::before {
-          content: '';
+          content: "";
           display: block;
           width: 7vmin;
           height: 7vmin;
           border-radius: 1vmin;
           background: {
             color: white;
-            image: url('../assets/icons/favicon-128x128.png');
+            image: url("../assets/icons/favicon-128x128.png");
             repeat: no-repeat;
             size: 4vmin;
             position: center;
           }
-          box-shadow:
-            0 0 0 rgba(0, 0, 0, 0.056),
-            0 0 0.1vmin rgba(0, 0, 0, 0.081),
-            0 0 0.1vmin rgba(0, 0, 0, 0.1),
-            0 0 0.2vmin rgba(0, 0, 0, 0.119),
-            0 0 0.4vmin rgba(0, 0, 0, 0.144),
+          box-shadow: 0 0 0 rgba(0, 0, 0, 0.056),
+            0 0 0.1vmin rgba(0, 0, 0, 0.081), 0 0 0.1vmin rgba(0, 0, 0, 0.1),
+            0 0 0.2vmin rgba(0, 0, 0, 0.119), 0 0 0.4vmin rgba(0, 0, 0, 0.144),
             0 0 1vmin rgba(0, 0, 0, 0.2);
 
           //filter: drop-shadow(0 0 0.5vmin white);
@@ -523,7 +650,7 @@ const loadHistory = (index: number, done: () => void) => {
 </style>
 
 <style lang="scss">
-@import '../css/quasar.variables';
+@import "../css/quasar.variables";
 .qaCard {
   .scrollarea__container {
     border-radius: 0.6vmin;
@@ -548,15 +675,5 @@ const loadHistory = (index: number, done: () => void) => {
   .q-message-text:last-child {
     min-height: unset;
   }
-}
-
-.q-timeline--comfortable .q-timeline__subtitle {
-  width: 20vw;
-  max-width: 180px;
-}
-
-.q-timeline--comfortable--right .q-timeline__content {
-  width: 80vw;
-  max-width: 400px;
 }
 </style>
