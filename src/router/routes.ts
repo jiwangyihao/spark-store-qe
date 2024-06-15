@@ -23,7 +23,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/DownloadPage.vue'),
         beforeEnter() {
           window.open(
-            'https://zunyun01.store.deepinos.org.cn/spark-store-dependencies-kylin.zip',
+            'https://gitee.com/spark-store-project/spark-store-dependencies/releases/latest',
           );
         },
       },
