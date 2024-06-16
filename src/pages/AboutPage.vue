@@ -94,8 +94,8 @@ useMeta({
           <p>
             <strong>投递须知：</strong
             ><a
-              href="https://spark-store-project.gitee.io/spark-wiki/#/Submit/Submit"
-              >https://spark-store-project.gitee.io/spark-wiki/#/Submit/Submit</a
+              href="https://wiki.spark-app.store/"
+              >https://wiki.spark-app.store/</a
             >
           </p>
         </div>

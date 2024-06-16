@@ -31,21 +31,21 @@ const routes: RouteRecordRaw[] = [
         path: 'forum',
         component: () => import('pages/AboutPage.vue'),
         beforeEnter() {
-          location.href = 'https://www.deepinos.org/';
+          location.href = 'https://bbs.spark-app.store/';
         },
       },
       {
         path: 'feedback',
         component: () => import('pages/AboutPage.vue'),
         beforeEnter() {
-          location.href = 'https://www.deepinos.org/';
+          location.href = 'https://bbs.spark-app.store/';
         },
       },
       {
         path: 'blog',
         component: () => import('pages/AboutPage.vue'),
         beforeEnter() {
-          location.href = 'https://www.deepinos.org/';
+          location.href = 'https://bbs.spark-app.store/';
         },
       },
       { path: 'about', component: () => import('pages/AboutPage.vue') },
