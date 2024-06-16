@@ -1,1 +1,0 @@
-import{_ as a,A as o,B as s,J as c,K as t,C as _}from"./index-C7NnRKns.js";const n={},d=e=>(c("data-v-b0ab312f"),e=e(),t(),e),r={class:"container"},i=d(()=>_("h5",null,"施工ing...",-1)),p=[i];function f(e,l){return o(),s("div",r,p)}const u=a(n,[["render",f],["__scopeId","data-v-b0ab312f"],["__file","RankPage.vue"]]);export{u as default};
