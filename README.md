@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **本仓库现已处于 Archived 状态，请前往全新重构的 [Spark Store Abyss](https://github.com/jiwangyihao/spark-store-abyss) 访问后续更新信息。**
+> 
+> **This repo has been archived, please go to our new fully-refactored [Spark Store Abyss](https://github.com/jiwangyihao/spark-store-abyss) to follow our updates.**
+
 # Spark Store QE
 
 星火应用商店官网，使用 Vue3 + Quasar 开发。
